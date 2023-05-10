@@ -1,5 +1,7 @@
 import Foundation
 
+// MARK: Internal Items
+
 /**
  FailableDecodable allows us to decode a whole list of objects, even if one of them is corrupt.
  */
@@ -25,15 +27,6 @@ internal struct NPGData: Decodable {
     var labels: [FailableDecodable<NPGLabel>]
 }
 
-protocol NPGObject: Hashable {
-    var id: Int { get }
-    var dateModified: Date { get }
-}
-
-protocol NPGFile: NPGObject {
-    var url: URL { get }
-}
-
 /**
  NPGBool is a stand-in for the standard Bool, but allows for "yes" and "no" values.
  */
@@ -41,6 +34,18 @@ internal enum NPGBool: String, Codable {
     case yes
     case no
 }
+
+// MARK: Public Items
+
+public protocol NPGObject: Hashable {
+    var id: Int { get }
+    var dateModified: Date { get }
+}
+
+public protocol NPGFile: NPGObject {
+    var url: URL { get }
+}
+
 
 /**
  NPGArea is a space within the gallery that encompasses one or more locations.
@@ -110,8 +115,13 @@ public struct NPGLocation: NPGObject, Codable {
     public var audioDescription: [NPGAudio]
 }
 
-
+/**
+ NPGLabel represents the publicly available data and metadata for an artwork.
+ It includes the name and description of the artwork along with images, 3D objects (for scanning), and audio files describing the work or as an interview with the artist or sitter.
+ */
 public struct NPGLabel: NPGObject, Codable {
+    
+    
     public struct LabelText: Codable, Hashable {
         public enum LabelType: String, Codable, Hashable {
             case caption
