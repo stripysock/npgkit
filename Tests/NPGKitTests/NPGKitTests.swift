@@ -10,15 +10,18 @@ final class NPGKitTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Items load successfully")
         let npgKit = NPGKit()
         
+        npgKit.$labels
+            .receive(on: RunLoop.main)
+            .sink { labels in
+                if !npgKit.labels.isEmpty {
+                    expectation.fulfill()
+                }
+            }
+            .store(in: &cancellables)
+        
         Task {
             do {
                 try await npgKit.refreshData()
-                
-                if !npgKit.labels.isEmpty {
-                    expectation.fulfill()
-                } else {
-                    XCTFail("Expected to see some label data")
-                }
                 
             } catch {
                 XCTFail(error.localizedDescription)
@@ -26,6 +29,5 @@ final class NPGKitTests: XCTestCase {
         }
         
         wait(for: [expectation], timeout: 15)
-
     }
 }
