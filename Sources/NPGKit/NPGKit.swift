@@ -35,9 +35,9 @@ public class NPGKit {
         let npgData = try jsonDecoder.decode(NPGData.self, from: data)
         
         DispatchQueue.main.async {
-            self.areas = npgData.areas
-            self.locations = npgData.locations
-            self.labels = npgData.labels
+            self.areas = npgData.areas.compactMap { $0.base }
+            self.locations = npgData.locations.compactMap { $0.base }
+            self.labels = npgData.labels.compactMap { $0.base }
         }
     }
 }

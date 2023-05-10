@@ -1,16 +1,25 @@
 import Foundation
 
-internal struct NPGData: Codable {
-    public struct Metadata: Codable {
+internal struct FailableDecodable<Base: Decodable> : Decodable {
+    let base: Base?
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        self.base = try? container.decode(Base.self)
+    }
+}
+
+internal struct NPGData: Decodable {
+    public struct Metadata: Decodable {
         var title: String
         var subtitle: String
         var intro: String
     }
     
     var title: Metadata
-    var areas: [NPGArea]
-    var locations: [NPGLocation]
-    var labels: [NPGLabel]
+    var areas: [FailableDecodable<NPGArea>]
+    var locations: [FailableDecodable<NPGLocation>]
+    var labels: [FailableDecodable<NPGLabel>]
 }
 
 protocol NPGObject: Hashable {
