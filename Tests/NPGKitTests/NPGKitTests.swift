@@ -10,10 +10,10 @@ final class NPGKitTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Items load successfully")
         let npgKit = NPGKit()
         
-        npgKit.$labels
+        npgKit.$artworks
             .receive(on: RunLoop.main)
-            .sink { labels in
-                if !npgKit.labels.isEmpty {
+            .sink { artwork in
+                if !npgKit.artworks.isEmpty {
                     expectation.fulfill()
                 }
             }

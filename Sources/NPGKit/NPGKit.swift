@@ -15,7 +15,6 @@ public class NPGKit {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         decoder.dateDecodingStrategy = .formatted(dateFormatter)
-        //decoder.dateDecodingStrategy = .iso8601
         return decoder
     }()
     
@@ -23,7 +22,7 @@ public class NPGKit {
     
     @Published public var areas: [NPGArea] = []
     @Published public var locations: [NPGLocation] = []
-    @Published public var labels: [NPGLabel] = []
+    @Published public var artworks: [NPGArtwork] = []
     
     public init() {
         
@@ -37,7 +36,7 @@ public class NPGKit {
         DispatchQueue.main.async {
             self.areas = npgData.areas.compactMap { $0.base }
             self.locations = npgData.locations.compactMap { $0.base }
-            self.labels = npgData.labels.compactMap { $0.base }
+            self.artworks = npgData.labels.compactMap { $0.base }
         }
     }
 }

@@ -28,7 +28,7 @@ extension NPGLocation {
     }
 }
 
-extension NPGLabel {
+extension NPGArtwork {
     enum CodingKeys: String, CodingKey {
         case id, title, subtitle, beacon, priority, width, height, text, images, audio
         case dateModified = "datemodified"

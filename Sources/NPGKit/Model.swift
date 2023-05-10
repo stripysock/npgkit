@@ -24,7 +24,7 @@ internal struct NPGData: Decodable {
     var title: Metadata
     var areas: [FailableDecodable<NPGArea>]
     var locations: [FailableDecodable<NPGLocation>]
-    var labels: [FailableDecodable<NPGLabel>]
+    var labels: [FailableDecodable<NPGArtwork>]
 }
 
 /**
@@ -116,10 +116,10 @@ public struct NPGLocation: NPGObject, Codable {
 }
 
 /**
- NPGLabel represents the publicly available data and metadata for an artwork.
+ NPGArtwork represents the publicly available data and metadata for an artwork.
  It includes the name and description of the artwork along with images, 3D objects (for scanning), and audio files describing the work or as an interview with the artist or sitter.
  */
-public struct NPGLabel: NPGObject, Codable {
+public struct NPGArtwork: NPGObject, Codable {
     
     
     public struct LabelText: Codable, Hashable {
