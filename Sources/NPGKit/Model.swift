@@ -1,5 +1,8 @@
 import Foundation
 
+/**
+ FailableDecodable allows us to decode a whole list of objects, even if one of them is corrupt.
+ */
 internal struct FailableDecodable<Base: Decodable> : Decodable {
     let base: Base?
 
