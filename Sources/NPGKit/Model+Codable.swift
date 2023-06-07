@@ -35,7 +35,7 @@ extension NPGArtwork {
         case dateCreated = "datecreated"
         case areaID = "areaid"
         case locationID = "locationid"
-        case nearbyLabels = "nearbylabels"
+        case nearbyArtworks = "nearbylabels"
         case audioDescription = "audiodescription"
         case scanObjects = "3dscan"
     }

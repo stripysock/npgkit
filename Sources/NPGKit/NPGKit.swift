@@ -20,14 +20,20 @@ public class NPGKit {
     
     private let endpoint: URL = URL(string: "https://www.portrait.gov.au/json/ondisplaytest/all")!
     
+    /// A published collection of areas within (and possibly beyond) the National Portrait Gallery.
     @Published public var areas: [NPGArea] = []
+    
+    /// A published collection of locations with the NPG. Use a location's ``areaID`` to determine the associated area.
     @Published public var locations: [NPGLocation] = []
+    
+    /// A published collection of artwork on display within the NPG.
     @Published public var artworks: [NPGArtwork] = []
     
     public init() {
         
     }
     
+    /// Call to retrieve the latest content from the API and in turn, refresh the various publishers.
     public func refreshData() async throws {
         let (data, _) = try await session.data(from: endpoint)
         

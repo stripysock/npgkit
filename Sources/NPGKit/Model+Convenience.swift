@@ -49,11 +49,4 @@ extension NPGImage.CropSize {
     public var bottomRight: CGPoint {
         .init(x: cropBottomRightX, y: cropBottomRightY)
     }
-    
-//    public var inset: NSEdgeInsets {
-//        .init(top: cropTopLeftY,
-//              left: cropTopLeftX,
-//              bottom: height - cropBottomRightY,
-//              right: width - cropBottomRightX)
-//    }
 }
