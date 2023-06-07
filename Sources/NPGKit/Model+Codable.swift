@@ -28,14 +28,14 @@ extension NPGLocation {
     }
 }
 
-extension NPGLabel {
+extension NPGArtwork {
     enum CodingKeys: String, CodingKey {
         case id, title, subtitle, beacon, priority, width, height, text, images, audio
         case dateModified = "datemodified"
         case dateCreated = "datecreated"
         case areaID = "areaid"
         case locationID = "locationid"
-        case nearbyLabels = "nearbylabels"
+        case nearbyArtworks = "nearbylabels"
         case audioDescription = "audiodescription"
         case scanObjects = "3dscan"
     }

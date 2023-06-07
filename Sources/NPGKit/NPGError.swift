@@ -4,7 +4,7 @@ import Foundation
  NPGError covers errors encountered when using NPGKit.
  */
 enum NPGError: LocalizedError {
-    /// An invalid data format encountered, possibly when
+    /// Thrown when a string is expected - but not received - in a certain format.
     case invalidStringFormat(expectedFormat: String)
     
     var errorDescription: String? {
