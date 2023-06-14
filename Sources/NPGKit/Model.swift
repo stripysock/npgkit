@@ -7,10 +7,17 @@ import Foundation
  */
 internal struct FailableDecodable<Base: Decodable> : Decodable {
     let base: Base?
+    let error: Error?
 
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
-        self.base = try? container.decode(Base.self)
+        do {
+            self.base = try container.decode(Base.self)
+            self.error = nil
+        } catch {
+            self.base = nil
+            self.error = error
+        }
     }
 }
 
