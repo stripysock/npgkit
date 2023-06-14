@@ -109,11 +109,8 @@ public struct NPGLocation: NPGObject, Codable {
     /// All of the labels that appear within this location
     public var labelIDs: [Int]
     
-    /// Audio wayfinding entry, guiding the user from this location to another.
-    public var audioGuidance: [NPGAudio]
-    
-    /// Audio wayfinding entry, describing the features of this location.
-    public var audioDescription: [NPGAudio]
+    /// Audio for wayfinding. This could be guiding the user from this location to another (``NPGAudio.AudioContext.wayfinding``) or a description fo the area (``NPGAudio.AudioContext.audiodescription``).
+    public var audio: [NPGAudio]
 }
 
 /**
@@ -200,12 +197,9 @@ public struct NPGArtwork: NPGObject, Codable {
     /// Information on artworks physically near this one.
     public var nearbyArtworks: [Nearby]
     
-    /// An array of audio files that relate to the artwork. These may be artist interviews, critiques or information about the sitter.
+    /// An array of audio files that relate to the artwork.
     public var audio: [NPGAudio]
-    
-    /// An array of audio files that describe the features of the artwork.
-    public var audioDescription: [NPGAudio]
-    
+
     /// An array of 3D Objects to be used for detection by ARKit
     public var scanObjects: [NPG3DObject]
 }
@@ -252,11 +246,29 @@ public struct NPGImage: NPGFile {
 
 /// An audio file associated with an artwork.
 public struct NPGAudio: NPGFile, Codable {
+    /// The context in which an audio file should be used.
+    public enum AudioContext: String, Codable {
+        /// An interview with the subject or artist, usually contemporaneous to the associated artwork.
+        case intheirownwords
+        
+        /// Audio describing the assocatiated artwork or location.
+        case audiodescription
+        
+        /// Audio giving directions from one area or location to another.
+        case wayfinding
+        
+        /// Audio related to an artwork or location, but not fitting into ``intheirownwords`` or ``audiodescription``.
+        case generalaudio
+    }
+    
     /// The unique identifier of our file.
     public var id: Int
     
     /// When this file was last modified.
     public var dateModified: Date
+    
+    /// The context of the audio.
+    public var audioContext: AudioContext
     
     /// The title of the recording.
     public var title: String

@@ -6,8 +6,8 @@ import Combine
 final class NPGKitTests: XCTestCase {
     private var cancellables = Set<AnyCancellable>()
     
-    func testDataRetrieval() {
-        let expectation = XCTestExpectation(description: "Items load successfully")
+    func testArtworkRetrieval() {
+        let expectation = XCTestExpectation(description: "Artwork loads successfully")
         let npgKit = NPGKit()
         
         npgKit.$artworks
@@ -15,6 +15,8 @@ final class NPGKitTests: XCTestCase {
             .sink { artwork in
                 if !npgKit.artworks.isEmpty {
                     expectation.fulfill()
+                } else {
+                    print("No artworks yet...")
                 }
             }
             .store(in: &cancellables)
