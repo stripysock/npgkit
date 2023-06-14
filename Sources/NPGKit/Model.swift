@@ -32,6 +32,7 @@ internal struct NPGData: Decodable {
     var areas: [FailableDecodable<NPGArea>]
     var locations: [FailableDecodable<NPGLocation>]
     var labels: [FailableDecodable<NPGArtwork>]
+    var beacons: [FailableDecodable<NPGBeacon>]
 }
 
 /**
@@ -52,6 +53,39 @@ public protocol NPGObject: Hashable {
 /// A file referenced by our model.
 public protocol NPGFile: NPGObject {
     var url: URL { get }
+}
+
+/**
+ NPGBeacon represents a physical iBeacon within the gallery.
+ */
+public struct NPGBeacon: NPGObject, Codable {
+    
+    /// A unique identifier for this beacon.
+    public var id: Int
+    
+    /// Last modified date for this beacon.
+    public var dateModified: Date
+    
+    /// The proximity UUID associated with this beacon. Traditionally all beacons within the gallery shared a proximity ID and differentiated with the major/minor values, though this may change in futre.
+    public var proximityUUID: UUID
+    
+    /// The major value of the beacon.
+    public var major: Int
+    
+    /// The minor value of the beacon. Traditionally this has what has differentiated beacons within the gallery, though this may change in future.
+    public var minor: Int
+    
+    /// A name of an associated location (though not in the NPGLocation sense).
+    public var title: String
+    
+    /// An array of area IDs associated with this beacon.
+    public var areaIDs: [Int]
+    
+    /// An array of location IDs associated with this beacon.
+    public var locationIDs: [Int]
+    
+    /// An array of artwork IDs associated with this beacon.
+    public var artworkIDs: [Int]
 }
 
 

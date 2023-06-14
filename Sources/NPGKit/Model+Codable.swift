@@ -8,6 +8,17 @@ extension NPGObject {
     }
 }
 
+extension NPGBeacon {
+    enum CodingKeys: String, CodingKey {
+        case id, title, major, minor
+        case proximityUUID = "uuid"
+        case dateModified = "datemodified"
+        case areaIDs = "areas"
+        case locationIDs = "locations"
+        case artworkIDs = "labels"
+    }
+}
+
 extension NPGArea {
     enum CodingKeys: String, CodingKey {
         case id, title, subtitle, beacon, priority
