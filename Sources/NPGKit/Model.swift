@@ -7,10 +7,17 @@ import Foundation
  */
 internal struct FailableDecodable<Base: Decodable> : Decodable {
     let base: Base?
+    let error: Error?
 
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
-        self.base = try? container.decode(Base.self)
+        do {
+            self.base = try container.decode(Base.self)
+            self.error = nil
+        } catch {
+            self.base = nil
+            self.error = error
+        }
     }
 }
 
@@ -25,6 +32,7 @@ internal struct NPGData: Decodable {
     var areas: [FailableDecodable<NPGArea>]
     var locations: [FailableDecodable<NPGLocation>]
     var labels: [FailableDecodable<NPGArtwork>]
+    var beacons: [FailableDecodable<NPGBeacon>]
 }
 
 /**
@@ -45,6 +53,39 @@ public protocol NPGObject: Hashable {
 /// A file referenced by our model.
 public protocol NPGFile: NPGObject {
     var url: URL { get }
+}
+
+/**
+ NPGBeacon represents a physical iBeacon within the gallery.
+ */
+public struct NPGBeacon: NPGObject, Codable {
+    
+    /// A unique identifier for this beacon.
+    public var id: Int
+    
+    /// Last modified date for this beacon.
+    public var dateModified: Date
+    
+    /// The proximity UUID associated with this beacon. Traditionally all beacons within the gallery shared a proximity ID and differentiated with the major/minor values, though this may change in futre.
+    public var proximityUUID: UUID
+    
+    /// The major value of the beacon.
+    public var major: Int
+    
+    /// The minor value of the beacon. Traditionally this has what has differentiated beacons within the gallery, though this may change in future.
+    public var minor: Int
+    
+    /// A name of an associated location (though not in the NPGLocation sense).
+    public var title: String
+    
+    /// An array of area IDs associated with this beacon.
+    public var areaIDs: [Int]
+    
+    /// An array of location IDs associated with this beacon.
+    public var locationIDs: [Int]
+    
+    /// An array of artwork IDs associated with this beacon.
+    public var artworkIDs: [Int]
 }
 
 
@@ -109,11 +150,8 @@ public struct NPGLocation: NPGObject, Codable {
     /// All of the labels that appear within this location
     public var labelIDs: [Int]
     
-    /// Audio wayfinding entry, guiding the user from this location to another.
-    public var audioGuidance: [NPGAudio]
-    
-    /// Audio wayfinding entry, describing the features of this location.
-    public var audioDescription: [NPGAudio]
+    /// Audio for wayfinding. This could be guiding the user from this location to another (``NPGAudio.AudioContext.wayfinding``) or a description fo the area (``NPGAudio.AudioContext.audiodescription``).
+    public var audio: [NPGAudio]
 }
 
 /**
@@ -200,12 +238,9 @@ public struct NPGArtwork: NPGObject, Codable {
     /// Information on artworks physically near this one.
     public var nearbyArtworks: [Nearby]
     
-    /// An array of audio files that relate to the artwork. These may be artist interviews, critiques or information about the sitter.
+    /// An array of audio files that relate to the artwork.
     public var audio: [NPGAudio]
-    
-    /// An array of audio files that describe the features of the artwork.
-    public var audioDescription: [NPGAudio]
-    
+
     /// An array of 3D Objects to be used for detection by ARKit
     public var scanObjects: [NPG3DObject]
 }
@@ -252,11 +287,29 @@ public struct NPGImage: NPGFile {
 
 /// An audio file associated with an artwork.
 public struct NPGAudio: NPGFile, Codable {
+    /// The context in which an audio file should be used.
+    public enum AudioContext: String, Codable {
+        /// An interview with the subject or artist, usually contemporaneous to the associated artwork.
+        case intheirownwords
+        
+        /// Audio describing the assocatiated artwork or location.
+        case audiodescription
+        
+        /// Audio giving directions from one area or location to another.
+        case wayfinding
+        
+        /// Audio related to an artwork or location, but not fitting into ``intheirownwords`` or ``audiodescription``.
+        case generalaudio
+    }
+    
     /// The unique identifier of our file.
     public var id: Int
     
     /// When this file was last modified.
     public var dateModified: Date
+    
+    /// The context of the audio.
+    public var audioContext: AudioContext
     
     /// The title of the recording.
     public var title: String

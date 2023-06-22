@@ -29,6 +29,9 @@ public class NPGKit {
     /// A published collection of artwork on display within the NPG.
     @Published public var artworks: [NPGArtwork] = []
     
+    /// A published collection of location beacons used throughout the NPG.
+    @Published public var beacons: [NPGBeacon] = []
+    
     public init() {
         
     }
@@ -43,6 +46,7 @@ public class NPGKit {
             self.areas = npgData.areas.compactMap { $0.base }
             self.locations = npgData.locations.compactMap { $0.base }
             self.artworks = npgData.labels.compactMap { $0.base }
+            self.beacons = npgData.beacons.compactMap { $0.base }
         }
     }
 }

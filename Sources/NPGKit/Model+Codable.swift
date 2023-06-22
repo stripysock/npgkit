@@ -8,6 +8,17 @@ extension NPGObject {
     }
 }
 
+extension NPGBeacon {
+    enum CodingKeys: String, CodingKey {
+        case id, title, major, minor
+        case proximityUUID = "uuid"
+        case dateModified = "datemodified"
+        case areaIDs = "areas"
+        case locationIDs = "locations"
+        case artworkIDs = "labels"
+    }
+}
+
 extension NPGArea {
     enum CodingKeys: String, CodingKey {
         case id, title, subtitle, beacon, priority
@@ -19,12 +30,10 @@ extension NPGArea {
 
 extension NPGLocation {
     enum CodingKeys: String, CodingKey {
-        case id, title, subtitle, beacon, priority
+        case id, title, subtitle, beacon, priority, audio
         case dateModified = "datemodified"
         case areaID = "areaid"
         case labelIDs = "labels"
-        case audioDescription = "audiodescription"
-        case audioGuidance = "audioguidance"
     }
 }
 
@@ -36,7 +45,6 @@ extension NPGArtwork {
         case areaID = "areaid"
         case locationID = "locationid"
         case nearbyArtworks = "nearbylabels"
-        case audioDescription = "audiodescription"
         case scanObjects = "3dscan"
     }
 }
@@ -96,6 +104,7 @@ extension NPGAudio {
     enum CodingKeys: String, CodingKey {
         case id
         case dateModified = "datemodified"
+        case audioContext = "type"
         case title
         case duration
         case transcript
