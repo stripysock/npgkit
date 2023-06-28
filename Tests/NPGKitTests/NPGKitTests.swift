@@ -9,6 +9,7 @@ final class NPGKitTests: XCTestCase {
     func testArtworkRetrieval() {
         let artworkExpectation = XCTestExpectation(description: "Artwork loads successfully")
         let beaconExpectation = XCTestExpectation(description: "Beacons load successfully")
+        let locationExpectation = XCTestExpectation(description: "Locations load successfully")
         
         let npgKit = NPGKit()
         
@@ -20,6 +21,18 @@ final class NPGKitTests: XCTestCase {
                     artworkExpectation.fulfill()
                 } else {
                     print("No artworks yet...")
+                }
+            }
+            .store(in: &cancellables)
+        
+        npgKit.$locations
+            .receive(on: RunLoop.main)
+            .sink { locations in
+                if !npgKit.locations.isEmpty {
+                    print("Haz locations!")
+                    locationExpectation.fulfill()
+                } else {
+                    print("No locations yet...")
                 }
             }
             .store(in: &cancellables)
@@ -45,6 +58,6 @@ final class NPGKitTests: XCTestCase {
             }
         }
         
-        wait(for: [artworkExpectation,beaconExpectation], timeout: 15)
+        wait(for: [artworkExpectation,beaconExpectation, locationExpectation], timeout: 15)
     }
 }

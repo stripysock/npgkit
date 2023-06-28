@@ -45,7 +45,7 @@ internal enum NPGBool: String, Codable {
 
 // MARK: Public Items
 
-public protocol NPGObject: Hashable {
+public protocol NPGObject: Equatable {
     var id: Int { get }
     var dateModified: Date { get }
 }
@@ -288,7 +288,7 @@ public struct NPGImage: NPGFile {
 /// An audio file associated with an artwork.
 public struct NPGAudio: NPGFile, Codable {
     /// The context in which an audio file should be used.
-    public enum AudioContext: String, Codable {
+    public enum AudioContext: Codable, Equatable {
         /// An interview with the subject or artist, usually contemporaneous to the associated artwork.
         case intheirownwords
         
@@ -296,7 +296,7 @@ public struct NPGAudio: NPGFile, Codable {
         case audiodescription
         
         /// Audio giving directions from one area or location to another.
-        case wayfinding
+        case wayfinding(targetareaID: Int? = nil, targetlocationID: Int? = nil)
         
         /// Audio related to an artwork or location, but not fitting into ``intheirownwords`` or ``audiodescription``.
         case generalaudio
