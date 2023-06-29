@@ -106,8 +106,8 @@ public struct NPGArea: NPGObject, Codable {
     /// An optional subtitle for this area.
     public var subtitle: String?
     
-    /// A becaon identifier associated with this area.
-    public var beacon: String?
+    /// A beacon identifier associated with this area.
+    public var beaconID: Int?
     
     /// Sort priority
     public var priority: Int
@@ -141,8 +141,8 @@ public struct NPGLocation: NPGObject, Codable {
     /// An optional text of a label that may appear at the entrance to the space.
     public var content: String?
     
-    /// A becaon identifier associated with this location.
-    public var beacon: String?
+    /// A beacon identifier associated with this location.
+    public var beaconID: Int?
     
     /// Sort priority.
     public var priority: Int
@@ -218,7 +218,7 @@ public struct NPGArtwork: NPGObject, Codable {
     public var locationID: Int?
     
     /// The ID of the beacon associated with this artwork. If empty, use the beacon associated with the area or location.
-    public var beacon: String?
+    public var beaconID: Int?
     
     /// Sort priority. This may be used to passively encourage a particular visitor flow and may not seem to have any logical reason.
     public var priority: Int
