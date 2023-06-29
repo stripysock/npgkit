@@ -21,31 +21,34 @@ extension NPGBeacon {
 
 extension NPGArea {
     enum CodingKeys: String, CodingKey {
-        case id, title, subtitle, beacon, priority
+        case id, title, subtitle, priority
         case dateModified = "datemodified"
         case locationIDs = "locations"
         case labelIDs = "labels"
+        case beaconID = "beaconid"
     }
 }
 
 extension NPGLocation {
     enum CodingKeys: String, CodingKey {
-        case id, title, subtitle, beacon, priority, audio
+        case id, title, subtitle, priority, audio
         case dateModified = "datemodified"
         case areaID = "areaid"
         case labelIDs = "labels"
+        case beaconID = "beaconid"
     }
 }
 
 extension NPGArtwork {
     enum CodingKeys: String, CodingKey {
-        case id, title, subtitle, beacon, priority, width, height, text, images, audio
+        case id, title, subtitle, priority, width, height, text, images, audio
         case dateModified = "datemodified"
         case dateCreated = "datecreated"
         case areaID = "areaid"
         case locationID = "locationid"
         case nearbyArtworks = "nearbylabels"
         case scanObjects = "3dscan"
+        case beaconID = "beaconid"
     }
 }
 
