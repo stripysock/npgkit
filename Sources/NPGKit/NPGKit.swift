@@ -3,6 +3,7 @@ import Combine
 
 @available(iOS 15.0, *)
 @available(macOS 12.0, *)
+@available(tvOS 16.0, *)
 public class NPGKit {
     private let session: URLSession = {
         let configuration = URLSessionConfiguration.default
