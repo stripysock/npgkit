@@ -47,7 +47,7 @@ extension NPGArea {
     }
 }
 
-extension NPGLocation {
+extension NPGArea.Location {
     enum CodingKeys: String, CodingKey {
         case id, title, subtitle, priority, audio
         case dateModified = "datemodified"

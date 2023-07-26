@@ -24,13 +24,16 @@ public class NPGKit {
     @Published public var areas: [NPGArea] = []
     
     /// A published collection of locations with the NPG. Use a location's ``areaID`` to determine the associated area.
-    @Published public var locations: [NPGLocation] = []
+    @Published public var locations: [NPGArea.Location] = []
     
     /// A published collection of artwork on display within the NPG.
     @Published public var artworks: [NPGArtwork] = []
     
     /// A published collection of location beacons used throughout the NPG.
     @Published public var beacons: [NPGBeacon] = []
+    
+    /// A published collection of tours offered within (and possibly beyond) the National Portrait Gallery.
+    @Published public var tours: [NPGTour] = []
     
     public init() {
         
@@ -47,6 +50,7 @@ public class NPGKit {
             self.locations = npgData.locations.compactMap { $0.base }
             self.artworks = npgData.labels.compactMap { $0.base }
             self.beacons = npgData.beacons.compactMap { $0.base }
+            self.tours = npgData.tours.compactMap { $0.base }
         }
     }
 }

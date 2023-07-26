@@ -30,7 +30,7 @@ internal struct NPGData: Decodable {
     
     var title: Metadata
     var areas: [FailableDecodable<NPGArea>]
-    var locations: [FailableDecodable<NPGLocation>]
+    var locations: [FailableDecodable<NPGArea.Location>]
     var labels: [FailableDecodable<NPGArtwork>]
     var beacons: [FailableDecodable<NPGBeacon>]
 }
@@ -155,6 +155,41 @@ public struct NPGBeacon: NPGObject, Codable {
  For example, the area for Portrait 23 encompasses the locations "Gallery 4", "Gallery 5", "Gallery 6", "Gallery 6 Nook 1" and "Gallery 6 Nook 2".
  */
 public struct NPGArea: NPGObject, Codable {
+    /**
+     NPGArea.Location represents a given contiguous area within the Gallery. This might be an entire Gallery space (i.e. Gallery 2), an alcove, or even a wall.
+     */
+    public struct Location: NPGObject, Codable {
+        /// A unique identifier for this location.
+        public var id: Int
+        
+        /// The ID of the ``NPGArea`` that encompasses this location.
+        public var areaID: Int
+        
+        /// Last modified date for this area.
+        public var dateModified: Date
+        
+        /// A title for this location, for instance, "Gallery 2"
+        public var title: String
+        
+        /// An optional subtitle for this location, for instance, "Emerging Artists"
+        public var subtitle: String?
+        
+        /// An optional text of a label that may appear at the entrance to the space.
+        public var content: String?
+        
+        /// A beacon identifier associated with this location.
+        public var beaconID: Int?
+        
+        /// Sort priority.
+        public var priority: Int
+        
+        /// All of the labels that appear within this location
+        public var labelIDs: [Int]
+        
+        /// Audio for wayfinding. This could be guiding the user from this location to another (``NPGAudio.AudioContext.wayfinding``) or a description fo the area (``NPGAudio.AudioContext.audiodescription``).
+        public var audio: [NPGAudio]
+    }
+    
     /// A unique identifier for this area.
     public var id: Int
     
@@ -178,41 +213,6 @@ public struct NPGArea: NPGObject, Codable {
     
     /// All of the labels that appear within the entire area.
     public var labelIDs: [Int]
-}
-
-/**
- NPGLocation represents a given contiguous area within the Gallery. This might be an entire Gallery space (i.e. Gallery 2), an alcove, or even a wall.
- */
-public struct NPGLocation: NPGObject, Codable {
-    /// A unique identifier for this location.
-    public var id: Int
-    
-    /// The ID of the ``NPGArea`` that encompasses this location.
-    public var areaID: Int
-    
-    /// Last modified date for this area.
-    public var dateModified: Date
-    
-    /// A title for this location, for instance, "Gallery 2"
-    public var title: String
-    
-    /// An optional subtitle for this location, for instance, "Emerging Artists"
-    public var subtitle: String?
-    
-    /// An optional text of a label that may appear at the entrance to the space.
-    public var content: String?
-    
-    /// A beacon identifier associated with this location.
-    public var beaconID: Int?
-    
-    /// Sort priority.
-    public var priority: Int
-    
-    /// All of the labels that appear within this location
-    public var labelIDs: [Int]
-    
-    /// Audio for wayfinding. This could be guiding the user from this location to another (``NPGAudio.AudioContext.wayfinding``) or a description fo the area (``NPGAudio.AudioContext.audiodescription``).
-    public var audio: [NPGAudio]
 }
 
 /**
@@ -349,6 +349,7 @@ public struct NPGImage: NPGFile {
 /// An audio file associated with an artwork.
 public struct NPGAudio: NPGFile, Codable {
     /// The context in which an audio file should be used.
+    /// TODO: Decoder is no longer decoding string values for below
     public enum AudioContext: Codable, Equatable {
         /// An interview with the subject or artist, usually contemporaneous to the associated artwork.
         case intheirownwords
