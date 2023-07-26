@@ -33,6 +33,7 @@ internal struct NPGData: Decodable {
     var locations: [FailableDecodable<NPGArea.Location>]
     var labels: [FailableDecodable<NPGArtwork>]
     var beacons: [FailableDecodable<NPGBeacon>]
+    var tours: [FailableDecodable<NPGTour>]
 }
 
 /**
