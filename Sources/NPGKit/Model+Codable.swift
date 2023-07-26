@@ -8,6 +8,24 @@ extension NPGObject {
     }
 }
 
+extension NPGTour {
+    enum CodingKeys: String, CodingKey {
+        case id, title, subtitle, priority, audio
+        case dateModified = "datemodified"
+        case beaconID = "beaconid"
+        case tourStopIDs = "tourstops"
+    }
+}
+
+extension NPGTour.TourStop {
+    enum CodingKeys: String, CodingKey {
+        case id, title, subtitle, content, priority, audio
+        case dateModified = "datemodified"
+        case beaconID = "beaconid"
+        case labelIDs = "labels"
+    }
+}
+
 extension NPGBeacon {
     enum CodingKeys: String, CodingKey {
         case id, title, major, minor

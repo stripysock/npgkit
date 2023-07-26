@@ -56,6 +56,67 @@ public protocol NPGFile: NPGObject {
 }
 
 /**
+ NPGTour represents a self-guided tour or pre-determined path through the gallery.
+ */
+public struct NPGTour: NPGObject, Codable {
+    /**
+     TourStop represents a particular stop on an ``NPGTour``.
+     */
+    public struct TourStop: NPGObject, Codable {
+        /// A unique identifier for this tour stop.
+        public var id: Int
+        
+        /// Last modified date for this tour stop..
+        public var dateModified: Date
+        
+        /// The name of the tour stop.
+        public var title: String
+        
+        /// A subtitle, catch-phrase or second-half of a colonic title. Yep, that's a thing. Bing it.
+        public var subtitle: String?
+        
+        /// Additional textual content to be displayed.
+        public var content: String?
+        
+        /// A beacon identifier associated with this tour stop.
+        public var beaconID: Int
+        
+        /// Sort priority
+        public var priority: Int
+        
+        /// All of the labels that appear within this tour stop.
+        public var labelIDs: [Int]
+        
+        /// Audio tracks associated with this tour stop.
+        public var audio: [NPGAudio]
+    }
+    
+    /// A unique identifier for this tour.
+    public var id: Int
+    
+    /// Last modified date for this tour.
+    public var dateModified: Date
+    
+    /// The name of the tour.
+    public var title: String
+    
+    /// A subtitle, catch-phrase or second-half of a colonic title. Yep, that's a thing. Bing it.
+    public var subtitle: String?
+    
+    /// A beacon identifier associated with this tour. This would be used to kick off the tour.
+    public var beaconID: Int?
+    
+    /// Sort priority
+    public var priority: Int
+    
+    /// Audio tracks that introduce the tour.
+    public var audio: [NPGAudio]
+    
+    /// IDs of the tour stops along this particular tour.
+    public var tourStopIDs: [Int]
+}
+
+/**
  NPGBeacon represents a physical iBeacon within the gallery.
  */
 public struct NPGBeacon: NPGObject, Codable {
