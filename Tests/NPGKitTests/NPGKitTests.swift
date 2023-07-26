@@ -5,17 +5,14 @@ import Combine
 @available(iOS 15.0, *)
 final class NPGKitTests: XCTestCase {
     private var cancellables = Set<AnyCancellable>()
+    private let npgKit = NPGKit()
     
     func testArtworkRetrieval() {
         let artworkExpectation = XCTestExpectation(description: "Artwork loads successfully")
-        let beaconExpectation = XCTestExpectation(description: "Beacons load successfully")
-        let locationExpectation = XCTestExpectation(description: "Locations load successfully")
-        
-        let npgKit = NPGKit()
         
         npgKit.$artworks
             .receive(on: RunLoop.main)
-            .sink { artwork in
+            .sink { [npgKit] artwork in
                 if !npgKit.artworks.isEmpty {
                     print("Haz artworks!")
                     artworkExpectation.fulfill()
@@ -24,10 +21,66 @@ final class NPGKitTests: XCTestCase {
                 }
             }
             .store(in: &cancellables)
+             
+        Task {
+            do {
+                try await npgKit.refreshData()
+                
+            } catch {
+                XCTFail(error.localizedDescription)
+            }
+        }
+        
+        wait(for: [artworkExpectation], timeout: 8)
+    }
+    
+    func testTourRetrieval() {
+        let tourExpectation = XCTestExpectation(description: "Tours load successfully")
+        
+        npgKit.$artworks
+            .receive(on: RunLoop.main)
+            .sink { [npgKit] artwork in
+                if !npgKit.tours.isEmpty {
+                    print("Haz tours!")
+                    tourExpectation.fulfill()
+                } else {
+                    print("No tours yet...")
+                }
+            }
+            .store(in: &cancellables)
+             
+        Task {
+            do {
+                try await npgKit.refreshData()
+                
+            } catch {
+                XCTFail(error.localizedDescription)
+            }
+        }
+        
+        wait(for: [tourExpectation], timeout: 8)
+    }
+    
+    func testLocationRetrieval() {
+        let beaconExpectation = XCTestExpectation(description: "Beacons load successfully")
+        let areaExpectation = XCTestExpectation(description: "Areas load successfully")
+        let locationExpectation = XCTestExpectation(description: "Locations load successfully")
+        
+        npgKit.$areas
+            .receive(on: RunLoop.main)
+            .sink { [npgKit] areas in
+                if !npgKit.areas.isEmpty {
+                    print("Haz areas!")
+                    areaExpectation.fulfill()
+                } else {
+                    print("No areas yet...")
+                }
+            }
+            .store(in: &cancellables)
         
         npgKit.$locations
             .receive(on: RunLoop.main)
-            .sink { locations in
+            .sink { [npgKit] locations in
                 if !npgKit.locations.isEmpty {
                     print("Haz locations!")
                     locationExpectation.fulfill()
@@ -39,7 +92,7 @@ final class NPGKitTests: XCTestCase {
         
         npgKit.$beacons
             .receive(on: RunLoop.main)
-            .sink { beacons in
+            .sink { [npgKit] beacons in
                 if !npgKit.beacons.isEmpty {
                     print("Haz beacons!")
                     beaconExpectation.fulfill()
@@ -58,6 +111,6 @@ final class NPGKitTests: XCTestCase {
             }
         }
         
-        wait(for: [artworkExpectation,beaconExpectation, locationExpectation], timeout: 15)
+        wait(for: [beaconExpectation, areaExpectation, locationExpectation], timeout: 8)
     }
 }
