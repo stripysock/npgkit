@@ -13,7 +13,7 @@ extension NPGTour {
         case id, title, subtitle, priority, audio
         case dateModified = "datemodified"
         case beaconID = "beaconid"
-        case tourStopIDs = "tourstops"
+        case tourStops = "tourstops"
     }
 }
 

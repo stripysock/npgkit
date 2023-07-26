@@ -113,8 +113,8 @@ public struct NPGTour: NPGObject, Codable {
     /// Audio tracks that introduce the tour.
     public var audio: [NPGAudio]
     
-    /// IDs of the tour stops along this particular tour.
-    public var tourStopIDs: [Int]
+    /// The tour stops along this particular tour.
+    public var tourStops: [TourStop]
 }
 
 /**
@@ -351,7 +351,7 @@ public struct NPGImage: NPGFile {
 public struct NPGAudio: NPGFile, Codable {
     /// The context in which an audio file should be used.
     /// TODO: Decoder is no longer decoding string values for below
-    public enum AudioContext: Codable, Equatable {
+    public enum AudioContext: String, Equatable, Codable {
         /// An interview with the subject or artist, usually contemporaneous to the associated artwork.
         case intheirownwords
         
@@ -359,7 +359,7 @@ public struct NPGAudio: NPGFile, Codable {
         case audiodescription
         
         /// Audio giving directions from one area or location to another.
-        case wayfinding(targetareaID: Int? = nil, targetlocationID: Int? = nil)
+        case wayfinding
         
         /// Audio related to an artwork or location, but not fitting into ``intheirownwords`` or ``audiodescription``.
         case generalaudio
