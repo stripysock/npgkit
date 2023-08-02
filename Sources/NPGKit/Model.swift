@@ -46,7 +46,7 @@ internal enum NPGBool: String, Codable {
 
 // MARK: Public Items
 
-public protocol NPGObject: Equatable {
+public protocol NPGObject: Hashable, Identifiable {
     var id: Int { get }
     var dateModified: Date { get }
 }
