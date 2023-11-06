@@ -44,6 +44,7 @@ extension NPGArea {
         case locationIDs = "locations"
         case labelIDs = "labels"
         case beaconID = "beaconid"
+        case externalCoordinates = "gpscoordinates"
     }
 }
 

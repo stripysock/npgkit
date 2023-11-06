@@ -57,6 +57,16 @@ public protocol NPGFile: NPGObject {
 }
 
 /**
+ NPGCoordinates acts as a container for latitude/longitude values, (presumably) using the WGS 84 reference frame.
+ 
+ Consider extending this struct to export `CLLocationCoordinate2D` or equivalent as required for your implementation.
+ */
+public struct NPGCoordinates: Hashable, Codable {
+    var latitude: Double
+    var longitude: Double
+}
+
+/**
  NPGTour represents a self-guided tour or pre-determined path through the gallery.
  */
 public struct NPGTour: NPGObject, Codable {
@@ -214,6 +224,9 @@ public struct NPGArea: NPGObject, Codable {
     
     /// All of the labels that appear within the entire area.
     public var labelIDs: [Int]
+    
+    /// If the area is external to the gallery (for instance, a touring exhibition), the lat/long coordinates.
+    public var externalCoordinates: NPGCoordinates?
 }
 
 /**
