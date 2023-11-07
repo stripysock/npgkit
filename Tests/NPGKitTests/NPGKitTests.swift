@@ -14,7 +14,7 @@ final class NPGKitTests: XCTestCase {
             .receive(on: RunLoop.main)
             .sink { [npgKit] artwork in
                 if !npgKit.artworks.isEmpty {
-                    print("Haz artworks!")
+                    print("Haz \(artwork.count) artworks!")
                     artworkExpectation.fulfill()
                 } else {
                     print("No artworks yet...")
