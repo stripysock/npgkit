@@ -93,8 +93,27 @@ extension NPGImage: Codable {
         let scanningOnly = try container.decode(NPGBool.self, forKey: .scanningOnly)
         self.scanningOnly = scanningOnly.bool
         
-        self.width = try container.decode(Double.self, forKey: .width)
-        self.height = try container.decode(Double.self, forKey: .height)
+        if let widthDouble = try? container.decode(Double.self, forKey: .width) {
+            self.width = widthDouble
+        } else {
+            let widthString = try container.decode(String.self, forKey: .width)
+            guard let widthDouble = Double(widthString) else {
+                let context = DecodingError.Context(codingPath: [CodingKeys.width], debugDescription: "Expected double.")
+                throw(DecodingError.typeMismatch(String.self, context))
+            }
+            self.width = widthDouble
+        }
+        
+        if let heightDouble = try? container.decode(Double.self, forKey: .height) {
+            self.height = heightDouble
+        } else {
+            let heightString = try container.decode(String.self, forKey: .height)
+            guard let heightDouble = Double(heightString) else {
+                let context = DecodingError.Context(codingPath: [CodingKeys.height], debugDescription: "Expected double.")
+                throw(DecodingError.typeMismatch(String.self, context))
+            }
+            self.height = heightDouble
+        }
         
         if let cropString = try container.decodeIfPresent(String.self, forKey: .subjectCrop) {
             self.subjectCrop = try CropSize(string: cropString)
