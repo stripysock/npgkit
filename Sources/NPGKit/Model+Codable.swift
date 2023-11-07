@@ -79,9 +79,9 @@ extension NPGImage: Codable {
         case width
         case height
         case subjectCrop = "cropsquare"
-        case url = "largeURL"
-        case thumbnailURL = "smallURL"
-        case squareURL
+        case url = "fileURL"
+        case thumbnailURL = "thickURL"
+        case squareURL = "doublesquareURL"
     }
     
     public init(from decoder: Decoder) throws {
