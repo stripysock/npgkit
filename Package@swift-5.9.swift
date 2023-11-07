@@ -20,7 +20,9 @@ let package = Package(
     targets: [
         .target(
             name: "NPGKit",
-            dependencies: []),
+            dependencies: [],
+            resources: [.process("Resources")]
+        ),
         .testTarget(
             name: "NPGKitTests",
             dependencies: ["NPGKit"]),
