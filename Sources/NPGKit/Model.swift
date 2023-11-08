@@ -240,6 +240,7 @@ public struct NPGArtwork: NPGObject, Codable {
         public enum LabelType: String, Codable, Hashable {
             case caption
             case label
+            case biography
         }
         
         /// The type of label that this item represents.
@@ -410,4 +411,84 @@ public struct NPG3DObject: NPGFile, Codable {
     
     /// The publicly accessible URL of the file.
     public var url: URL
+}
+
+/**
+ NPGEntity represents a person or group, apperaing as either a sitter or artist.
+ */
+public struct NPGEntity: NPGObject, Codable {
+    
+    /// A unique identifier for this entity.
+    public var id: Int
+    
+    /// Last modified date for this entity.
+    public var dateModified: Date
+    
+    /**
+     The entity's name as it is usually displayed within the gallery. For an individual this would include the given and family names as structured by their culture, and would include any titles or honorifics. For collectives this would simply be the registered / official name.
+     
+     ## Examples
+     * Drusilla Modjeska
+     * Lan Wang
+     * Charles Richard Bone
+     * Dame Helen Blaxland DBE
+     * Midnight Oil
+     * Montalbetti + Campbell
+     */
+    public var displayName: String
+    
+    /**
+     An alternative to ``displayName`` that omits any titles or honorifics, and may also drop additional (secondary) names.
+     For collectives, or when the result is no different to the ``displayName``, this should be left as nil.
+     
+     ## Examples
+     * Charles Bone
+     * Helen Blaxland
+     
+     ### See Also
+     ``displayName``
+     */
+    public var simpleName: String?
+    
+    /**
+     An array of an individiual's given names.
+     For collectives this should be left as nil.
+     
+     ## Examples
+     * Drusilla
+     * Wang
+     * Charles, Richard
+     * Helen
+     
+     ### See Also
+     ``displayName``
+     */
+    public var givenNames: [String]?
+    
+    /**
+     An array of an individiual's family names.
+     For collectives this should be left as nil.
+     
+     ## Examples
+     * Modjeska
+     * Lan
+     * Bone
+     * Blaxland
+     
+     ### See Also
+     ``displayName``
+     */
+    public var familyNames: [String]?
+    
+    /// A collection of  text related to the entity.
+    public var text: [NPGArtwork.LabelText]
+    
+    /// Audio tracks associated with this entity.
+    public var audio: [NPGAudio]
+    
+    /// An array of artwork IDs where this entity appears as the subject.
+    public var artworkAsSubjectIDs: [Int]
+    
+    /// An array of artwork IDs where this entity is credited as the artist.
+    public var artworkAsArtistIDs: [Int]
 }

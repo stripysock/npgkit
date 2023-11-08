@@ -160,3 +160,16 @@ extension NPG3DObject {
         case url = "fileURL"
     }
 }
+
+extension NPGEntity {
+    enum CodingKeys: String, CodingKey {
+        case id, text, audio
+        case dateModified = "datemodified"
+        case displayName = "displayname"
+        case simpleName = "simplename"
+        case givenNames = "givennames"
+        case familyNames = "familynames"
+        case artworkAsSubjectIDs = "subjectlabels"
+        case artworkAsArtistIDs = "artistlabels"
+    }
+}
