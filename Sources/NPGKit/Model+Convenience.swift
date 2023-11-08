@@ -10,6 +10,13 @@ extension NPGBool {
     }
 }
 
+extension NPGArtwork {
+    /// The size of the artwork in centimetres.
+    public var size: CGSize {
+        .init(width: width, height: height)
+    }
+}
+
 extension NPGImage {
     public var size: CGSize {
         .init(width: width, height: height)

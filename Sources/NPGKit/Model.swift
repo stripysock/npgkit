@@ -298,10 +298,10 @@ public struct NPGArtwork: NPGObject, Codable {
     /// Sort priority. This may be used to passively encourage a particular visitor flow and may not seem to have any logical reason.
     public var priority: Int
     
-    /// Use convenience ``size`` instead.
+    /// Width in centimetres. Use convenience ``size`` instead.
     var width: Double
     
-    /// Use convenience ``size`` instead.
+    /// Height in centimetres. Use convenience ``size`` instead.
     var height: Double
     
     /// A collection of label text related to the artwork.
