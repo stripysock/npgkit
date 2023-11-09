@@ -11,6 +11,11 @@ extension NPGArea {
         }
         return "\(beaconID)"
     }
+    
+    @available(swift, deprecated: 1.0.8, renamed: "artworkIDs")
+    var labelIDs: [Int] {
+        return artworkIDs
+    }
 }
 
 @available(swift, deprecated: 1.0.2, renamed: "NPGArea.Location")
@@ -24,6 +29,11 @@ extension NPGArea.Location {
         }
         return "\(beaconID)"
     }
+    
+    @available(swift, deprecated: 1.0.8, renamed: "artworkIDs")
+    var labelIDs: [Int] {
+        return artworkIDs
+    }
 }
 
 extension NPGArtwork {
@@ -33,5 +43,12 @@ extension NPGArtwork {
             return nil
         }
         return "\(beaconID)"
+    }
+}
+
+extension NPGTour.TourStop {
+    @available(swift, deprecated: 1.0.8, renamed: "artworkIDs")
+    var labelIDs: [Int] {
+        return artworkIDs
     }
 }

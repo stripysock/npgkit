@@ -95,8 +95,8 @@ public struct NPGTour: NPGObject, Codable {
         /// Sort priority
         public var priority: Int
         
-        /// All of the labels that appear within this tour stop.
-        public var labelIDs: [Int]
+        /// IDs of all of the labels that appear within this tour stop.
+        public var artworkIDs: [Int]
         
         /// Audio tracks associated with this tour stop.
         public var audio: [NPGAudio]
@@ -194,8 +194,8 @@ public struct NPGArea: NPGObject, Codable {
         /// Sort priority.
         public var priority: Int
         
-        /// All of the labels that appear within this location
-        public var labelIDs: [Int]
+        /// IDs of all of the labels that appear within this location
+        public var artworkIDs: [Int]
         
         /// Audio for wayfinding. This could be guiding the user from this location to another (``NPGAudio.AudioContext.wayfinding``) or a description fo the area (``NPGAudio.AudioContext.audiodescription``).
         public var audio: [NPGAudio]
@@ -219,11 +219,11 @@ public struct NPGArea: NPGObject, Codable {
     /// Sort priority
     public var priority: Int
     
-    /// All of the locations encapsulated by this area.
+    /// IDs of all of the locations encapsulated by this area.
     public var locationIDs: [Int]
     
-    /// All of the labels that appear within the entire area.
-    public var labelIDs: [Int]
+    /// IDs of all of the labels that appear within the entire area.
+    public var artworkIDs: [Int]
     
     /// If the area is external to the gallery (for instance, a touring exhibition), the lat/long coordinates.
     public var externalCoordinates: NPGCoordinates?
