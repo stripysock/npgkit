@@ -364,8 +364,7 @@ public struct NPGImage: NPGFile {
 /// An audio file associated with an artwork.
 public struct NPGAudio: NPGFile, Codable {
     /// The context in which an audio file should be used.
-    /// TODO: Decoder is no longer decoding string values for below
-    public enum AudioContext: String, Equatable, Codable {
+    public enum AudioContext: String, Equatable, Codable, Comparable {
         /// An interview with the subject or artist, usually contemporaneous to the associated artwork.
         case intheirownwords
         
