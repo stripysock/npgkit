@@ -22,7 +22,7 @@ extension NPGTour.TourStop {
         case id, title, subtitle, content, priority, audio
         case dateModified = "datemodified"
         case beaconID = "beaconid"
-        case labelIDs = "labels"
+        case artworkIDs = "labels"
     }
 }
 
@@ -42,7 +42,7 @@ extension NPGArea {
         case id, title, subtitle, priority
         case dateModified = "datemodified"
         case locationIDs = "locations"
-        case labelIDs = "labels"
+        case artworkIDs = "labels"
         case beaconID = "beaconid"
         case externalCoordinates = "gpscoordinates"
     }
@@ -53,7 +53,7 @@ extension NPGArea.Location {
         case id, title, subtitle, priority, audio
         case dateModified = "datemodified"
         case areaID = "areaid"
-        case labelIDs = "labels"
+        case artworkIDs = "labels"
         case beaconID = "beaconid"
     }
 }
@@ -158,5 +158,18 @@ extension NPG3DObject {
         case id
         case dateModified = "datemodified"
         case url = "fileURL"
+    }
+}
+
+extension NPGEntity {
+    enum CodingKeys: String, CodingKey {
+        case id, text, audio
+        case dateModified = "datemodified"
+        case displayName = "displayname"
+        case simpleName = "simplename"
+        case givenNames = "givennames"
+        case familyNames = "familynames"
+        case artworkAsSubjectIDs = "subjectlabels"
+        case artworkAsArtistIDs = "artistlabels"
     }
 }
