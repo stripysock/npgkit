@@ -364,7 +364,7 @@ public struct NPGImage: NPGFile {
 /// An audio file associated with an artwork.
 public struct NPGAudio: NPGFile, Codable {
     /// The context in which an audio file should be used.
-    public enum AudioContext: String, Equatable, Codable, Comparable {
+    public enum AudioContext: String, Equatable, Codable {
         /// An interview with the subject or artist, usually contemporaneous to the associated artwork.
         case intheirownwords
         
@@ -414,6 +414,8 @@ public struct NPG3DObject: NPGFile, Codable {
 
 /**
  NPGEntity represents a person or group, apperaing as either a sitter or artist.
+ 
+ Note that as of 1.0.8 these entities **are not** being retrieved, and instead are a proposed structure for future implmentation.
  */
 public struct NPGEntity: NPGObject, Codable {
     

@@ -26,7 +26,21 @@ extension NPGArea.Location: Comparable {
 
 extension NPGArtwork: Comparable {
     public static func < (lhs: NPGArtwork, rhs: NPGArtwork) -> Bool {
-        lhs.priority < rhs.priority
+        if let lhsLocationID = lhs.locationID, let rhsLocationID = rhs.locationID {
+            if lhsLocationID != rhsLocationID {
+                return lhsLocationID < rhsLocationID
+            }
+        }
+        
+        if lhs.areaID != rhs.areaID {
+            return lhs.areaID < rhs.areaID
+        }
+        
+        if lhs.priority != rhs.priority {
+            return lhs.priority < rhs.priority
+        }
+        
+        return lhs.title < rhs.title
     }
 }
 
@@ -42,6 +56,12 @@ extension NPGAudio: Comparable {
             return lhs.audioContext < rhs.audioContext
         }
         return lhs.title < rhs.title
+    }
+}
+
+extension NPGAudio.AudioContext: Comparable {
+    public static func < (lhs: NPGAudio.AudioContext, rhs: NPGAudio.AudioContext) -> Bool {
+        return lhs.rawValue < rhs.rawValue
     }
 }
 

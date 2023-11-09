@@ -34,6 +34,49 @@ final class NPGKitTests: XCTestCase {
         wait(for: [artworkExpectation], timeout: 8)
     }
     
+    func testArtworkSorting() {
+        let artworkCountExpectation = XCTestExpectation(description: "More than one artwork is retrieved")
+        let artworkSortExpectation = XCTestExpectation(description: "Artwork sorts successfully")
+        
+        npgKit.$artworks
+            .receive(on: RunLoop.main)
+            .sink { [npgKit] artwork in
+                if !npgKit.artworks.isEmpty {
+                    
+                    if npgKit.artworks.count > 1 {
+                        print("Haz \(artwork.count) artworks!")
+                        artworkCountExpectation.fulfill()
+                    } else {
+                        XCTFail("Didn't retrieve enough artworks")
+                    }
+                    
+                    let sorted = npgKit.artworks.sorted()
+                    
+                    // visually inspect sorted items with latest sorting logic
+                    print(sorted[0])
+                    print(sorted[1])
+                    
+                    artworkSortExpectation.fulfill()
+                    
+                    
+                } else {
+                    print("No artworks yet...")
+                }
+            }
+            .store(in: &cancellables)
+             
+        Task {
+            do {
+                try await npgKit.refreshData()
+                
+            } catch {
+                XCTFail(error.localizedDescription)
+            }
+        }
+        
+        wait(for: [artworkCountExpectation,artworkSortExpectation], timeout: 8)
+    }
+    
     func testTourRetrieval() {
         let tourExpectation = XCTestExpectation(description: "Tours load successfully")
         
