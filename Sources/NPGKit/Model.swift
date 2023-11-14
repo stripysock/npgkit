@@ -22,9 +22,9 @@ internal struct FailableDecodable<Base: Decodable> : Decodable {
 }
 
 public struct NPGMetadata: Codable {
-    var title: String
-    var subtitle: String
-    var intro: String
+    public var title: String
+    public var subtitle: String
+    public var intro: String
 }
 
 internal struct NPGData: Decodable {
