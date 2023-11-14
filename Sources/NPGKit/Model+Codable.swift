@@ -8,6 +8,14 @@ extension NPGObject {
     }
 }
 
+extension NPGData {
+    enum CodingKeys: String, CodingKey {
+        case areas, locations, beacons, tours
+        case artworks = "labels"
+        case metadata = "title"
+    }
+}
+
 extension NPGTour {
     enum CodingKeys: String, CodingKey {
         case id, title, subtitle, priority, audio
