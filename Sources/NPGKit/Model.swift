@@ -21,19 +21,21 @@ internal struct FailableDecodable<Base: Decodable> : Decodable {
     }
 }
 
+public struct NPGMetadata: Codable {
+    var title: String
+    var subtitle: String
+    var intro: String
+}
+
 internal struct NPGData: Decodable {
-    public struct Metadata: Decodable {
-        var title: String
-        var subtitle: String
-        var intro: String
-    }
     
-    var title: Metadata
+    var metadata: NPGMetadata
     var areas: [FailableDecodable<NPGArea>]
     var locations: [FailableDecodable<NPGArea.Location>]
-    var labels: [FailableDecodable<NPGArtwork>]
+    var artworks: [FailableDecodable<NPGArtwork>]
     var beacons: [FailableDecodable<NPGBeacon>]
     var tours: [FailableDecodable<NPGTour>]
+    var entities: [FailableDecodable<NPGEntity>]
 }
 
 /**

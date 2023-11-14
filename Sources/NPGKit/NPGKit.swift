@@ -28,6 +28,9 @@ public class NPGKit {
     
     private let dataSource: DataSource
     
+    /// A published metadata object containing text about the service.
+    @Published public var metadata: NPGMetadata = .empty
+    
     /// A published collection of areas within (and possibly beyond) the National Portrait Gallery.
     @Published public var areas: [NPGArea] = []
     
@@ -42,6 +45,9 @@ public class NPGKit {
     
     /// A published collection of tours offered within (and possibly beyond) the National Portrait Gallery.
     @Published public var tours: [NPGTour] = []
+    
+    /// A published collection of entities (people or collectives) referenced in the gallery.
+    @Published public var entities: [NPGEntity] = []
     
     public init(dataSource: DataSource = .production) {
         self.dataSource = dataSource
@@ -69,11 +75,13 @@ public class NPGKit {
         let npgData = try jsonDecoder.decode(NPGData.self, from: data)
         
         DispatchQueue.main.async {
+            self.metadata = npgData.metadata
             self.areas = npgData.areas.compactMap { $0.base }
             self.locations = npgData.locations.compactMap { $0.base }
-            self.artworks = npgData.labels.compactMap { $0.base }
+            self.artworks = npgData.artworks.compactMap { $0.base }
             self.beacons = npgData.beacons.compactMap { $0.base }
             self.tours = npgData.tours.compactMap { $0.base }
+            self.entities = npgData.entities.compactMap { $0.base }
         }
     }
 }

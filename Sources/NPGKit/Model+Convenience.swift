@@ -10,6 +10,10 @@ extension NPGBool {
     }
 }
 
+extension NPGMetadata {
+    static var empty = Self.init(title: "", subtitle: "", intro: "")
+}
+
 extension NPGArtwork {
     /// The size of the artwork in centimetres.
     public var size: CGSize {
