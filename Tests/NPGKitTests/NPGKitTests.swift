@@ -157,6 +157,33 @@ final class NPGKitTests: XCTestCase {
         wait(for: [beaconExpectation, areaExpectation, locationExpectation], timeout: 8)
     }
     
+    func testEntityRetrieval() {
+        let entityExpectation = XCTestExpectation(description: "Entities load successfully")
+        
+        npgKit.$entities
+            .receive(on: RunLoop.main)
+            .sink { [npgKit] entities in
+                if !npgKit.entities.isEmpty {
+                    print("Haz \(entities.count) entities!")
+                    entityExpectation.fulfill()
+                } else {
+                    print("No entities yet...")
+                }
+            }
+            .store(in: &cancellables)
+             
+        Task {
+            do {
+                try await npgKit.refreshData()
+                
+            } catch {
+                XCTFail(error.localizedDescription)
+            }
+        }
+        
+        wait(for: [entityExpectation], timeout: 8)
+    }
+    
     func testEntityEncoding() {
         let expectation = XCTestExpectation(description: "Entities encoded successfully.")
         

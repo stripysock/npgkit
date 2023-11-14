@@ -46,6 +46,9 @@ public class NPGKit {
     /// A published collection of tours offered within (and possibly beyond) the National Portrait Gallery.
     @Published public var tours: [NPGTour] = []
     
+    /// A published collection of entities (people or collectives) referenced in the gallery.
+    @Published public var entities: [NPGEntity] = []
+    
     public init(dataSource: DataSource = .production) {
         self.dataSource = dataSource
     }
@@ -78,6 +81,7 @@ public class NPGKit {
             self.artworks = npgData.artworks.compactMap { $0.base }
             self.beacons = npgData.beacons.compactMap { $0.base }
             self.tours = npgData.tours.compactMap { $0.base }
+            self.entities = npgData.entities.compactMap { $0.base }
         }
     }
 }

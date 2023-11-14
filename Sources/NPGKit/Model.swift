@@ -35,6 +35,7 @@ internal struct NPGData: Decodable {
     var artworks: [FailableDecodable<NPGArtwork>]
     var beacons: [FailableDecodable<NPGBeacon>]
     var tours: [FailableDecodable<NPGTour>]
+    var entities: [FailableDecodable<NPGEntity>]
 }
 
 /**

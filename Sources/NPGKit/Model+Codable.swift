@@ -12,6 +12,7 @@ extension NPGData {
     enum CodingKeys: String, CodingKey {
         case areas, locations, beacons, tours
         case artworks = "labels"
+        case entities = "people"
         case metadata = "title"
     }
 }
