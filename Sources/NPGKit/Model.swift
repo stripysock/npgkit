@@ -64,8 +64,8 @@ public protocol NPGFile: NPGObject {
  Consider extending this struct to export `CLLocationCoordinate2D` or equivalent as required for your implementation.
  */
 public struct NPGCoordinates: Hashable, Codable {
-    var latitude: Double
-    var longitude: Double
+    public var latitude: Double
+    public var longitude: Double
 }
 
 /**
@@ -302,10 +302,10 @@ public struct NPGArtwork: NPGObject, Codable {
     public var priority: Int
     
     /// Width in centimetres. Use convenience ``size`` instead.
-    var width: Double
+    public var width: Double
     
     /// Height in centimetres. Use convenience ``size`` instead.
-    var height: Double
+    public var height: Double
     
     /// A collection of label text related to the artwork.
     public var text: [LabelText]
@@ -345,10 +345,10 @@ public struct NPGImage: NPGFile {
     public var scanningOnly: Bool
     
     /// Internal - Use convenience ``size`` instead.
-    var width: Double
+    public var width: Double
     
     /// Internal  - Use convenience ``size`` instead.
-    var height: Double
+    public var height: Double
     
     /// If present, `subjectCrop` defines how to crop the image to focus on the subject.
     public var subjectCrop: CropSize?
