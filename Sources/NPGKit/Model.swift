@@ -335,6 +335,12 @@ public struct NPGImage: NPGFile {
         public var cropBottomRightY: Double
     }
     
+    /// A structure specifying the region of a person's face within an image
+    public struct FaceCrop: Hashable {
+        public var entityID: Int
+        public var crop: CropSize
+    }
+    
     /// The unique identifier of our image.
     public var id: Int
     
@@ -353,6 +359,9 @@ public struct NPGImage: NPGFile {
     /// If present, `subjectCrop` defines how to crop the image to focus on the subject.
     public var subjectCrop: CropSize?
     
+    /// The regions in the portrait where a face appears, and who that face belongs to.
+    public var faceCrops: [FaceCrop]
+    
     /// The publicly accessible URL of the image.
     public var url: URL
     
@@ -361,6 +370,8 @@ public struct NPGImage: NPGFile {
     
     /// A square-cropped version of the image that (hopefully) takes the sitter's position into consideration.
     public var squareURL: URL?
+    
+    
 }
 
 /// An audio file associated with an artwork.
