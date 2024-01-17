@@ -114,7 +114,7 @@ extension NPGImage.CropSize {
      */
     public func rect(for outputSize: CGSize) -> CGRect {
         let size = size(for: outputSize)
-        let origin = CGPoint(x: topLeft.x * outputSize.width, y: topLeft.x * outputSize.height)
+        let origin = CGPoint(x: topLeft.x * outputSize.width, y: topLeft.y * outputSize.height)
         
         return .init(origin: origin, size: size)
     }
