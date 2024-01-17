@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 extension NPGBool {
     init(bool: Bool) {
@@ -100,7 +101,6 @@ extension NPGImage.CropSize {
      If no reference size is provided, the internal reference size will be used.
      */
     public func size(for outputSize: CGSize) -> CGSize {
-        
         let width = (bottomRight.x - topLeft.x) * outputSize.width
         let height = (bottomRight.y - topLeft.y) * outputSize.height
         
