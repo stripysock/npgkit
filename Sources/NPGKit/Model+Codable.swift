@@ -172,12 +172,7 @@ extension NPGImage.FaceCrop: Codable {
         let width = try container.decode(Double.self, forKey: .width)
         let height = try container.decode(Double.self, forKey: .height)
         
-        let cropSize = NPGImage.CropSize(referenceWidth: nil,
-                                         referenceHeight: nil,
-                                         topLeftX: left,
-                                         topLeftY: top,
-                                         bottomRightX: left + width,
-                                         bottomRightY: top + height)
+        let cropSize = NPGImage.CropSize(rect: .init(origin: .init(x: left, y: top), size: .init(width: width, height: height)))
         
         self.crop = cropSize
     }
@@ -185,15 +180,14 @@ extension NPGImage.FaceCrop: Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
+        let rect = self.crop.rect(for: .init(width: 100, height: 100))
+        
         try container.encode(self.entityID, forKey: .entityID)
-        try container.encode(self.crop.cropTopLeftX, forKey: .left)
-        try container.encode(self.crop.cropTopLeftY, forKey: .top)
-        try container.encode(self.crop.width, forKey: .width)
-        try container.encode(self.crop.height, forKey: .height)
+        try container.encode(rect.origin.x, forKey: .left)
+        try container.encode(rect.origin.y, forKey: .top)
+        try container.encode(rect.size.width, forKey: .width)
+        try container.encode(rect.size.height, forKey: .height)
     }
-    
-    
-    
 }
 
 extension NPGAudio {
