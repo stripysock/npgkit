@@ -325,14 +325,14 @@ public struct NPGArtwork: NPGObject, Codable {
 
 /// An image file representing an artwork.
 public struct NPGImage: NPGFile {
-    /// A structure dictating how an image should be cropped.
+    /// A structure dictating how an image should be cropped. If no reference size is supplied (or is zero), it should be assumed that the topLeft and and bottomRight are percentage values of the image's total size.
     public struct CropSize: Hashable {
-        public var width: Double
-        public var height: Double
-        public var cropTopLeftX: Double
-        public var cropTopLeftY: Double
-        public var cropBottomRightX: Double
-        public var cropBottomRightY: Double
+        internal var referenceWidth: Double?
+        internal var referenceHeight: Double?
+        internal var topLeftX: Double
+        internal var topLeftY: Double
+        internal var bottomRightX: Double
+        internal var bottomRightY: Double
     }
     
     /// A structure specifying the region of a person's face within an image

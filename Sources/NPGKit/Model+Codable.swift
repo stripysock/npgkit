@@ -172,12 +172,12 @@ extension NPGImage.FaceCrop: Codable {
         let width = try container.decode(Double.self, forKey: .width)
         let height = try container.decode(Double.self, forKey: .height)
         
-        let cropSize = NPGImage.CropSize(width: width,
-                                         height: height,
-                                         cropTopLeftX: left,
-                                         cropTopLeftY: top,
-                                         cropBottomRightX: left + width,
-                                         cropBottomRightY: top + height)
+        let cropSize = NPGImage.CropSize(referenceWidth: nil,
+                                         referenceHeight: nil,
+                                         topLeftX: left,
+                                         topLeftY: top,
+                                         bottomRightX: left + width,
+                                         bottomRightY: top + height)
         
         self.crop = cropSize
     }
