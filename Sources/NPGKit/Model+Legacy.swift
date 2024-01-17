@@ -59,7 +59,7 @@ extension NPGImage.CropSize {
     
     @available(swift, deprecated: 1.1.4, renamed: "size(for:)")
     public var size: CGSize {
-        return size(for: nil)
+        return size(for: referenceSize)
     }
     
     @available(swift, deprecated: 1.1.4, renamed: "topLeft")

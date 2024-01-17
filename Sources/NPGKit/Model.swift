@@ -327,8 +327,8 @@ public struct NPGArtwork: NPGObject, Codable {
 public struct NPGImage: NPGFile {
     /// A structure dictating how an image should be cropped. If no reference size is supplied (or is zero), it should be assumed that the topLeft and and bottomRight are percentage values of the image's total size.
     public struct CropSize: Hashable {
-        internal var referenceWidth: Double?
-        internal var referenceHeight: Double?
+        internal var referenceWidth: Double
+        internal var referenceHeight: Double
         internal var topLeftX: Double
         internal var topLeftY: Double
         internal var bottomRightX: Double
