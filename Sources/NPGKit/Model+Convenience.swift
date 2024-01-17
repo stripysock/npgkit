@@ -37,27 +37,92 @@ extension NPGImage.CropSize {
             throw(NPGError.invalidStringFormat(expectedFormat: "6 comma-delimited values, i.e. 560,742,0,0,559,559"))
         }
         
-        self.width = parts[0]
-        self.height = parts[1]
-        self.cropTopLeftX = parts[2]
-        self.cropTopLeftY = parts[3]
-        self.cropBottomRightX = parts[4]
-        self.cropBottomRightY = parts[5]
+        if parts[0] > 0, parts[1] > 0 {
+            self.referenceWidth = parts[0]
+            self.referenceHeight = parts[1]
+        } else {
+            self.referenceWidth = nil
+            self.referenceHeight = nil
+        }
+        
+        self.topLeftX = parts[2]
+        self.topLeftY = parts[3]
+        
+        self.bottomRightX = parts[4]
+        self.bottomRightY = parts[5]
     }
     
-    var stringValue: String {
-        "\(width),\(height),\(cropTopLeftX),\(cropTopLeftY),\(cropBottomRightX),\(cropBottomRightY)"
+    public var stringValue: String {
+        "\(referenceSize.width),\(referenceSize.height),\(topLeft.x),\(topLeft.y),\(bottomRight.x),\(bottomRight.y)"
     }
     
-    public var size: CGSize {
-        .init(width: width, height: height)
+    /**
+     Reference size, if present, is the frame of reference that the ``topLeft`` and ``bottomRight`` points lie within.
+     If reference size is equal to 0, topLeft and bottomRight should be considered percentage values of the total image size.
+     
+     - seealso: ``size(for:)``, ``rect(for:)``
+     */
+    public var referenceSize: CGSize {
+        CGSize(width: referenceWidth ?? 0, height: referenceHeight ?? 0)
     }
     
+    /**
+     The upper-left coordinates of the crop.
+     
+     - seealso: ``referenceSize``
+     */
     public var topLeft: CGPoint {
-        .init(x: cropTopLeftX, y: cropTopLeftY)
+        CGPoint(x: topLeftX, y: topLeftY)
     }
     
+    /**
+     The lower-right coordinates of the crop.
+     
+     - seealso: ``referenceSize``
+     */
     public var bottomRight: CGPoint {
-        .init(x: cropBottomRightX, y: cropBottomRightY)
+        CGPoint(x: bottomRightX, y: bottomRightY)
+    }
+    
+    /**
+     Calculates a size for the crop, with the provided reference size providing a reference frame.
+     If no reference size is provided, the internal reference size will be used.
+     */
+    public func size(for referenceSize: CGSize?) -> CGSize {
+        let width: CGFloat
+        let height: CGFloat
+        
+        if let suppliedRef = referenceSize {
+            // Treat bottomRight, topLeft as percentages
+            width = (bottomRight.x - topLeft.x) * suppliedRef.width
+            height = (bottomRight.y - topLeft.y) * suppliedRef.height
+            
+        } else if self.referenceWidth == 0, self.referenceHeight == 0 {
+            width = 0
+            height = 0
+            
+        } else {
+            width = bottomRight.x - topLeft.x
+            height = bottomRight.y - topLeft.y
+        }
+        return .init(width: width, height: height)
+    }
+    
+    /**
+     Calculates a CGRect for the crop based on the supplied reference size.
+     If no reference size is provided, the internal reference size will be used.
+     */
+    public func rect(for referenceSize: CGSize?) -> CGRect {
+        let size = size(for: referenceSize)
+        let origin: CGPoint
+        
+        if let suppliedRef = referenceSize {
+            // Treat topLeft as percentages
+            origin = .init(x: topLeft.x * suppliedRef.width, y: topLeft.x * suppliedRef.height)
+        } else {
+            origin = topLeft
+        }
+        
+        return .init(origin: origin, size: size)
     }
 }
