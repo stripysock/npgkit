@@ -88,6 +88,7 @@ extension NPGImage: Codable {
         case width
         case height
         case subjectCrop = "cropsquare"
+        case faceCrops = "faces"
         case url = "fileURL"
         case thumbnailURL = "thickURL"
         case squareURL = "doublesquareURL"
@@ -129,6 +130,7 @@ extension NPGImage: Codable {
         } else {
             self.subjectCrop = nil
         }
+        self.faceCrops = try container.decodeIfPresent([FaceCrop].self, forKey: .faceCrops) ?? []
         
         self.url = try container.decode(URL.self, forKey: .url)
         self.thumbnailURL = try container.decodeIfPresent(URL.self, forKey: .thumbnailURL)
@@ -144,10 +146,54 @@ extension NPGImage: Codable {
         try container.encode(self.width, forKey: .width)
         try container.encode(self.height, forKey: .height)
         try container.encodeIfPresent(self.subjectCrop?.stringValue, forKey: .subjectCrop)
+        try container.encodeIfPresent(self.faceCrops, forKey: .faceCrops)
         try container.encode(self.url, forKey: .url)
         try container.encodeIfPresent(self.thumbnailURL, forKey: .thumbnailURL)
         try container.encodeIfPresent(self.squareURL, forKey: .squareURL)
     }
+}
+
+extension NPGImage.FaceCrop: Codable {
+    enum CodingKeys: String, CodingKey {
+        case entityID = "peopleid"
+        case left
+        case top
+        case width
+        case height
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        self.entityID = try container.decode(Int.self, forKey: .entityID)
+        
+        let left = try container.decode(Double.self, forKey: .left)
+        let top = try container.decode(Double.self, forKey: .top)
+        let width = try container.decode(Double.self, forKey: .width)
+        let height = try container.decode(Double.self, forKey: .height)
+        
+        let cropSize = NPGImage.CropSize(width: width,
+                                         height: height,
+                                         cropTopLeftX: left,
+                                         cropTopLeftY: top,
+                                         cropBottomRightX: left + width,
+                                         cropBottomRightY: top + height)
+        
+        self.crop = cropSize
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(self.entityID, forKey: .entityID)
+        try container.encode(self.crop.cropTopLeftX, forKey: .left)
+        try container.encode(self.crop.cropTopLeftY, forKey: .top)
+        try container.encode(self.crop.width, forKey: .width)
+        try container.encode(self.crop.height, forKey: .height)
+    }
+    
+    
+    
 }
 
 extension NPGAudio {
