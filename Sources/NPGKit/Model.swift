@@ -215,8 +215,8 @@ public struct NPGArea: NPGObject, Codable {
     /// An optional subtitle for this area.
     public var subtitle: String?
     
-    /// A beacon identifier associated with this area.
-    public var beaconID: Int?
+    /// A collection of beacon identifiers associated with this area.
+    public var beaconIDs: [Int]
     
     /// Sort priority
     public var priority: Int

@@ -52,7 +52,7 @@ extension NPGArea {
         case dateModified = "datemodified"
         case locationIDs = "locations"
         case artworkIDs = "labels"
-        case beaconID = "beaconid"
+        case beaconIDs = "beaconids"
         case externalCoordinates = "gpscoordinates"
     }
 }
