@@ -93,8 +93,11 @@ public class NPGKit {
 fileprivate extension NPGKit.DataSource {
     var endpoint: URL? {
         switch self {
-        case .development, .production:
+        case .development:
             return URL(string: "https://www.portrait.gov.au/json/ondisplaytest/all")
+            
+        case .production:
+            return URL(string: "https://www.portrait.gov.au/json/ondisplaylive/all")
             
         default:
             return nil
