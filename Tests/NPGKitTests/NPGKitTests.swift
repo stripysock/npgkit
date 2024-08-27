@@ -163,6 +163,12 @@ final class NPGKitTests: XCTestCase {
             .sink { [npgKit] entities in
                 if !npgKit.entities.isEmpty {
                     print("Haz \(entities.count) entities!")
+                    
+                    // Inspect entities
+                    if let inspectable = entities.first(where: { $0.id == 9029 }) {
+                        print(inspectable)
+                    }
+                    
                     entityExpectation.fulfill()
                 } else {
                     print("No entities yet...")
