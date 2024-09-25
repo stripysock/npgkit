@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "54692C84-2CA6-42AA-BB04-705701153DFF",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "NPGKitTests",
+        "name" : "NPGKitTests"
+      }
+    }
+  ],
+  "version" : 1
+}
