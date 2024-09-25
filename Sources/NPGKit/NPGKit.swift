@@ -94,7 +94,7 @@ fileprivate extension NPGKit.DataSource {
     var endpoint: URL? {
         switch self {
         case .development:
-            return URL(string: "https://www.portrait.gov.au/json/ondisplaytest/all")
+            return URL(string: "https://www.portrait.gov.au/json/ondisplaydev/all")
             
         case .production:
             return URL(string: "https://www.portrait.gov.au/json/ondisplaylive/all")
