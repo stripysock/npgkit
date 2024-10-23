@@ -192,12 +192,9 @@ extension NPGImage.FaceCrop: Codable {
 
 extension NPGAudio {
     enum CodingKeys: String, CodingKey {
-        case id
+        case id, priority, title, duration, transcript, attribution, acknowledgements
         case dateModified = "datemodified"
         case audioContext = "type"
-        case title
-        case duration
-        case transcript
         case url = "fileURL"
     }
 }
