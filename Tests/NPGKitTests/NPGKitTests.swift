@@ -5,7 +5,7 @@ import Combine
 @available(iOS 15.0, *)
 final class NPGKitTests: XCTestCase {
     private var cancellables = Set<AnyCancellable>()
-    private let npgKit = NPGKit()
+    private let npgKit = NPGKit(dataSource: .production)
     
     func testArtworkRetrieval() {
         let artworkExpectation = XCTestExpectation(description: "Artwork loads successfully")
@@ -205,6 +205,7 @@ final class NPGKitTests: XCTestCase {
                                     audio: [
                                         .init(id: 329,
                                               dateModified: Date(),
+                                              priority: 1,
                                               audioContext: .intheirownwords,
                                               title: "Vincent Fantauzzo on Hugh Jackman",
                                               duration: "1 minute 24 seconds",

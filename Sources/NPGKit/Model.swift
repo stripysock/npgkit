@@ -401,6 +401,9 @@ public struct NPGAudio: NPGFile, Codable {
     /// When this file was last modified.
     public var dateModified: Date
     
+    /// The sort priority for this audio.
+    public var priority: Int
+    
     /// The context of the audio.
     public var audioContext: AudioContext
     
@@ -410,8 +413,14 @@ public struct NPGAudio: NPGFile, Codable {
     /// A string description of the **approximate** run length. Use other means to determine duration where possible.
     public var duration: String
     
-    /// A HTML string containing a textual representation of the recording.
+    /// A Markdown formatted string containing a textual representation of the recording.
     public var transcript: String
+    
+    /// A Markdown formatted string containing information about the voice actor.
+    public var attribution: String? = nil
+    
+    /// A Markdown formatted string containing information on where the audio was sourced.
+    public var acknowledgements: String? = nil
     
     /// The publicly accessible URL of the file.
     public var url: URL
