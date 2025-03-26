@@ -5,7 +5,7 @@ import Foundation
 /**
  FailableDecodable allows us to decode a whole list of objects, even if one of them is corrupt.
  */
-internal struct FailableDecodable<Base: Decodable> : Decodable {
+internal struct FailableDecodable<Base: Decodable & Sendable> : Decodable & Sendable {
     let base: Base?
     let error: Error?
 
@@ -21,13 +21,13 @@ internal struct FailableDecodable<Base: Decodable> : Decodable {
     }
 }
 
-public struct NPGMetadata: Codable {
+public struct NPGMetadata: Codable, Sendable {
     public var title: String
     public var subtitle: String
     public var intro: String
 }
 
-internal struct NPGData: Decodable {
+internal struct NPGData: Decodable, Sendable {
     
     var metadata: NPGMetadata
     var areas: [FailableDecodable<NPGArea>]
@@ -41,14 +41,14 @@ internal struct NPGData: Decodable {
 /**
  NPGBool is a stand-in for the standard Bool, but allows for "yes" and "no" values.
  */
-internal enum NPGBool: String, Codable {
+internal enum NPGBool: String, Codable, Sendable {
     case yes
     case no
 }
 
 // MARK: Public Items
 
-public protocol NPGObject: Hashable, Identifiable {
+public protocol NPGObject: Hashable, Identifiable, Sendable {
     var id: Int { get }
     var dateModified: Date { get }
 }
@@ -63,7 +63,7 @@ public protocol NPGFile: NPGObject {
  
  Consider extending this struct to export `CLLocationCoordinate2D` or equivalent as required for your implementation.
  */
-public struct NPGCoordinates: Hashable, Codable {
+public struct NPGCoordinates: Hashable, Codable, Sendable {
     public var latitude: Double
     public var longitude: Double
 }
@@ -238,8 +238,8 @@ public struct NPGArea: NPGObject, Codable {
 public struct NPGArtwork: NPGObject, Codable {
     
     /// Text used for an artwork's on-wall label.
-    public struct LabelText: Codable, Hashable {
-        public enum LabelType: String, Codable, Hashable {
+    public struct LabelText: Codable, Hashable, Sendable {
+        public enum LabelType: String, Codable, Hashable, Sendable {
             case caption
             case label
             case biography
@@ -256,9 +256,9 @@ public struct NPGArtwork: NPGObject, Codable {
     }
     
     /// A structure that describes the relative position of another artwork.
-    public struct Nearby: Codable, Hashable {
+    public struct Nearby: Codable, Hashable, Sendable {
         /// The relative position of one artwork to another.
-        public enum Relationship: String, Codable, Hashable {
+        public enum Relationship: String, Codable, Hashable, Sendable {
             case above
             case below
             case left
@@ -330,7 +330,7 @@ public struct NPGImage: NPGFile {
      
      Note that all of the values are public, but *should* be internal. However, because our computed properties reference these, it can lead to SIL compile errors.
      */
-    public struct CropSize: Hashable {
+    public struct CropSize: Hashable, Sendable {
         public var referenceWidth: Double
         public var referenceHeight: Double
         public var topLeftX: Double
@@ -340,7 +340,7 @@ public struct NPGImage: NPGFile {
     }
     
     /// A structure specifying the region of a person's face within an image
-    public struct FaceCrop: Hashable {
+    public struct FaceCrop: Hashable, Sendable {
         public var entityID: Int
         public var crop: CropSize
     }
@@ -379,9 +379,9 @@ public struct NPGImage: NPGFile {
 }
 
 /// An audio file associated with an artwork.
-public struct NPGAudio: NPGFile, Codable {
+public struct NPGAudio: NPGFile, Codable, Sendable {
     /// The context in which an audio file should be used.
-    public enum AudioContext: String, Equatable, Codable {
+    public enum AudioContext: String, Equatable, Codable, Sendable {
         /// An interview with the subject or artist, usually contemporaneous to the associated artwork.
         case intheirownwords
         
