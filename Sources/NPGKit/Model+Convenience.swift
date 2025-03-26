@@ -12,7 +12,7 @@ extension NPGBool {
 }
 
 extension NPGMetadata {
-    static var empty = Self.init(title: "", subtitle: "", intro: "")
+    static public let empty = Self.init(title: "", subtitle: "", intro: "")
 }
 
 extension NPGArtwork {
