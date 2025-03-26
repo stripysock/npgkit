@@ -6,7 +6,7 @@ import Combine
 @available(tvOS 16.0, *)
 @available(visionOS 1.0, *)
 public class NPGKit {
-    public enum DataSource: String {
+    public enum DataSource: String, Sendable {
         case fixture
         case development
         case production
@@ -74,15 +74,18 @@ public class NPGKit {
         
         let npgData = try jsonDecoder.decode(NPGData.self, from: data)
         
-        DispatchQueue.main.async {
-            self.metadata = npgData.metadata
-            self.areas = npgData.areas.compactMap { $0.base }
-            self.locations = npgData.locations.compactMap { $0.base }
-            self.artworks = npgData.artworks.compactMap { $0.base }
-            self.beacons = npgData.beacons.compactMap { $0.base }
-            self.tours = npgData.tours.compactMap { $0.base }
-            self.entities = npgData.entities.compactMap { $0.base }
-        }
+        await updateContent(npgData: npgData)
+    }
+    
+    @MainActor
+    func updateContent(npgData: NPGData) {
+        self.metadata = npgData.metadata
+        self.areas = npgData.areas.compactMap { $0.base }
+        self.locations = npgData.locations.compactMap { $0.base }
+        self.artworks = npgData.artworks.compactMap { $0.base }
+        self.beacons = npgData.beacons.compactMap { $0.base }
+        self.tours = npgData.tours.compactMap { $0.base }
+        self.entities = npgData.entities.compactMap { $0.base }
     }
 }
 
