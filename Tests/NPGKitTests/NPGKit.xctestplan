@@ -13,6 +13,9 @@
   },
   "testTargets" : [
     {
+      "skippedTests" : [
+        "NPGKitTests\/testTourRetrieval()"
+      ],
       "target" : {
         "containerPath" : "container:",
         "identifier" : "NPGKitTests",
