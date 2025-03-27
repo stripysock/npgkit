@@ -5,27 +5,18 @@ import XCTest
 final class NPGKitTests: XCTestCase {
     private let npgKit = NPGKit(dataSource: .production)
     
-    override func setUp() async throws {
-        do {
-            try await npgKit.refreshData()
-        } catch {
-            XCTFail("Could not refresh data.")
-        }
-    }
-    
-    func testArtworksStream() async {
+    func testArtworkRetrieval() async {
         let artworkExpectation = XCTestExpectation(description: "Artworks load successfully")
         
         do {
-            for try await values in npgKit.artworksStream() {
+            for try await values in await npgKit.artworks() {
                 if !values.isEmpty {
                     print("Haz \(values.count) artworks!")
                     artworkExpectation.fulfill()
                     return
                     
                 } else {
-                    XCTFail("No artworks found.")
-                    return
+                    throw NPGError.noContentForType(NPGArtwork.self)
                 }
             }
         } catch {
@@ -36,64 +27,57 @@ final class NPGKitTests: XCTestCase {
         await fulfillment(of: [artworkExpectation], timeout: 5)
     }
     
-    func testArtworkRetrieval() async {
-        let artworkExpectation = XCTestExpectation(description: "Artwork loads successfully")
+    func testArtworkPolling() async {
+        let artworkSingleRetrievalExpectation = XCTestExpectation(description: "Artwork received")
+        let artworkMultipleRetrievalExpectation = XCTestExpectation(description: "Artwork received multiple times")
         
-        for await values in npgKit.$artworks.values {
-            if !values.isEmpty {
-                print("Haz \(values.count) artworks!")
-                artworkExpectation.fulfill()
-                return
-                
-            } else {
-                XCTFail("No artworks found.")
-                return
+        var pollCount = 0
+        
+        do {
+            for try await values in await npgKit.artworks(pollEvery: 10) {
+                if values.count > 1 {
+                    print("Haz \(values.count) artworks!")
+                    pollCount += 1
+                    if pollCount == 1 {
+                        print("First pass complete.")
+                        artworkSingleRetrievalExpectation.fulfill()
+                        
+                    } else if pollCount == 2 {
+                        print("Second pass complete.")
+                        artworkMultipleRetrievalExpectation.fulfill()
+                        return
+                    }
+                    
+                } else {
+                    throw NPGError.noContentForType(NPGArtwork.self)
+                }
             }
-        }
-        
-        await self.fulfillment(of: [artworkExpectation], timeout: 5)
-    }
-    
-    func testArtworkSorting() async {
-        let artworkCountExpectation = XCTestExpectation(description: "More than one artwork is retrieved")
-        let artworkSortExpectation = XCTestExpectation(description: "Artwork sorts successfully")
-        
-        for await values in npgKit.$artworks.values {
-            if values.count > 1 {
-                print("Haz \(values.count) artworks!")
-                artworkCountExpectation.fulfill()
-                
-            } else {
-                XCTFail("Didn't retrieve enough artworks")
-                return
-            }
-            
-            let sorted = values.sorted()
-            
-            // visually inspect sorted items with latest sorting logic
-            print(sorted[0])
-            print(sorted[1])
-            
-            artworkSortExpectation.fulfill()
+        } catch {
+            XCTFail("Error encountered whilst retrieving artworks: \(error.localizedDescription).")
             return
         }
         
-        await fulfillment(of: [artworkCountExpectation, artworkSortExpectation], timeout: 5, enforceOrder: true)
+        await fulfillment(of: [artworkSingleRetrievalExpectation, artworkMultipleRetrievalExpectation], timeout: 20, enforceOrder: true)
+        
     }
     
     func testTourRetrieval() async {
         let tourExpectation = XCTestExpectation(description: "Tours load successfully")
         
-        for await values in npgKit.$tours.values {
-            if !values.isEmpty {
-                print("Haz \(values.count) tours!")
-                tourExpectation.fulfill()
-                return
-                
-            } else {
-                XCTFail("No tours found.")
-                return
+        do {
+            for try await values in await npgKit.tours() {
+                if !values.isEmpty {
+                    print("Haz \(values.count) tours!")
+                    tourExpectation.fulfill()
+                    return
+                    
+                } else {
+                    throw NPGError.noContentForType(NPGTour.self)
+                }
             }
+        } catch {
+            XCTFail("Error encountered whilst retrieving tours: \(error.localizedDescription).")
+            return
         }
         
         await fulfillment(of: [tourExpectation], timeout: 5)
@@ -104,50 +88,62 @@ final class NPGKitTests: XCTestCase {
         let areaExpectation = XCTestExpectation(description: "Areas load successfully")
         let locationExpectation = XCTestExpectation(description: "Locations load successfully")
         
-        for await values in npgKit.$beacons.values {
-            if !values.isEmpty {
-                print("Haz \(values.count) beacons!")
-                beaconExpectation.fulfill()
-                return
-                
-            } else {
-                XCTFail("No beacons found.")
-                return
+        do {
+            for try await values in await npgKit.beacons() {
+                if !values.isEmpty {
+                    print("Haz \(values.count) beacons!")
+                    beaconExpectation.fulfill()
+                    return
+                    
+                } else {
+                    throw NPGError.noContentForType(NPGBeacon.self)
+                }
             }
+        } catch {
+            XCTFail("Error encountered whilst retrieving beacons: \(error.localizedDescription).")
+            return
         }
         
-        for await values in npgKit.$areas.values {
-            if !values.isEmpty {
-                print("Haz \(values.count) areas!")
-                areaExpectation.fulfill()
-                return
-                
-            } else {
-                XCTFail("No areas found.")
-                return
+        do {
+            for try await values in await npgKit.areas() {
+                if !values.isEmpty {
+                    print("Haz \(values.count) areas!")
+                    areaExpectation.fulfill()
+                    return
+                    
+                } else {
+                    throw NPGError.noContentForType(NPGArea.self)
+                }
             }
+        } catch {
+            XCTFail("Error encountered whilst retrieving areas: \(error.localizedDescription).")
+            return
         }
         
-        for await values in npgKit.$locations.values {
-            if !values.isEmpty {
-                print("Haz \(values.count) locations!")
-                locationExpectation.fulfill()
-                return
-                
-            } else {
-                XCTFail("No locations found.")
-                return
+        do {
+            for try await values in await npgKit.locations() {
+                if !values.isEmpty {
+                    print("Haz \(values.count) locations!")
+                    locationExpectation.fulfill()
+                    return
+                    
+                } else {
+                    throw NPGError.noContentForType(NPGArea.Location.self)
+                }
             }
+        } catch {
+            XCTFail("Error encountered whilst retrieving locations: \(error.localizedDescription).")
+            return
         }
         
         await fulfillment(of: [beaconExpectation, areaExpectation, locationExpectation], timeout: 8, enforceOrder: false)
     }
     
-    func testEntitiesStream() async {
+    func testEntityRetrieval() async {
         let entityExpectation = XCTestExpectation(description: "Entities load successfully")
         
         do {
-            for try await values in npgKit.entitiesStream() {
+            for try await values in await npgKit.entities() {
                 if !values.isEmpty {
                     print("Haz \(values.count) entities!")
                     
@@ -160,37 +156,12 @@ final class NPGKitTests: XCTestCase {
                     return
                     
                 } else {
-                    XCTFail("No entities found.")
-                    return
+                    throw NPGError.noContentForType(NPGEntity.self)
                 }
             }
         } catch {
             XCTFail("Error encountered whilst retrieving entities: \(error.localizedDescription).")
             return
-        }
-        
-        await fulfillment(of: [entityExpectation], timeout: 5)
-    }
-    
-    func testEntityRetrieval() async {
-        let entityExpectation = XCTestExpectation(description: "Entities load successfully")
-        
-        for await values in npgKit.$entities.values {
-            if !values.isEmpty {
-                print("Haz \(values.count) entities!")
-                
-                // Inspect entities
-                if let inspectable = values.first(where: { $0.id == 9029 }) {
-                    print(inspectable)
-                }
-                
-                entityExpectation.fulfill()
-                return
-                
-            } else {
-                XCTFail("No entities found.")
-                return
-            }
         }
         
         await fulfillment(of: [entityExpectation], timeout: 5)
