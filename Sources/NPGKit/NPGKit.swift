@@ -45,36 +45,62 @@ public class NPGKit {
     
     private let dataSource: DataSource
     
-    /// A published metadata object containing text about the service.
-    @Published public var metadata: NPGMetadata = .empty
-    
-    /// A published collection of areas within (and possibly beyond) the National Portrait Gallery.
-    @Published public var areas: [NPGArea] = []
-    
-    /// A published collection of locations with the NPG. Use a location's ``areaID`` to determine the associated area.
-    @Published public var locations: [NPGArea.Location] = []
-    
-    /// A published collection of artwork on display within the NPG.
-    @Published public var artworks: [NPGArtwork] = []
-    
-    /// A published collection of location beacons used throughout the NPG.
-    @Published public var beacons: [NPGBeacon] = []
-    
-    /// A published collection of tours offered within (and possibly beyond) the National Portrait Gallery.
-    @Published public var tours: [NPGTour] = []
-    
-    /// A published collection of entities (people or collectives) referenced in the gallery.
-    @Published public var entities: [NPGEntity] = []
-    
     public init(dataSource: DataSource = .production) {
         self.dataSource = dataSource
     }
     
-    public func artworksStream() -> AsyncThrowingStream<[NPGArtwork], Error> {
+    /**
+     An async throwing stream of areas within (and possibly beyond) the National Portrait Gallery.
+     
+     - throws: Will throw an `NPGError` if the content can't be retrieved or is malformed.
+     */
+    public func areas() -> AsyncThrowingStream<[NPGArea], Error> {
         pollingStreamForNPGObject()
     }
     
-    public func entitiesStream() -> AsyncThrowingStream<[NPGEntity], Error> {
+    /**
+     An async throwing stream of of artworks on display within the NPG.
+     
+     - throws: Will throw an `NPGError` if the content can't be retrieved or is malformed.
+     */
+    public func artworks() -> AsyncThrowingStream<[NPGArtwork], Error> {
+        pollingStreamForNPGObject()
+    }
+    
+    /**
+     An async throwing stream of location beacons used throughout the NPG.
+     
+     - throws: Will throw an `NPGError` if the content can't be retrieved or is malformed.
+     */
+    public func beacons() -> AsyncThrowingStream<[NPGBeacon], Error> {
+        pollingStreamForNPGObject()
+    }
+    
+    /**
+     An async throwing stream of entities (people or collectives) referenced in the gallery.
+     
+     - throws: Will throw an `NPGError` if the content can't be retrieved or is malformed.
+     */
+    public func entities() -> AsyncThrowingStream<[NPGEntity], Error> {
+        pollingStreamForNPGObject()
+    }
+    
+    /**
+     An async throwing stream of  locations with the NPG.
+     Use a location's ``areaID`` to determine the associated area.
+     
+     - throws: Will throw an `NPGError` if the content can't be retrieved or is malformed.
+     */
+    public func locations() -> AsyncThrowingStream<[NPGArea.Location], Error> {
+        pollingStreamForNPGObject()
+    }
+    
+    /**
+     An async throwing stream of tours offered within (and possibly beyond) the National Portrait Gallery.
+     
+     - throws: Will throw an `NPGError` if the content can't be retrieved or is malformed.
+     */
+    public func tours() -> AsyncThrowingStream<[NPGTour], Error> {
         pollingStreamForNPGObject()
     }
     
@@ -136,43 +162,6 @@ public class NPGKit {
             timer.fire()
         }
         
-    }
-    
-    /// Call to retrieve the latest content from the API and in turn, refresh the various publishers.
-    public func refreshData() async throws {
-        let data: Data
-        switch dataSource {
-        case .fixture:
-            guard let path = Bundle.module.path(forResource: "fixture", ofType: "json"),
-                  FileManager.default.fileExists(atPath: path),
-                  let fixtureData = FileManager.default.contents(atPath: path) else {
-                fatalError("No fixture found for the data source \"\(dataSource.rawValue)\".")
-            }
-            data = fixtureData
-        default:
-            guard let endpoint = dataSource.endpoint else {
-                fatalError("No endpoint specified for the data source \"\(dataSource.rawValue)\".")
-            }
-            let (sessionData, _) = try await session.data(from: endpoint)
-            data = sessionData
-        }
-        
-        let npgData = try jsonDecoder.decode(NPGData.self, from: data)
-        
-        await updateContent(npgData: npgData)
-    }
-    
-    @MainActor
-    func updateContent(npgData: NPGData) {
-        if let metadata = npgData.metadata {
-            self.metadata = metadata
-        }
-        self.areas = npgData.areas?.compactMap { $0.base } ?? []
-        self.locations = npgData.locations?.compactMap { $0.base } ?? []
-        self.artworks = npgData.artworks?.compactMap { $0.base } ?? []
-        self.beacons = npgData.beacons?.compactMap { $0.base } ?? []
-        self.tours = npgData.tours?.compactMap { $0.base } ?? []
-        self.entities = npgData.entities?.compactMap { $0.base } ?? []
     }
 }
 
