@@ -123,7 +123,7 @@ public actor NPGKit {
                                 guard let path = Bundle.module.path(forResource: "fixture", ofType: "json"),
                                       FileManager.default.fileExists(atPath: path),
                                       let fixtureData = FileManager.default.contents(atPath: path) else {
-                                    fatalError("No fixture data found.")
+                                    fatalError("No fixture data found for \(T.self).")
                                 }
                                 data = fixtureData
                             default:
@@ -138,7 +138,7 @@ public actor NPGKit {
                         
                         let decodingErrors = try npgData.decodingErrors(for: T.self)
                         if !decodingErrors.isEmpty {
-                            Self.logger.error("\(decodingErrors.count) errors encountered whilst decoding entities.")
+                            Self.logger.error("\(decodingErrors.count) errors encountered whilst decoding \(T.self) entities.")
                         }
                         
                         continuation.yield(values)
@@ -151,7 +151,6 @@ public actor NPGKit {
                 } while !Task.isCancelled
             }
             
-            Self.logger.info("Polling stream stopped.")
         }
         
     }
