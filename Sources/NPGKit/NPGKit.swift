@@ -6,7 +6,7 @@ import os.log
 @available(macOS 12.0, *)
 @available(tvOS 16.0, *)
 @available(visionOS 1.0, *)
-public class NPGKit {
+public actor NPGKit {
     private static let logger = Logger(
         subsystem: Bundle.main.bundleIdentifier!,
         category: String(describing: #file)
@@ -17,12 +17,12 @@ public class NPGKit {
         case development
         case production
         
-        var pollPeriod: TimeInterval {
+        var defaultPollPeriod: TimeInterval {
             switch self {
                 case .fixture:
-                    30
+                    60 // 60 seconds
                 case .development:
-                    60 * 60 * 1 // hour
+                    60 * 15 // 15 minutes
                 case .production:
                     60 * 60 * 1 // 1 hour
             }
