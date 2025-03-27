@@ -103,7 +103,6 @@ public actor NPGKit {
         pollingStreamForNPGObject(pollEvery: pollPeriod)
     }
     
-    private var timerBucket: [Timer] = []
     private func pollingStreamForNPGObject<T: NPGObject>(pollEvery pollPeriod: TimeInterval? = nil) -> AsyncThrowingStream<[T], Error> {
         let session = self.session
         let jsonDecoder = self.jsonDecoder
@@ -111,7 +110,6 @@ public actor NPGKit {
         let pollPeriod = pollPeriod ?? dataSource.defaultPollPeriod
         
         return AsyncThrowingStream { continuation in
-            
             Task {
                 repeat {
                     let data: Data
@@ -125,6 +123,7 @@ public actor NPGKit {
                                     fatalError("No fixture data found for \(T.self).")
                                 }
                                 data = fixtureData
+                                
                             default:
                                 let endpoint = try dataSource.endpoint(for: T.self)
                                 let (sessionData, _) = try await session.data(from: endpoint)
@@ -147,11 +146,10 @@ public actor NPGKit {
                     }
                     
                     try await Task.sleep(for: .seconds(pollPeriod))
+                    
                 } while !Task.isCancelled
             }
-            
         }
-        
     }
 }
 
