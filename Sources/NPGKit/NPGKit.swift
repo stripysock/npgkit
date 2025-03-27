@@ -94,16 +94,24 @@ public class NPGKit {
 @available(tvOS 16.0, *)
 @available(visionOS 1.0, *)
 fileprivate extension NPGKit.DataSource {
-    var endpoint: URL? {
+    var baseURL: URL? {
         switch self {
         case .development:
-            return URL(string: "https://www.portrait.gov.au/json/ondisplaydev/all")
+            return URL(string: "https://www.portrait.gov.au/json/ondisplaydev")
             
         case .production:
-            return URL(string: "https://www.portrait.gov.au/json/ondisplaylive/all")
+            return URL(string: "https://www.portrait.gov.au/json/ondisplaylive")
             
         default:
             return nil
+        }
+    }
+    
+    var endpoint: URL? {
+        if let baseURL = baseURL {
+            baseURL.appending(path: "/all")
+        } else {
+            nil
         }
     }
 }
