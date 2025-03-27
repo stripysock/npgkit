@@ -54,8 +54,8 @@ public class NPGKit {
      
      - throws: Will throw an `NPGError` if the content can't be retrieved or is malformed.
      */
-    public func areas() -> AsyncThrowingStream<[NPGArea], Error> {
-        pollingStreamForNPGObject()
+    public func areas(pollEvery pollPeriod: TimeInterval? = nil) -> AsyncThrowingStream<[NPGArea], Error> {
+        pollingStreamForNPGObject(pollEvery: pollPeriod)
     }
     
     /**
@@ -63,8 +63,8 @@ public class NPGKit {
      
      - throws: Will throw an `NPGError` if the content can't be retrieved or is malformed.
      */
-    public func artworks() -> AsyncThrowingStream<[NPGArtwork], Error> {
-        pollingStreamForNPGObject()
+    public func artworks(pollEvery pollPeriod: TimeInterval? = nil) -> AsyncThrowingStream<[NPGArtwork], Error> {
+        pollingStreamForNPGObject(pollEvery: pollPeriod)
     }
     
     /**
@@ -72,8 +72,8 @@ public class NPGKit {
      
      - throws: Will throw an `NPGError` if the content can't be retrieved or is malformed.
      */
-    public func beacons() -> AsyncThrowingStream<[NPGBeacon], Error> {
-        pollingStreamForNPGObject()
+    public func beacons(pollEvery pollPeriod: TimeInterval? = nil) -> AsyncThrowingStream<[NPGBeacon], Error> {
+        pollingStreamForNPGObject(pollEvery: pollPeriod)
     }
     
     /**
@@ -81,8 +81,8 @@ public class NPGKit {
      
      - throws: Will throw an `NPGError` if the content can't be retrieved or is malformed.
      */
-    public func entities() -> AsyncThrowingStream<[NPGEntity], Error> {
-        pollingStreamForNPGObject()
+    public func entities(pollEvery pollPeriod: TimeInterval? = nil) -> AsyncThrowingStream<[NPGEntity], Error> {
+        pollingStreamForNPGObject(pollEvery: pollPeriod)
     }
     
     /**
@@ -91,8 +91,8 @@ public class NPGKit {
      
      - throws: Will throw an `NPGError` if the content can't be retrieved or is malformed.
      */
-    public func locations() -> AsyncThrowingStream<[NPGArea.Location], Error> {
-        pollingStreamForNPGObject()
+    public func locations(pollEvery pollPeriod: TimeInterval? = nil) -> AsyncThrowingStream<[NPGArea.Location], Error> {
+        pollingStreamForNPGObject(pollEvery: pollPeriod)
     }
     
     /**
@@ -100,66 +100,58 @@ public class NPGKit {
      
      - throws: Will throw an `NPGError` if the content can't be retrieved or is malformed.
      */
-    public func tours() -> AsyncThrowingStream<[NPGTour], Error> {
-        pollingStreamForNPGObject()
+    public func tours(pollEvery pollPeriod: TimeInterval? = nil) -> AsyncThrowingStream<[NPGTour], Error> {
+        pollingStreamForNPGObject(pollEvery: pollPeriod)
     }
     
-    private func pollingStreamForNPGObject<T: NPGObject>() -> AsyncThrowingStream<[T], Error> {
+    private var timerBucket: [Timer] = []
+    private func pollingStreamForNPGObject<T: NPGObject>(pollEvery pollPeriod: TimeInterval? = nil) -> AsyncThrowingStream<[T], Error> {
         let session = self.session
         let jsonDecoder = self.jsonDecoder
         let dataSource = self.dataSource
-        let pollPeriod = dataSource.pollPeriod
+        let pollPeriod = pollPeriod ?? dataSource.defaultPollPeriod
         
         return AsyncThrowingStream { continuation in
-            let timer = Timer.scheduledTimer(withTimeInterval: pollPeriod, repeats: true) { _ in
-                Task {
-                    
+            
+            Task {
+                repeat {
                     let data: Data
-                    switch dataSource {
-                        case .fixture:
-                            guard let path = Bundle.module.path(forResource: "fixture", ofType: "json"),
-                                  FileManager.default.fileExists(atPath: path),
-                                  let fixtureData = FileManager.default.contents(atPath: path) else {
-                                fatalError("No fixture data found.")
-                            }
-                            data = fixtureData
-                        default:
-                            let endpoint = try dataSource.endpoint(for: T.self)
-                            let (sessionData, _) = try await session.data(from: endpoint)
-                            data = sessionData
-                    }
                     
                     do {
-                        // Note that [NPGData] is a stop gap whilst the API has an error
-                        let npgDataCollection: [NPGData]
-                        if let preferred = try? jsonDecoder.decode(NPGData.self, from: data) {
-                            npgDataCollection = [preferred]
-                        } else {
-                            npgDataCollection = try jsonDecoder.decode([NPGData].self, from: data)
+                        switch dataSource {
+                            case .fixture:
+                                guard let path = Bundle.module.path(forResource: "fixture", ofType: "json"),
+                                      FileManager.default.fileExists(atPath: path),
+                                      let fixtureData = FileManager.default.contents(atPath: path) else {
+                                    fatalError("No fixture data found.")
+                                }
+                                data = fixtureData
+                            default:
+                                let endpoint = try dataSource.endpoint(for: T.self)
+                                let (sessionData, _) = try await session.data(from: endpoint)
+                                data = sessionData
                         }
                         
-                        guard let npgData = npgDataCollection.first else {
-                            throw(NPGError.invalidStringFormat(expectedFormat: "Couldn't retrieve content"))
-                        }
+                        let npgData = try jsonDecoder.decode(NPGData.self, from: data)
                         
                         let values: [T] = try npgData.items()
-                        
-                        continuation.yield(values)
                         
                         let decodingErrors = try npgData.decodingErrors(for: T.self)
                         if !decodingErrors.isEmpty {
                             Self.logger.error("\(decodingErrors.count) errors encountered whilst decoding entities.")
                         }
                         
+                        continuation.yield(values)
+                        
                     } catch {
                         continuation.finish(throwing: error)
                     }
                     
-                    
-                }
+                    try await Task.sleep(for: .seconds(pollPeriod))
+                } while !Task.isCancelled
             }
             
-            timer.fire()
+            Self.logger.info("Polling stream stopped.")
         }
         
     }
@@ -171,16 +163,32 @@ public class NPGKit {
 @available(visionOS 1.0, *)
 fileprivate extension NPGKit.DataSource {
     enum PathComponent: String {
+        case areas = "/areas"
+        case locations = "/locations"
+        case beacons = "/beacons"
         case artworks = "/labels"
         case entities = "/people"
+        case tours = "/tours"
         
         static func forType(_ type: any NPGObject.Type) throws -> Self {
             switch type {
+                case is NPGArea.Type:
+                    return .areas
+                    
+                case is NPGArea.Location.Type:
+                    return .locations
+                    
+                case is NPGBeacon.Type:
+                    return .beacons
+                    
                 case is NPGArtwork.Type:
                     return .artworks
                     
                 case is NPGEntity.Type:
                     return .entities
+                    
+                case is NPGTour.Type:
+                    return .tours
                 default:
                     throw(NPGError.noPathComponentForType(type))
             }
@@ -222,14 +230,38 @@ fileprivate extension NPGKit.DataSource {
 fileprivate extension NPGData {
     func items<T: NPGObject>() throws -> [T] {
         switch T.self {
+            case is NPGArea.Type:
+                guard let values = self.areas else {
+                    throw(NPGError.noContentForType(T.self))
+                }
+                return values.compactMap { $0.base as? T }
+                
+            case is NPGArea.Location.Type:
+                guard let values = self.locations else {
+                    throw(NPGError.noContentForType(T.self))
+                }
+                return values.compactMap { $0.base as? T }
+            
             case is NPGArtwork.Type:
                 guard let values = self.artworks else {
                     throw(NPGError.noContentForType(T.self))
                 }
                 return values.compactMap { $0.base as? T }
                 
+            case is NPGBeacon.Type:
+                guard let values = self.beacons else {
+                    throw(NPGError.noContentForType(T.self))
+                }
+                return values.compactMap { $0.base as? T }
+                
             case is NPGEntity.Type:
                 guard let values = self.entities else {
+                    throw(NPGError.noContentForType(T.self))
+                }
+                return values.compactMap { $0.base as? T }
+                
+            case is NPGTour.Type:
+                guard let values = self.tours else {
                     throw(NPGError.noContentForType(T.self))
                 }
                 return values.compactMap { $0.base as? T }
@@ -241,14 +273,38 @@ fileprivate extension NPGData {
     
     func decodingErrors(for type: any NPGObject.Type) throws -> [Error] {
         switch type.self {
+            case is NPGArea.Type:
+                guard let values = self.areas else {
+                    throw(NPGError.noContentForType(type))
+                }
+                return values.compactMap { $0.error }
+                
+            case is NPGArea.Location.Type:
+                guard let values = self.locations else {
+                    throw(NPGError.noContentForType(type))
+                }
+                return values.compactMap { $0.error }
+               
             case is NPGArtwork.Type:
                 guard let values = self.artworks else {
                     throw(NPGError.noContentForType(type))
                 }
                 return values.compactMap { $0.error }
                 
+            case is NPGBeacon.Type:
+                guard let values = self.beacons else {
+                    throw(NPGError.noContentForType(type))
+                }
+                return values.compactMap { $0.error }
+                
             case is NPGEntity.Type:
                 guard let values = self.entities else {
+                    throw(NPGError.noContentForType(type))
+                }
+                return values.compactMap { $0.error }
+            
+            case is NPGTour.Type:
+                guard let values = self.tours else {
                     throw(NPGError.noContentForType(type))
                 }
                 return values.compactMap { $0.error }
