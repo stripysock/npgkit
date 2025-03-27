@@ -13,6 +13,29 @@ final class NPGKitTests: XCTestCase {
         }
     }
     
+    func testArtworksStream() async {
+        let artworkExpectation = XCTestExpectation(description: "Artworks load successfully")
+        
+        do {
+            for try await values in npgKit.artworksStream() {
+                if !values.isEmpty {
+                    print("Haz \(values.count) artworks!")
+                    artworkExpectation.fulfill()
+                    return
+                    
+                } else {
+                    XCTFail("No artworks found.")
+                    return
+                }
+            }
+        } catch {
+            XCTFail("Error encountered whilst retrieving artworks: \(error.localizedDescription).")
+            return
+        }
+        
+        await fulfillment(of: [artworkExpectation], timeout: 5)
+    }
+    
     func testArtworkRetrieval() async {
         let artworkExpectation = XCTestExpectation(description: "Artwork loads successfully")
         
@@ -118,6 +141,35 @@ final class NPGKitTests: XCTestCase {
         }
         
         await fulfillment(of: [beaconExpectation, areaExpectation, locationExpectation], timeout: 8, enforceOrder: false)
+    }
+    
+    func testEntitiesStream() async {
+        let entityExpectation = XCTestExpectation(description: "Entities load successfully")
+        
+        do {
+            for try await values in npgKit.entitiesStream() {
+                if !values.isEmpty {
+                    print("Haz \(values.count) entities!")
+                    
+                    // Inspect entities
+                    if let inspectable = values.first(where: { $0.id == 9029 }) {
+                        print(inspectable)
+                    }
+                    
+                    entityExpectation.fulfill()
+                    return
+                    
+                } else {
+                    XCTFail("No entities found.")
+                    return
+                }
+            }
+        } catch {
+            XCTFail("Error encountered whilst retrieving entities: \(error.localizedDescription).")
+            return
+        }
+        
+        await fulfillment(of: [entityExpectation], timeout: 5)
     }
     
     func testEntityRetrieval() async {
