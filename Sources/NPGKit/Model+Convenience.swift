@@ -1,6 +1,14 @@
 import Foundation
 import SwiftUI
 
+extension NPGObject {
+    internal static var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter
+    }
+}
+
 extension NPGBool {
     init(bool: Bool) {
         self = bool ? .yes : .no
