@@ -29,13 +29,13 @@ public struct NPGMetadata: Codable, Sendable {
 
 internal struct NPGData: Decodable, Sendable {
     
-    var metadata: NPGMetadata
-    var areas: [FailableDecodable<NPGArea>]
-    var locations: [FailableDecodable<NPGArea.Location>]
-    var artworks: [FailableDecodable<NPGArtwork>]
-    var beacons: [FailableDecodable<NPGBeacon>]
-    var tours: [FailableDecodable<NPGTour>]
-    var entities: [FailableDecodable<NPGEntity>]
+    var metadata: NPGMetadata?
+    var areas: [FailableDecodable<NPGArea>]?
+    var locations: [FailableDecodable<NPGArea.Location>]?
+    var artworks: [FailableDecodable<NPGArtwork>]?
+    var beacons: [FailableDecodable<NPGBeacon>]?
+    var tours: [FailableDecodable<NPGTour>]?
+    var entities: [FailableDecodable<NPGEntity>]?
 }
 
 /**
