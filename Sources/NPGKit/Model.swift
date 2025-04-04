@@ -72,16 +72,17 @@ public struct NPGCoordinates: Hashable, Codable, Sendable {
  NPGTour represents a self-guided tour or pre-determined path through the gallery.
  */
 public struct NPGTour: NPGObject, Codable {
-    public init(id: Int, dateModified: Date, title: String, subtitle: String? = nil, beaconID: Int? = nil, priority: Int, audio: [NPGAudio], tourStops: [NPGTour.TourStop]) {
-        self.id = id
-        self.dateModified = dateModified
-        self.title = title
-        self.subtitle = subtitle
-        self.beaconID = beaconID
-        self.priority = priority
-        self.audio = audio
-        self.tourStops = tourStops
-    }
+    
+    /**
+     TourStop represents a particular stop on an ``NPGTour``.
+     */
+    public struct TourStop: NPGObject, Codable {
+        /// A unique identifier for this tour stop.
+        public var id: Int
+        
+        /// Last modified date for this tour stop..
+        public var dateModified: Date
+        
         /// The name of the tour stop.
         public var title: String
         
@@ -133,18 +134,6 @@ public struct NPGTour: NPGObject, Codable {
  NPGBeacon represents a physical iBeacon within the gallery.
  */
 public struct NPGBeacon: NPGObject, Codable {
-    public init(id: Int, dateModified: Date, proximityUUID: UUID, major: Int, minor: Int, title: String, areaIDs: [Int], locationIDs: [Int], artworkIDs: [Int]) {
-        self.id = id
-        self.dateModified = dateModified
-        self.proximityUUID = proximityUUID
-        self.major = major
-        self.minor = minor
-        self.title = title
-        self.areaIDs = areaIDs
-        self.locationIDs = locationIDs
-        self.artworkIDs = artworkIDs
-    }
-    
     
     /// A unique identifier for this beacon.
     public var id: Int
@@ -180,35 +169,11 @@ public struct NPGBeacon: NPGObject, Codable {
  For example, the area for Portrait 23 encompasses the locations "Gallery 4", "Gallery 5", "Gallery 6", "Gallery 6 Nook 1" and "Gallery 6 Nook 2".
  */
 public struct NPGArea: NPGObject, Codable {
-    public init(id: Int, dateModified: Date, title: String, subtitle: String? = nil, beaconIDs: [Int], priority: Int, locationIDs: [Int], artworkIDs: [Int], externalCoordinates: NPGCoordinates? = nil) {
-        self.id = id
-        self.dateModified = dateModified
-        self.title = title
-        self.subtitle = subtitle
-        self.beaconIDs = beaconIDs
-        self.priority = priority
-        self.locationIDs = locationIDs
-        self.artworkIDs = artworkIDs
-        self.externalCoordinates = externalCoordinates
-    }
     
     /**
      NPGArea.Location represents a given contiguous area within the Gallery. This might be an entire Gallery space (i.e. Gallery 2), an alcove, or even a wall.
      */
     public struct Location: NPGObject, Codable {
-        public init(id: Int, areaID: Int, dateModified: Date, title: String, subtitle: String? = nil, content: String? = nil, beaconID: Int? = nil, priority: Int, artworkIDs: [Int], audio: [NPGAudio]) {
-            self.id = id
-            self.areaID = areaID
-            self.dateModified = dateModified
-            self.title = title
-            self.subtitle = subtitle
-            self.content = content
-            self.beaconID = beaconID
-            self.priority = priority
-            self.artworkIDs = artworkIDs
-            self.audio = audio
-        }
-        
         /// A unique identifier for this location.
         public var id: Int
         
@@ -273,25 +238,6 @@ public struct NPGArea: NPGObject, Codable {
  It includes the name and description of the artwork along with images, 3D objects (for scanning), and audio files describing the work or as an interview with the artist or sitter.
  */
 public struct NPGArtwork: NPGObject, Codable {
-    public init(id: Int, dateModified: Date, title: String, subtitle: String, dateCreated: String, areaID: Int, locationID: Int? = nil, beaconID: Int? = nil, priority: Int, width: Double, height: Double, text: [NPGArtwork.LabelText], images: [NPGImage], nearbyArtworks: [NPGArtwork.Nearby], audio: [NPGAudio], scanObjects: [NPG3DObject]) {
-        self.id = id
-        self.dateModified = dateModified
-        self.title = title
-        self.subtitle = subtitle
-        self.dateCreated = dateCreated
-        self.areaID = areaID
-        self.locationID = locationID
-        self.beaconID = beaconID
-        self.priority = priority
-        self.width = width
-        self.height = height
-        self.text = text
-        self.images = images
-        self.nearbyArtworks = nearbyArtworks
-        self.audio = audio
-        self.scanObjects = scanObjects
-    }
-    
     
     /// Text used for an artwork's on-wall label.
     public struct LabelText: Codable, Hashable, Sendable {
@@ -381,19 +327,6 @@ public struct NPGArtwork: NPGObject, Codable {
 
 /// An image file representing an artwork.
 public struct NPGImage: NPGFile {
-    public init(id: Int, dateModified: Date, scanningOnly: Bool, width: Double, height: Double, subjectCrop: NPGImage.CropSize? = nil, faceCrops: [NPGImage.FaceCrop], url: URL, thumbnailURL: URL? = nil, squareURL: URL? = nil) {
-        self.id = id
-        self.dateModified = dateModified
-        self.scanningOnly = scanningOnly
-        self.width = width
-        self.height = height
-        self.subjectCrop = subjectCrop
-        self.faceCrops = faceCrops
-        self.url = url
-        self.thumbnailURL = thumbnailURL
-        self.squareURL = squareURL
-    }
-    
     /**
      A structure dictating how an image should be cropped. If no reference size is supplied (or is zero), it should be assumed that the topLeft and and bottomRight are percentage values of the image's total size.
      
@@ -410,11 +343,6 @@ public struct NPGImage: NPGFile {
     
     /// A structure specifying the region of a person's face within an image
     public struct FaceCrop: Hashable, Sendable {
-        public init(entityID: Int, crop: NPGImage.CropSize) {
-            self.entityID = entityID
-            self.crop = crop
-        }
-        
         public var entityID: Int
         public var crop: CropSize
     }
@@ -454,18 +382,6 @@ public struct NPGImage: NPGFile {
 
 /// An audio file associated with an artwork.
 public struct NPGAudio: NPGFile, Codable, Sendable {
-    public init(id: Int, dateModified: Date, priority: Int, audioContext: NPGAudio.AudioContext, title: String, duration: String, transcript: String, attribution: String? = nil, acknowledgements: String? = nil, url: URL) {
-        self.id = id
-        self.dateModified = dateModified
-        self.priority = priority
-        self.audioContext = audioContext
-        self.title = title
-        self.duration = duration
-        self.transcript = transcript
-        self.attribution = attribution
-        self.acknowledgements = acknowledgements
-        self.url = url
-    }
     
     /// The context in which an audio file should be used.
     public enum AudioContext: String, Equatable, Codable, Sendable {
@@ -515,11 +431,6 @@ public struct NPGAudio: NPGFile, Codable, Sendable {
 
 /// An 3D scan associated with an artwork.
 public struct NPG3DObject: NPGFile, Codable {
-    public init(id: Int, dateModified: Date, url: URL) {
-        self.id = id
-        self.dateModified = dateModified
-        self.url = url
-    }
     
     /// The unique identifier of our file.
     public var id: Int
@@ -537,19 +448,6 @@ public struct NPG3DObject: NPGFile, Codable {
  Note that as of 1.0.8 these entities **are not** being retrieved, and instead are a proposed structure for future implmentation.
  */
 public struct NPGEntity: NPGObject, Codable {
-    public init(id: Int, dateModified: Date, displayName: String, simpleName: String? = nil, givenNames: [String]? = nil, familyNames: [String]? = nil, text: [NPGArtwork.LabelText], audio: [NPGAudio], artworkAsSubjectIDs: [Int], artworkAsArtistIDs: [Int]) {
-        self.id = id
-        self.dateModified = dateModified
-        self.displayName = displayName
-        self.simpleName = simpleName
-        self.givenNames = givenNames
-        self.familyNames = familyNames
-        self.text = text
-        self.audio = audio
-        self.artworkAsSubjectIDs = artworkAsSubjectIDs
-        self.artworkAsArtistIDs = artworkAsArtistIDs
-    }
-    
     
     /// A unique identifier for this entity.
     public var id: Int
