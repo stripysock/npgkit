@@ -72,6 +72,7 @@ public struct NPGCoordinates: Hashable, Codable, Sendable {
  NPGTour represents a self-guided tour or pre-determined path through the gallery.
  */
 public struct NPGTour: NPGObject, Codable {
+    
     /**
      TourStop represents a particular stop on an ``NPGTour``.
      */
@@ -168,6 +169,7 @@ public struct NPGBeacon: NPGObject, Codable {
  For example, the area for Portrait 23 encompasses the locations "Gallery 4", "Gallery 5", "Gallery 6", "Gallery 6 Nook 1" and "Gallery 6 Nook 2".
  */
 public struct NPGArea: NPGObject, Codable {
+    
     /**
      NPGArea.Location represents a given contiguous area within the Gallery. This might be an entire Gallery space (i.e. Gallery 2), an alcove, or even a wall.
      */
@@ -380,6 +382,7 @@ public struct NPGImage: NPGFile {
 
 /// An audio file associated with an artwork.
 public struct NPGAudio: NPGFile, Codable, Sendable {
+    
     /// The context in which an audio file should be used.
     public enum AudioContext: String, Equatable, Codable, Sendable {
         /// An interview with the subject or artist, usually contemporaneous to the associated artwork.
@@ -428,6 +431,7 @@ public struct NPGAudio: NPGFile, Codable, Sendable {
 
 /// An 3D scan associated with an artwork.
 public struct NPG3DObject: NPGFile, Codable {
+    
     /// The unique identifier of our file.
     public var id: Int
     

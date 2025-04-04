@@ -1,13 +1,5 @@
 import Foundation
 
-extension NPGObject {
-    internal static var dateFormatter: DateFormatter {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        return dateFormatter
-    }
-}
-
 extension NPGData {
     enum CodingKeys: String, CodingKey {
         case areas, locations, beacons, tours
