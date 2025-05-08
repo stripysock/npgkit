@@ -146,6 +146,7 @@ extension NPGArtwork {
                 title: String,
                 subtitle: String = "",
                 dateCreated: String,
+                accessionID: String? = nil,
                 areaID: Int,
                 locationID: Int? = nil,
                 beaconID: Int? = nil,
@@ -161,6 +162,7 @@ extension NPGArtwork {
         self.title = title
         self.subtitle = subtitle
         self.dateCreated = dateCreated
+        self.accessionID = accessionID
         self.areaID = areaID
         self.locationID = locationID
         self.beaconID = beaconID
