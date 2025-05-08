@@ -291,6 +291,13 @@ public struct NPGArtwork: NPGObject, Codable {
     /// The date this artwork was created by the artist.
     public var dateCreated: String
     
+    /**
+     An optional unique identifier that identifies the artwork by the date it was acquired.
+     
+     This value will only be present by artworks within the gallery collection, not those on loan.
+     */
+    public var accessionID: String?
+    
     /// The ID of the area in which this portrait exists.
     public var areaID: Int
     
