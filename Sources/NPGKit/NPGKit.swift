@@ -1,7 +1,7 @@
 import Foundation
 import os.log
 
-public actor NPGKit {
+public actor NPGKit: Sendable {
     private static let logger = Logger(
         subsystem: Bundle.main.bundleIdentifier!,
         category: String(describing: #file)
