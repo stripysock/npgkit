@@ -1,10 +1,6 @@
 import Foundation
 import os.log
 
-@available(iOS 15.0, *)
-@available(macOS 12.0, *)
-@available(tvOS 16.0, *)
-@available(visionOS 1.0, *)
 public actor NPGKit {
     private static let logger = Logger(
         subsystem: Bundle.main.bundleIdentifier!,
@@ -153,10 +149,6 @@ public actor NPGKit {
     }
 }
 
-@available(iOS 15.0, *)
-@available(macOS 12.0, *)
-@available(tvOS 16.0, *)
-@available(visionOS 1.0, *)
 fileprivate extension NPGKit.DataSource {
     enum PathComponent: String {
         case areas = "/areas"
