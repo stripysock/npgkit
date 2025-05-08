@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -7,9 +7,9 @@ let package = Package(
     name: "NPGKit",
     platforms: [
             .macOS(.v13),
-            .iOS(.v15),
-            .tvOS(.v15),
-            .visionOS(.v1)
+            .iOS(.v16),
+            .tvOS(.v16),
+            .visionOS(.v2)
         ],
     products: [
         .library(
