@@ -1,7 +1,6 @@
 import XCTest
 @testable import NPGKit
 
-@available(iOS 15.0, *)
 final class NPGKitTests: XCTestCase {
     private let npgKit = NPGKit(dataSource: .production)
     
