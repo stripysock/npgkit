@@ -6,8 +6,9 @@ import PackageDescription
 let package = Package(
     name: "NPGKit",
     platforms: [
-            .macOS(.v11),
-            .iOS(.v13),
+            .macOS(.v13),
+            .iOS(.v15),
+            .tvOS(.v15),
             .visionOS(.v1)
         ],
     products: [
