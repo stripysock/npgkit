@@ -65,7 +65,7 @@ extension NPGArtwork {
         case dateModified = "datemodified"
         case dateCreated = "datecreated"
         case areaID = "areaid"
-        case accessionID = "accessionid"
+        case accessionID = "accessionnumber"
         case locationID = "locationid"
         case nearbyArtworks = "nearbylabels"
         case scanObjects = "3dscan"

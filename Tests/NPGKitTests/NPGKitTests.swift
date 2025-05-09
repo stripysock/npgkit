@@ -26,6 +26,30 @@ final class NPGKitTests: XCTestCase {
         await fulfillment(of: [artworkExpectation], timeout: 5)
     }
     
+    func testArtworksWithAccessionNumber() async {
+        let artworkExpectation = XCTestExpectation(description: "Acquired artworks load successfully")
+        
+        do {
+            for try await values in await npgKit.artworks() {
+                print("Found \(values.count) artworks...")
+                let accessionIDs = values.compactMap( { $0.accessionID })
+                if !accessionIDs.isEmpty {
+                    print("... and \(accessionIDs.count) have accession numbers!")
+                    artworkExpectation.fulfill()
+                    return
+                    
+                } else {
+                    throw NPGError.noContentForType(NPGArtwork.self)
+                }
+            }
+        } catch {
+            XCTFail("Error encountered whilst retrieving artworks: \(error.localizedDescription).")
+            return
+        }
+        
+        await fulfillment(of: [artworkExpectation], timeout: 5)
+    }
+    
     func testArtworkPolling() async {
         let artworkSingleRetrievalExpectation = XCTestExpectation(description: "Artwork received")
         let artworkMultipleRetrievalExpectation = XCTestExpectation(description: "Artwork received multiple times")
