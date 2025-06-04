@@ -52,6 +52,9 @@ extension NPGArtwork.LabelText: Comparable {
 
 extension NPGAudio: Comparable {
     public static func < (lhs: NPGAudio, rhs: NPGAudio) -> Bool {
+        if lhs.priority != rhs.priority {
+            return lhs.priority < rhs.priority
+        }
         if lhs.audioContext != rhs.audioContext {
             return lhs.audioContext < rhs.audioContext
         }
@@ -61,6 +64,21 @@ extension NPGAudio: Comparable {
 
 extension NPGAudio.AudioContext: Comparable {
     public static func < (lhs: NPGAudio.AudioContext, rhs: NPGAudio.AudioContext) -> Bool {
+        return lhs.rawValue < rhs.rawValue
+    }
+}
+
+extension NPGVideo: Comparable {
+    public static func < (lhs: NPGVideo, rhs: NPGVideo) -> Bool {
+        if lhs.priority != rhs.priority {
+            return lhs.priority < rhs.priority
+        }
+        return lhs.title < rhs.title
+    }
+}
+
+extension NPGVideo.VideoContext: Comparable {
+    public static func < (lhs: NPGVideo.VideoContext, rhs: NPGVideo.VideoContext) -> Bool {
         return lhs.rawValue < rhs.rawValue
     }
 }

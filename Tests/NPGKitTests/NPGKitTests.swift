@@ -11,6 +11,10 @@ final class NPGKitTests: XCTestCase {
             for try await values in await npgKit.artworks() {
                 if !values.isEmpty {
                     print("Haz \(values.count) artworks!")
+                    
+                    let videoItems = values.filter({ !$0.video.isEmpty })
+                    print("Haz \(videoItems.count) artworks with video!")
+                    
                     artworkExpectation.fulfill()
                     return
                     
