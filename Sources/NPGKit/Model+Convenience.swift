@@ -156,6 +156,7 @@ extension NPGArtwork {
                 images: [NPGImage] = [],
                 nearbyArtworks: [NPGArtwork.Nearby] = [],
                 audio: [NPGAudio] = [],
+                video: [NPGVideo] = [],
                 scanObjects: [NPG3DObject] = []) {
         self.id = id
         self.dateModified = .now
@@ -173,6 +174,7 @@ extension NPGArtwork {
         self.images = images
         self.nearbyArtworks = nearbyArtworks
         self.audio = audio
+        self.video = video
         self.scanObjects = scanObjects
     }
     
@@ -350,6 +352,32 @@ extension NPGAudio {
         self.attribution = attribution
         self.acknowledgements = acknowledgements
         self.url = url
+    }
+}
+
+extension NPGVideo {
+    public init(id: Int = .idGenerator(),
+                priority: Int = 1,
+                videoContext: NPGVideo.VideoContext = .portraitstory,
+                title: String,
+                duration: String,
+                size: CGSize,
+                transcript: String,
+                url: URL) {
+        self.id = id
+        self.dateModified = .now
+        self.priority = priority
+        self.videoContext = videoContext
+        self.title = title
+        self.duration = duration
+        self.transcript = transcript
+        self.url = url
+        self.width = size.width
+        self.height = size.height
+    }
+    
+    public var size: CGSize {
+        .init(width: width, height: height)
     }
 }
 

@@ -327,6 +327,9 @@ public struct NPGArtwork: NPGObject, Codable {
     
     /// An array of audio files that relate to the artwork.
     public var audio: [NPGAudio]
+    
+    /// An array of video files that relate to the artwork.
+    public var video: [NPGVideo]
 
     /// An array of 3D Objects to be used for detection by ARKit
     public var scanObjects: [NPG3DObject]
@@ -431,6 +434,49 @@ public struct NPGAudio: NPGFile, Codable, Sendable {
     
     /// A Markdown formatted string containing information on where the audio was sourced.
     public var acknowledgements: String? = nil
+    
+    /// The publicly accessible URL of the file.
+    public var url: URL
+}
+
+/// An video file associated with an artwork.
+public struct NPGVideo: NPGFile, Codable, Sendable {
+    
+    /// The context in which an video file should be used.
+    public enum VideoContext: String, Equatable, Codable, Sendable {
+        /// An interview with the subject or artist, usually contemporaneous to the associated artwork.
+        case portraitstory
+        
+        /// Video related to an artwork or location, but not fitting into other contexts.
+        case general
+    }
+    
+    /// The unique identifier of our file.
+    public var id: Int
+    
+    /// When this file was last modified.
+    public var dateModified: Date
+    
+    /// The sort priority for this video.
+    public var priority: Int
+    
+    /// The context of the video.
+    public var videoContext: VideoContext
+    
+    /// The title of the recording.
+    public var title: String
+    
+    /// A string description of the **approximate** run length. Use other means to determine duration where possible.
+    public var duration: String
+    
+    /// Internal - Use convenience ``size`` instead.
+    public var width: Double
+    
+    /// Internal  - Use convenience ``size`` instead.
+    public var height: Double
+    
+    /// A Markdown formatted string containing a textual representation of the recording.
+    public var transcript: String
     
     /// The publicly accessible URL of the file.
     public var url: URL

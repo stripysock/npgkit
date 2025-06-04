@@ -61,7 +61,7 @@ extension NPGArea.Location {
 
 extension NPGArtwork {
     enum CodingKeys: String, CodingKey {
-        case id, title, subtitle, priority, width, height, text, images, audio
+        case id, title, subtitle, priority, width, height, text, images, audio, video
         case dateModified = "datemodified"
         case dateCreated = "datecreated"
         case areaID = "areaid"
@@ -189,6 +189,55 @@ extension NPGAudio {
         case dateModified = "datemodified"
         case audioContext = "type"
         case url = "fileURL"
+    }
+}
+
+extension NPGVideo {
+    enum CodingKeys: String, CodingKey {
+        case id, priority, title, duration, transcript, width, height
+        case dateModified = "datemodified"
+        case videoContext = "type"
+        case url = "fileURL"
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.priority = try container.decode(Int.self, forKey: .priority)
+        self.title = try container.decode(String.self, forKey: .title)
+        self.duration = (try? container.decode(String.self, forKey: .duration)) ?? ""
+        self.transcript = try container.decode(String.self, forKey: .transcript)
+        self.dateModified = try container.decode(Date.self, forKey: .dateModified)
+        self.videoContext = try container.decode(VideoContext.self, forKey: .videoContext)
+        self.url = try container.decode(URL.self, forKey: .url)
+        
+        if let widthVal = try? container.decode(Double.self, forKey: .width) {
+            self.width = widthVal
+        } else {
+            let widthString = try container.decode(String.self, forKey: .width)
+            self.width = Double(widthString) ?? 0
+        }
+        
+        if let heightVal = try? container.decode(Double.self, forKey: .height) {
+            self.height = heightVal
+        } else {
+            let heightString = try container.decode(String.self, forKey: .height)
+            self.height = Double(heightString) ?? 0
+        }
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(self.id, forKey: .id)
+        try container.encode(self.priority, forKey: .priority)
+        try container.encode(self.title, forKey: .title)
+        try container.encode(self.duration, forKey: .duration)
+        try container.encode(self.transcript, forKey: .transcript)
+        try container.encode(self.dateModified, forKey: .dateModified)
+        try container.encode(self.videoContext, forKey: .videoContext)
+        try container.encode(self.url, forKey: .url)
     }
 }
 
