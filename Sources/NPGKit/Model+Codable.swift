@@ -185,10 +185,46 @@ extension NPGImage.FaceCrop: Codable {
 
 extension NPGAudio {
     enum CodingKeys: String, CodingKey {
-        case id, priority, title, duration, transcript, attribution, acknowledgements
+        case id, priority, title, duration, transcript, attribution, acknowledgements, performer
         case dateModified = "datemodified"
         case audioContext = "type"
         case url = "fileURL"
+        case prefersAutoplay = "prefersAutoPlay"
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.dateModified = try container.decode(Date.self, forKey: .dateModified)
+        self.priority = try container.decode(Int.self, forKey: .priority)
+        self.audioContext = try container.decode(NPGAudio.AudioContext.self, forKey: .audioContext)
+        self.title = try container.decode(String.self, forKey: .title)
+        self.duration = try container.decode(String.self, forKey: .duration)
+        self.transcript = try container.decode(String.self, forKey: .transcript)
+        self.attribution = try container.decodeIfPresent(String.self, forKey: .attribution)
+        self.acknowledgements = try container.decodeIfPresent(String.self, forKey: .acknowledgements)
+        self.url = try container.decode(URL.self, forKey: .url)
+        
+        let prefersAutoplay = try container.decodeIfPresent(NPGBool.self, forKey: .prefersAutoplay)
+        self.prefersAutoplay = prefersAutoplay?.bool ?? false
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(self.id, forKey: .id)
+        try container.encode(self.dateModified, forKey: .dateModified)
+        try container.encode(self.priority, forKey: .priority)
+        try container.encode(self.audioContext, forKey: .audioContext)
+        try container.encode(self.title, forKey: .title)
+        try container.encode(self.duration, forKey: .duration)
+        try container.encode(self.transcript, forKey: .transcript)
+        try container.encode(self.attribution, forKey: .attribution)
+        try container.encode(self.acknowledgements, forKey: .acknowledgements)
+        try container.encode(self.url, forKey: .url)
+        try container.encode(NPGBool(bool: self.prefersAutoplay), forKey: .prefersAutoplay)
+        
     }
 }
 
