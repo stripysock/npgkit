@@ -406,6 +406,9 @@ public struct NPGAudio: NPGFile, Codable, Sendable {
         
         /// Audio related to an artwork or location, but not fitting into ``intheirownwords`` or ``audiodescription``.
         case generalaudio
+        
+        /// Musical audio to accompany the artwork.
+        case song
     }
     
     /// The unique identifier of our file.
