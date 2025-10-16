@@ -406,6 +406,9 @@ public struct NPGAudio: NPGFile, Codable, Sendable {
         
         /// Audio related to an artwork or location, but not fitting into ``intheirownwords`` or ``audiodescription``.
         case generalaudio
+        
+        /// Musical audio to accompany the artwork.
+        case song
     }
     
     /// The unique identifier of our file.
@@ -423,6 +426,9 @@ public struct NPGAudio: NPGFile, Codable, Sendable {
     /// The title of the recording.
     public var title: String
     
+    /// An optional name of the entity (person / group / species of bird) performing the audio.
+    public var performer: String? = nil
+    
     /// A string description of the **approximate** run length. Use other means to determine duration where possible.
     public var duration: String
     
@@ -437,6 +443,9 @@ public struct NPGAudio: NPGFile, Codable, Sendable {
     
     /// The publicly accessible URL of the file.
     public var url: URL
+    
+    /// Indicates whether the audio should be played automatically when the associated artwork is viewed.
+    public var prefersAutoplay: Bool = false
 }
 
 /// An video file associated with an artwork.
@@ -477,6 +486,9 @@ public struct NPGVideo: NPGFile, Codable, Sendable {
     
     /// A Markdown formatted string containing a textual representation of the recording.
     public var transcript: String
+    
+    /// The URL for WebVTT formatted caption text.
+    public var webVTT: URL? = nil
     
     /// The publicly accessible URL of the file.
     public var url: URL
