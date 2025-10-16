@@ -234,7 +234,7 @@ extension NPGVideo {
         case dateModified = "datemodified"
         case videoContext = "type"
         case url = "fileURL"
-        case webVTT = "webvtt"
+        case webVTT = "webvttURL"
     }
     
     public init(from decoder: Decoder) throws {
