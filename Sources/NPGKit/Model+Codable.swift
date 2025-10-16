@@ -205,6 +205,7 @@ extension NPGAudio {
         self.attribution = try container.decodeIfPresent(String.self, forKey: .attribution)
         self.acknowledgements = try container.decodeIfPresent(String.self, forKey: .acknowledgements)
         self.url = try container.decode(URL.self, forKey: .url)
+        self.performer = try container.decodeIfPresent(String.self, forKey: .performer)
         
         let prefersAutoplay = try container.decodeIfPresent(NPGBool.self, forKey: .prefersAutoplay)
         self.prefersAutoplay = prefersAutoplay?.bool ?? false
@@ -224,6 +225,7 @@ extension NPGAudio {
         try container.encode(self.acknowledgements, forKey: .acknowledgements)
         try container.encode(self.url, forKey: .url)
         try container.encode(NPGBool(bool: self.prefersAutoplay), forKey: .prefersAutoplay)
+        try container.encodeIfPresent(self.performer, forKey: .performer)
         
     }
 }
