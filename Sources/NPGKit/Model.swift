@@ -487,6 +487,9 @@ public struct NPGVideo: NPGFile, Codable, Sendable {
     /// A Markdown formatted string containing a textual representation of the recording.
     public var transcript: String
     
+    /// The URL for WebVTT formatted caption text.
+    public var webVTT: URL? = nil
+    
     /// The publicly accessible URL of the file.
     public var url: URL
 }

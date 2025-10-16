@@ -234,6 +234,7 @@ extension NPGVideo {
         case dateModified = "datemodified"
         case videoContext = "type"
         case url = "fileURL"
+        case webVTT = "webvtt"
     }
     
     public init(from decoder: Decoder) throws {
@@ -247,6 +248,8 @@ extension NPGVideo {
         self.dateModified = try container.decode(Date.self, forKey: .dateModified)
         self.videoContext = try container.decode(VideoContext.self, forKey: .videoContext)
         self.url = try container.decode(URL.self, forKey: .url)
+        self.webVTT = try? container.decodeIfPresent(URL.self, forKey: .webVTT)
+        
         
         if let widthVal = try? container.decode(Double.self, forKey: .width) {
             self.width = widthVal
@@ -274,6 +277,7 @@ extension NPGVideo {
         try container.encode(self.dateModified, forKey: .dateModified)
         try container.encode(self.videoContext, forKey: .videoContext)
         try container.encode(self.url, forKey: .url)
+        try container.encodeIfPresent(self.webVTT, forKey: .webVTT)
     }
 }
 
