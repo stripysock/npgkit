@@ -197,7 +197,9 @@ extension NPGAudio {
         
         self.id = try container.decode(Int.self, forKey: .id)
         self.dateModified = try container.decode(Date.self, forKey: .dateModified)
-        self.priority = try container.decode(Int.self, forKey: .priority)
+        let priority = try container.decodeIfPresent(Int.self, forKey: .priority)
+        self.priority = priority ?? 1
+        
         self.audioContext = try container.decode(NPGAudio.AudioContext.self, forKey: .audioContext)
         self.title = try container.decode(String.self, forKey: .title)
         self.duration = try container.decode(String.self, forKey: .duration)
