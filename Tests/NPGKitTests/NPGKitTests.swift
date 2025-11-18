@@ -30,6 +30,36 @@ final class NPGKitTests: XCTestCase {
         await fulfillment(of: [artworkExpectation], timeout: 5)
     }
     
+    func testArtworkEncoding() async {
+        let artworkExpectation = XCTestExpectation(description: "Artworks reencode successfully")
+        
+        do {
+            for try await values in await npgKit.artworks() {
+                if !values.isEmpty {
+                    print("Haz \(values.count) artworks!")
+                    
+                    // Encode as data...
+                    let data = try JSONEncoder.npgKit.encode(values)
+                    
+                    // And decode
+                    let _ = try JSONDecoder.npgKit.decode([NPGArtwork].self, from: data)
+                      
+                    artworkExpectation.fulfill()
+                    
+                    return
+                    
+                } else {
+                    throw NPGError.noContentForType(NPGArtwork.self)
+                }
+            }
+        } catch {
+            XCTFail("Error encountered whilst retrieving artworks: \(error.localizedDescription).")
+            return
+        }
+        
+        await fulfillment(of: [artworkExpectation], timeout: 5)
+    }
+    
     func testArtworksWithAccessionNumber() async {
         let artworkExpectation = XCTestExpectation(description: "Acquired artworks load successfully")
         
@@ -231,13 +261,8 @@ final class NPGKitTests: XCTestCase {
                                     artworkAsSubjectIDs: [2210, 2218],
                                     artworkAsArtistIDs: [2210, 2218])
         
-        let encoder = JSONEncoder()
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        encoder.dateEncodingStrategy = .formatted(dateFormatter)
-        
         do {
-            let data = try encoder.encode([humanEntity, groupEntity])
+            let data = try JSONEncoder.npgKit.encode([humanEntity, groupEntity])
             if let json = String(data: data, encoding: .utf8) {
                 print(json)
                 expectation.fulfill()

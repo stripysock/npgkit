@@ -30,14 +30,6 @@ public actor NPGKit: Sendable {
         return session
     }()
     
-    private let jsonDecoder: JSONDecoder = {
-        let decoder = JSONDecoder()
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        decoder.dateDecodingStrategy = .formatted(dateFormatter)
-        return decoder
-    }()
-    
     private let dataSource: DataSource
     
     public init(dataSource: DataSource = .production) {
@@ -101,7 +93,7 @@ public actor NPGKit: Sendable {
     
     private func pollingStreamForNPGObject<T: NPGObject>(pollEvery pollPeriod: TimeInterval? = nil) -> AsyncThrowingStream<[T], Error> {
         let session = self.session
-        let jsonDecoder = self.jsonDecoder
+        let jsonDecoder = JSONDecoder.npgKit
         let dataSource = self.dataSource
         let pollPeriod = pollPeriod ?? dataSource.defaultPollPeriod
         
