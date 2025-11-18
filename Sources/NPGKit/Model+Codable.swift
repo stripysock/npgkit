@@ -282,6 +282,8 @@ extension NPGVideo {
         try container.encode(self.videoContext, forKey: .videoContext)
         try container.encode(self.url, forKey: .url)
         try container.encodeIfPresent(self.webVTT, forKey: .webVTT)
+        try container.encode(self.width, forKey: .width)
+        try container.encode(self.height, forKey: .height)
     }
 }
 
