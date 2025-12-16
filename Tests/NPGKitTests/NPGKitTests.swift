@@ -2,7 +2,53 @@ import XCTest
 @testable import NPGKit
 
 final class NPGKitTests: XCTestCase {
-    private let npgKit = NPGKit(dataSource: .production)
+    private let npgKit = NPGKit(dataSource: .fixture)
+    
+    func testAdjoiningAreas() async {
+        let retrievalExpectation = XCTestExpectation(description: "Areas retrieved successfully")
+        let comparisonExpectation = XCTestExpectation(description: "All adjoining areas have corresponding entries")
+        
+        do {
+            for try await values in await npgKit.areas() {
+                if !values.isEmpty {
+                    print("Haz \(values.count) areas!")
+                    
+                    retrievalExpectation.fulfill()
+                    
+                    for area in values {
+                        for adjoiningAreaRule in area.adjoiningAreas {
+                            guard let adjoiningArea = values.first(where: { $0.id == adjoiningAreaRule.areaID }) else {
+                                XCTFail("No area found with an ID of \(adjoiningAreaRule.areaID)")
+                                return
+                            }
+                            
+                            guard let reciprocalRule = adjoiningArea.adjoiningAreas.first(where: { $0.areaID == area.id }) else {
+                                XCTFail("No reciprocal rule found for area \(area.id)")
+                                return
+                            }
+                            
+                            guard adjoiningAreaRule.accessPointLocation == reciprocalRule.accessPointLocation.opposite else {
+                                XCTFail("Reciprocal rules found between area \(area.id) to \(adjoiningAreaRule.areaID), but access points don't match up: \(adjoiningAreaRule.accessPointLocation) vs \(reciprocalRule.accessPointLocation)")
+                                return
+                            }
+                        }
+                    }
+                    comparisonExpectation.fulfill()
+                    
+                    return
+                    
+                } else {
+                    throw NPGError.noContentForType(NPGArea.self)
+                }
+            }
+        } catch {
+            XCTFail("Error encountered whilst retrieving areas: \(error.localizedDescription).")
+            return
+        }
+        
+        await fulfillment(of: [retrievalExpectation, comparisonExpectation], timeout: 5)
+    }
+    
     
     func testArtworkRetrieval() async {
         let artworkExpectation = XCTestExpectation(description: "Artworks load successfully")

@@ -12,7 +12,13 @@
             "priority": 1,
             "audio": [],
             "locations": [92, 90],
-            "labels": [1968, 3915, 1969]
+            "labels": [1968, 3915, 1969],
+            "adjoiningareas": [
+                {
+                    "areaid": 43,
+                    "accesspoint": "southwest"
+                }
+            ]
         }, {
             "id": 43,
             "datemodified": "2024-09-27",
@@ -24,55 +30,17 @@
             "priority": 2,
             "audio": [],
             "locations": [89, 131],
-            "labels": [3427, 3426, 3390, 3398, 3411, 3415, 3404, 3428, 3414, 3391, 3413, 3389, 3399, 3419, 3410, 3412, 3408, 3409, 3430, 3420, 3397, 3423, 3401, 3831, 3832, 3400, 3388, 3405, 3396, 3424, 3995, 3406, 3394, 2670, 3402, 3386, 3395, 3422, 3407, 3421, 3387, 3417, 3425, 3392, 3403, 3393, 2625, 3418]
-        }, {
-            "id": 84,
-            "datemodified": "2025-07-04",
-            "title": "One-on-one",
-            "subtitle": "Gallery 3",
-            "beaconid": 17,
-            "beaconids": [17],
-            "dateadded": "2025-03-13",
-            "priority": 3,
-            "audio": [],
-            "locations": [136, 146, 147],
-            "labels": [3897, 3898, 3899, 3902, 3894, 3901, 3891, 3893, 3896, 3895, 3892, 3904, 3905, 3906, 3907, 3908, 3909, 3910, 3911, 3912, 3913, 3914]
-        }, {
-            "id": 89,
-            "datemodified": "2025-09-04",
-            "title": "In Bloom: A collection of the beautiful, bold and botanical",
-            "subtitle": "Galleries 4",
-            "beaconid": 18,
-            "beaconids": [18],
-            "dateadded": "2025-09-04",
-            "priority": 4,
-            "audio": [],
-            "locations": [153, 154],
-            "labels": [3772, 3785, 3750, 3757, 3771, 3779, 3780, 3782, 3781, 3784, 3756, 3783, 3739, 3738, 3741, 3808]
-        }, {
-            "id": 90,
-            "datemodified": "2025-09-04",
-            "title": "In Bloom: A collection of the beautiful, bold and botanical",
-            "subtitle": "Gallery 5",
-            "beaconid": 19,
-            "beaconids": [19],
-            "dateadded": "2025-09-04",
-            "priority": 5,
-            "audio": [],
-            "locations": [155, 156],
-            "labels": [3753, 3752, 3735, 3743, 3748, 3737, 3749, 4002, 3773, 3754, 3751, 3746, 3742, 3736, 3747, 3733, 3740, 3744, 3774, 3745]
-        }, {
-            "id": 91,
-            "datemodified": "2025-09-04",
-            "title": "In Bloom: A collection of the beautiful, bold and botanical",
-            "subtitle": "Gallery 6",
-            "beaconid": 20,
-            "beaconids": [20],
-            "dateadded": "2025-09-04",
-            "priority": 6,
-            "audio": [],
-            "locations": [157, 158, 159, 160],
-            "labels": [3761, 3807, 3806, 4003, 3803, 3805, 3800, 3797, 3799, 3798, 3802, 3796, 3804, 3801, 3759, 3760, 3755, 3758, 3827, 3765, 3828, 3768, 3829, 3769, 3830, 3791, 3787, 3795, 3786, 3792, 3790, 3793, 3794, 3789, 3788, 3770, 3775, 3778, 3777, 4001]
+            "labels": [3427, 3426, 3390, 3398, 3411, 3415, 3404, 3428, 3414, 3391, 3413, 3389, 3399, 3419, 3410, 3412, 3408, 3409, 3430, 3420, 3397, 3423, 3401, 3831, 3832, 3400, 3388, 3405, 3396, 3424, 3995, 3406, 3394, 2670, 3402, 3386, 3395, 3422, 3407, 3421, 3387, 3417, 3425, 3392, 3403, 3393, 2625, 3418],
+            "adjoiningareas": [
+                {
+                    "areaid": 57,
+                    "accesspoint": "northeast"
+                },
+                {
+                    "areaid": 55,
+                    "accesspoint": "southwest"
+                }
+            ]
         }, {
             "id": 55,
             "datemodified": "2025-10-13",
@@ -84,7 +52,117 @@
             "priority": 7,
             "audio": [],
             "locations": [84],
-            "labels": [3916, 3917, 3431, 3453, 3833, 3834, 3452, 3606, 4000]
+            "labels": [3916, 3917, 3431, 3453, 3833, 3834, 3452, 3606, 4000],
+            "adjoiningareas": [
+                {
+                    "areaid": 43,
+                    "accesspoint": "northeast"
+                },
+                {
+                    "areaid": 90,
+                    "accesspoint": "southwest"
+                },
+                {
+                    "areaid": 84,
+                    "accesspoint": "southeast"
+                },
+                {
+                    "areaid": 88,
+                    "accesspoint": "northwest"
+                }
+            ]
+        }, {
+            "id": 84,
+            "datemodified": "2025-07-04",
+            "title": "One-on-one",
+            "subtitle": "Gallery 3",
+            "beaconid": 17,
+            "beaconids": [17],
+            "dateadded": "2025-03-13",
+            "priority": 3,
+            "audio": [],
+            "locations": [136, 146, 147],
+            "labels": [3897, 3898, 3899, 3902, 3894, 3901, 3891, 3893, 3896, 3895, 3892, 3904, 3905, 3906, 3907, 3908, 3909, 3910, 3911, 3912, 3913, 3914],
+            "adjoiningareas": [
+                {
+                    "areaid": 89,
+                    "accesspoint": "southwest"
+                },
+                {
+                    "areaid": 55,
+                    "accesspoint": "northwest"
+                }
+            ]
+        }, {
+            "id": 89,
+            "datemodified": "2025-09-04",
+            "title": "In Bloom: A collection of the beautiful, bold and botanical",
+            "subtitle": "Galleries 4",
+            "beaconid": 18,
+            "beaconids": [18],
+            "dateadded": "2025-09-04",
+            "priority": 4,
+            "audio": [],
+            "locations": [153, 154],
+            "labels": [3772, 3785, 3750, 3757, 3771, 3779, 3780, 3782, 3781, 3784, 3756, 3783, 3739, 3738, 3741, 3808],
+            "adjoiningareas": [
+                {
+                    "areaid": 84,
+                    "accesspoint": "northeast"
+                },
+                {
+                    "areaid": 90,
+                    "accesspoint": "northwest"
+                }
+            ]
+        }, {
+            "id": 90,
+            "datemodified": "2025-09-04",
+            "title": "In Bloom: A collection of the beautiful, bold and botanical",
+            "subtitle": "Gallery 5",
+            "beaconid": 19,
+            "beaconids": [19],
+            "dateadded": "2025-09-04",
+            "priority": 5,
+            "audio": [],
+            "locations": [155, 156],
+            "labels": [3753, 3752, 3735, 3743, 3748, 3737, 3749, 4002, 3773, 3754, 3751, 3746, 3742, 3736, 3747, 3733, 3740, 3744, 3774, 3745],
+            "adjoiningareas": [
+                {
+                    "areaid": 89,
+                    "accesspoint": "southeast"
+                },
+                {
+                    "areaid": 55,
+                    "accesspoint": "northeast"
+                },
+                {
+                    "areaid": 91,
+                    "accesspoint": "northwest"
+                }
+            ]
+        }, {
+            "id": 91,
+            "datemodified": "2025-09-04",
+            "title": "In Bloom: A collection of the beautiful, bold and botanical",
+            "subtitle": "Gallery 6",
+            "beaconid": 20,
+            "beaconids": [20],
+            "dateadded": "2025-09-04",
+            "priority": 6,
+            "audio": [],
+            "locations": [157, 158, 159, 160],
+            "labels": [3761, 3807, 3806, 4003, 3803, 3805, 3800, 3797, 3799, 3798, 3802, 3796, 3804, 3801, 3759, 3760, 3755, 3758, 3827, 3765, 3828, 3768, 3829, 3769, 3830, 3791, 3787, 3795, 3786, 3792, 3790, 3793, 3794, 3789, 3788, 3770, 3775, 3778, 3777, 4001],
+            "adjoiningareas": [
+                {
+                    "areaid": 90,
+                    "accesspoint": "southeast"
+                },
+                {
+                    "areaid": 88,
+                    "accesspoint": "northeast"
+                }
+            ]
         }, {
             "id": 88,
             "datemodified": "2025-10-13",
@@ -96,7 +174,17 @@
             "priority": 9,
             "audio": [],
             "locations": [151, 152],
-            "labels": [3988, 3977, 3981, 3974, 3975, 3972, 3979, 3976, 3986, 3980, 3985, 3983, 3987, 3984, 3982]
+            "labels": [3988, 3977, 3981, 3974, 3975, 3972, 3979, 3976, 3986, 3980, 3985, 3983, 3987, 3984, 3982],
+            "adjoiningareas": [
+                {
+                    "areaid": 91,
+                    "accesspoint": "southwest"
+                },
+                {
+                    "areaid": 55,
+                    "accesspoint": "southeast"
+                }
+            ]
         }, {
             "id": 78,
             "datemodified": "2025-10-15",
@@ -106,8 +194,10 @@
             "dateadded": "2024-02-07",
             "priority": 10,
             "audio": [],
+            "beaconids": [],
             "locations": [145],
-            "labels": [3088, 3089, 3090, 3091, 3077, 3078, 3079, 3080, 3092, 3081, 3082, 3083, 3084, 3085, 3099, 3069, 3073, 3074, 3086, 3087, 3093, 3094, 3095, 3096, 3097, 3098, 3100, 3101, 3102, 3066, 3067, 3068, 3070, 3071, 3072, 3075, 3052, 3103, 3076, 3053, 3054, 3055, 3056, 3057, 3058, 3059, 3060, 3061, 3062, 3063, 3064, 3065]
+            "labels": [3088, 3089, 3090, 3091, 3077, 3078, 3079, 3080, 3092, 3081, 3082, 3083, 3084, 3085, 3099, 3069, 3073, 3074, 3086, 3087, 3093, 3094, 3095, 3096, 3097, 3098, 3100, 3101, 3102, 3066, 3067, 3068, 3070, 3071, 3072, 3075, 3052, 3103, 3076, 3053, 3054, 3055, 3056, 3057, 3058, 3059, 3060, 3061, 3062, 3063, 3064, 3065],
+            "adjoiningareas": []
         }],
     "beacons": [{
             "id": 14,
@@ -12883,7 +12973,8 @@
             "dateadded": "2025-03-13",
             "priority": 1,
             "audio": [],
-            "labels": [3897, 3898, 3899, 3902, 3894, 3901, 3891, 3893, 3896, 3895, 3892, 3904, 3905]
+            "labels": [3897, 3898, 3899, 3902, 3894, 3901, 3891, 3893, 3896, 3895, 3892, 3904, 3905],
+            "accesspoints": ["north","south"]
         }, {
             "id": 84,
             "areaid": 55,

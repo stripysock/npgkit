@@ -46,6 +46,14 @@ extension NPGArea {
         case artworkIDs = "labels"
         case beaconIDs = "beaconids"
         case externalCoordinates = "gpscoordinates"
+        case adjoiningAreas = "adjoiningareas"
+    }
+}
+
+extension NPGArea.AdjoiningArea {
+    enum CodingKeys: String, CodingKey {
+        case areaID = "areaid"
+        case accessPointLocation = "accesspoint"
     }
 }
 
