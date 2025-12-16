@@ -169,11 +169,31 @@ public struct NPGBeacon: NPGObject, Codable {
  For example, the area for Portrait 23 encompasses the locations "Gallery 4", "Gallery 5", "Gallery 6", "Gallery 6 Nook 1" and "Gallery 6 Nook 2".
  */
 public struct NPGArea: NPGObject, Codable {
+    /// A point where a room can be entered or exited.
+    public enum AccessPointLocation: String, Sendable, Hashable, Codable {
+        case north
+        case northEast = "northeast"
+        case east
+        case southEast = "southeast"
+        case south
+        case southWest = "southwest"
+        case west
+        case northWest = "northwest"
+    }
+    
+    public struct AdjoiningArea: Codable, Hashable, Sendable {
+        /// The ID of the ``NPGArea`` that is adjoining.
+        public var areaID: Int
+        
+        /// The location upon the current area's edge to enter the adjoining area.
+        public var accessPointLocation: AccessPointLocation
+    }
     
     /**
      NPGArea.Location represents a given contiguous area within the Gallery. This might be an entire Gallery space (i.e. Gallery 2), an alcove, or even a wall.
      */
     public struct Location: NPGObject, Codable {
+        
         /// A unique identifier for this location.
         public var id: Int
         
@@ -231,6 +251,9 @@ public struct NPGArea: NPGObject, Codable {
     
     /// If the area is external to the gallery (for instance, a touring exhibition), the lat/long coordinates.
     public var externalCoordinates: NPGCoordinates?
+    
+    /// Areas that adjoin this one.
+    public var adjoiningAreas: [AdjoiningArea]
 }
 
 /**

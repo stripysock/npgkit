@@ -105,7 +105,9 @@ extension NPGArea {
                 priority: Int = 1,
                 locationIDs: [Int],
                 artworkIDs: [Int],
-                externalCoordinates: NPGCoordinates? = nil) {
+                externalCoordinates: NPGCoordinates? = nil,
+                adjoiningAreas: [AdjoiningArea] = []
+    ) {
         self.id = id
         self.dateModified = .now
         self.title = title
@@ -115,6 +117,31 @@ extension NPGArea {
         self.locationIDs = locationIDs
         self.artworkIDs = artworkIDs
         self.externalCoordinates = externalCoordinates
+        self.adjoiningAreas = adjoiningAreas
+    }
+}
+
+extension NPGArea.AccessPointLocation {
+    var opposite: Self {
+        switch self {
+        case .north:
+                .south
+        case .northEast:
+                .southWest
+        case .east:
+                .west
+        case .southEast:
+                .northWest
+        case .south:
+                .north
+        case .southWest:
+                .northEast
+        case .west:
+                .east
+        case .northWest:
+                .southEast
+        }
+        
     }
 }
 

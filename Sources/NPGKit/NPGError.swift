@@ -7,6 +7,9 @@ enum NPGError: LocalizedError {
     /// Thrown when a string is expected - but not received - in a certain format.
     case invalidStringFormat(expectedFormat: String)
     
+    /// Thrown when an object with a specified ID can't be found.
+    case noObjectWithID(Int)
+    
     /// Thrown when a request for a given content type yields no results.
     case noContentForType(any NPGObject.Type)
     
@@ -20,15 +23,18 @@ enum NPGError: LocalizedError {
         switch self {
         case .invalidStringFormat(let expectedFormat):
             return "Incorrect string format. Expected \"\(expectedFormat)\"."
-        
-            case .noContentForType(let type):
-                return "No content found for \(type)"
-                
-            case .noPathComponentForType(let type):
-                return "No path component found for \(type)"
-                
-            case .noBaseURLForDataSource:
-                return "No base URL for the selected data source."
+            
+        case .noObjectWithID(let id):
+            return "No object found with id \(id)"
+            
+        case .noContentForType(let type):
+            return "No content found for \(type)"
+            
+        case .noPathComponentForType(let type):
+            return "No path component found for \(type)"
+            
+        case .noBaseURLForDataSource:
+            return "No base URL for the selected data source."
         }
     }
 }
