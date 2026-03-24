@@ -532,9 +532,7 @@ public struct NPG3DObject: NPGFile, Codable {
 
 /**
  NPGEntity represents a person or group, apperaing as either a sitter or artist.
- 
- Note that as of 1.0.8 these entities **are not** being retrieved, and instead are a proposed structure for future implmentation.
- */
+  */
 public struct NPGEntity: NPGObject, Codable {
     
     /// A unique identifier for this entity.
