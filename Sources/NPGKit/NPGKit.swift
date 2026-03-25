@@ -8,18 +8,19 @@ public actor NPGKit: Sendable {
     )
     
     public enum DataSource: String, Sendable {
+        case fixtureDevelopment
         case fixture
         case development
         case production
         
         var defaultPollPeriod: TimeInterval {
             switch self {
-                case .fixture:
-                    60 // 60 seconds
-                case .development:
-                    60 * 15 // 15 minutes
-                case .production:
-                    60 * 60 * 1 // 1 hour
+            case .fixture, .fixtureDevelopment:
+                60 // 60 seconds
+            case .development:
+                60 * 15 // 15 minutes
+            case .production:
+                60 * 60 * 1 // 1 hour
             }
         }
     }
@@ -104,18 +105,25 @@ public actor NPGKit: Sendable {
                     
                     do {
                         switch dataSource {
-                            case .fixture:
-                                guard let path = Bundle.module.path(forResource: "fixture", ofType: "json"),
-                                      FileManager.default.fileExists(atPath: path),
-                                      let fixtureData = FileManager.default.contents(atPath: path) else {
-                                    fatalError("No fixture data found for \(T.self).")
-                                }
-                                data = fixtureData
-                                
-                            default:
-                                let endpoint = try dataSource.endpoint(for: T.self)
-                                let (sessionData, _) = try await session.data(from: endpoint)
-                                data = sessionData
+                        case .fixtureDevelopment:
+                            guard let path = Bundle.module.path(forResource: "fixture-dev", ofType: "json"),
+                                  FileManager.default.fileExists(atPath: path),
+                                  let fixtureData = FileManager.default.contents(atPath: path) else {
+                                fatalError("No fixture development data found for \(T.self).")
+                            }
+                            data = fixtureData
+                        case .fixture:
+                            guard let path = Bundle.module.path(forResource: "fixture", ofType: "json"),
+                                  FileManager.default.fileExists(atPath: path),
+                                  let fixtureData = FileManager.default.contents(atPath: path) else {
+                                fatalError("No fixture data found for \(T.self).")
+                            }
+                            data = fixtureData
+                            
+                        default:
+                            let endpoint = try dataSource.endpoint(for: T.self)
+                            let (sessionData, _) = try await session.data(from: endpoint)
+                            data = sessionData
                         }
                         
                         let npgData = try jsonDecoder.decode(NPGData.self, from: data)
