@@ -1,0 +1,140 @@
+{
+    "areas": [
+        {
+            "id": 280280,
+            "datemodified": "2026-03-25",
+            "title": "Adam's Office",
+            "subtitle": "Stripy Sock, Bundanoon Outpost",
+            "beaconids": [
+                280280
+            ],
+            "gpscoordinates": {
+                "latitude": -34.65680,
+                "longitude": 150.30984
+            },
+            "dateadded": "2026-03-25",
+            "priority": 28,
+            "audio": [],
+            "locations": [
+                280280
+            ],
+            "labels": [
+                280280
+            ]
+        }
+    ],
+    "beacons": [
+        {
+            "id": 280280,
+            "uuid": "A4F04E94-A280-A280-A280-FAA280280280",
+            "major": 1,
+            "minor": 28,
+            "title": "Adam's Office",
+            "datemodified": "2026-03-25",
+            "dateadded": "2026-03-25",
+            "areas": [
+                280280
+            ],
+            "locations": [
+                280280
+            ],
+            "labels": [
+                280280
+            ],
+            "tours": [],
+            "tourstops": []
+        }
+    ],
+    "labels": [
+        {
+            "id": 280280,
+            "datemodified": "2026-03-25",
+            "title": "Straight Stoppers",
+            "subtitle": "Adam Cooper",
+            "datecreated": "2019",
+            "accessionnumber": "A2019.1",
+            "areaid": 280280,
+            "locationid": 280280,
+            "beaconid": 280280,
+            "priority": 1,
+            "width": 30,
+            "height": 30,
+            "media": "Illustration",
+            "medium": "inkjet print",
+            "text": [{
+                    "type": "caption",
+                    "content": "digital colour print\n\nPart of the Retro MTB Collection, 2019",
+                    "priority": 1
+                },
+                {
+                    "type": "label",
+                    "content": "For years, cantilevers were the only way to stop. Eventually there’d be disc brakes, but in between there were linear pull brakes, and these bad boys were the ultimate stoppers.\n\nAdam Cooper is an Australian artist whose practice is shaped by a childhood steeped in BMX culture, stackhats, and the visual constraints of early digital graphics. Drawing on this formative period, Cooper’s work reflects a fascination with clarity, reduction, and the power of limitation.\n\nGuided by a philosophy of distillation, Cooper strips subjects back to their essential forms, removing unnecessary detail to reveal a precise visual language. His illustrations are characterised by restrained colour palettes, confident linework, and a considered balance of light and shadow. Through this approach, everyday objects are reinterpreted with a quiet graphic elegance, inviting viewers to reconsider the familiar through a lens of simplicity and intention.",
+                    "priority": 2,
+                }
+            ],
+            "images": [{
+                "id": 18750,
+                "datemodified": "2025-07-25",
+                "scanningonly": "no",
+                "width": "299",
+                "height": "299",
+                "cropsquare": "560,262,305.82222222222,7.7777777777778,560,262",
+                "thickURL": "https://davysprocket.com.au/vbrake-on-cyan.jpg",
+                "doublesquareURL": "https://davysprocket.com.au/vbrake-on-cyan.jpg",
+                "fileURL": "https://davysprocket.com.au/vbrake-on-cyan.jpg",
+                "faces": []
+            }],
+            "audio": [],
+            "video": [],
+            "3dscan": [],
+            "nearbylabels": []
+        }
+    ],
+    "locations": [
+        {
+            "id": 280280,
+            "areaid": 280280,
+            "datemodified": "2026-03-25",
+            "title": "Room one",
+            "subtitle": "",
+            "content": "",
+            "wallwidth": 0,
+            "wallheight": 0,
+            "beaconid": 280280,
+            "dateadded": "2026-03-25",
+            "priority": 1,
+            "audio": [],
+            "labels": [
+                280280,
+            ]
+        }
+    ],
+    "people": [
+        {
+            "id": 280280,
+            "datemodified": "2026-03-25",
+            "displayname": "Adam Cooper",
+            "simplename": "Adam Cooper",
+            "givennames": ["Adam"],
+            "familynames": ["Cooper"],
+            "text": [{
+                "type": "biography",
+                "priority": 1,
+                "content": "Adam Cooper is an Australian artist whose practice is shaped by a childhood steeped in BMX culture, stackhats, and the visual constraints of early digital graphics. Drawing on this formative period, Cooper’s work reflects a fascination with clarity, reduction, and the power of limitation.\n\nGuided by a philosophy of distillation, Cooper strips subjects back to their essential forms, removing unnecessary detail to reveal a precise visual language. His illustrations are characterised by restrained colour palettes, confident linework, and a considered balance of light and shadow. Through this approach, everyday objects are reinterpreted with a quiet graphic elegance, inviting viewers to reconsider the familiar through a lens of simplicity and intention.",
+            }],
+            "artistlabels": [
+                280280
+            ],
+            "subjectlabels": [],
+            "audio": []
+        },
+    ],
+    "title": {
+        "title": "Liberate the Labels",
+        "subtitle": "",
+        "intro": "A short description about how to use the app.",
+    },
+    "tours": [],
+    "tourstops": []
+}
+

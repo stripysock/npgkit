@@ -2,7 +2,7 @@ import XCTest
 @testable import NPGKit
 
 final class NPGKitTests: XCTestCase {
-    private let npgKit = NPGKit(dataSource: .production)
+    private let npgKit = NPGKit(dataSource: .development)
     
     func testArtworkRetrieval() async {
         let artworkExpectation = XCTestExpectation(description: "Artworks load successfully")
@@ -92,7 +92,7 @@ final class NPGKitTests: XCTestCase {
         
         do {
             for try await values in await npgKit.artworks(pollEvery: 10) {
-                if values.count > 1 {
+                if values.count > 0 {
                     print("Haz \(values.count) artworks!")
                     pollCount += 1
                     if pollCount == 1 {
