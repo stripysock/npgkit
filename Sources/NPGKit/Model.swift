@@ -59,6 +59,15 @@ public protocol NPGFile: NPGObject {
 }
 
 /**
+ NPGApplication represents a known mobile application owned by NPG. Certain content may be excluded from one of these applications.
+ */
+public enum NPGApplication: String, Codable, Sendable {
+    case headHunt = "headhunt"
+    case missionToMars = "m2m"
+    case portraitStories = "portraitstories"
+}
+
+/**
  NPGCoordinates acts as a container for latitude/longitude values, (presumably) using the WGS 84 reference frame.
  
  Consider extending this struct to export `CLLocationCoordinate2D` or equivalent as required for your implementation.
@@ -371,7 +380,15 @@ public struct NPGArtwork: NPGObject, Codable {
     /// An array of 3D Objects to be used for detection by ARKit
     public var scanObjects: [NPG3DObject]
     
-    public var media: MediaType?
+	/// The type of media used within this artwork.
+	public var media: MediaType?
+
+    /**
+     A list of NPG Applications that should ignore this content.
+     
+     Note that an exclusion for an application should only be used when the content isn't appropriate for the application's use-case. If, for instance, content was inappropriate for a certain age, we may target this (in future) by specifying an intended audience.
+     */
+	public var excludeFromApplications: [NPGApplication]
 }
 
 /// An image file representing an artwork.

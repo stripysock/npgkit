@@ -78,6 +78,76 @@ extension NPGArtwork {
         case nearbyArtworks = "nearbylabels"
         case scanObjects = "3dscan"
         case beaconID = "beaconid"
+        case excludeFromApplications = "excludeFrom"
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.dateModified = try container.decode(Date.self, forKey: .dateModified)
+        self.title = try container.decode(String.self, forKey: .title)
+        self.subtitle = try container.decode(String.self, forKey: .subtitle)
+        self.dateCreated = try container.decode(String.self, forKey: .dateCreated)
+        self.accessionID = try container.decodeIfPresent(String.self, forKey: .accessionID)
+        self.areaID = try container.decode(Int.self, forKey: .areaID)
+        self.locationID = try container.decodeIfPresent(Int.self, forKey: .locationID)
+        self.beaconID = try container.decodeIfPresent(Int.self, forKey: .beaconID)
+        self.priority = try container.decode(Int.self, forKey: .priority)
+
+        if let widthDouble = try? container.decode(Double.self, forKey: .width) {
+            self.width = widthDouble
+        } else {
+            let widthString = try container.decode(String.self, forKey: .width)
+            guard let widthDouble = Double(widthString) else {
+                let context = DecodingError.Context(codingPath: [CodingKeys.width], debugDescription: "Expected double.")
+                throw DecodingError.typeMismatch(String.self, context)
+            }
+            self.width = widthDouble
+        }
+
+        if let heightDouble = try? container.decode(Double.self, forKey: .height) {
+            self.height = heightDouble
+        } else {
+            let heightString = try container.decode(String.self, forKey: .height)
+            guard let heightDouble = Double(heightString) else {
+                let context = DecodingError.Context(codingPath: [CodingKeys.height], debugDescription: "Expected double.")
+                throw DecodingError.typeMismatch(String.self, context)
+            }
+            self.height = heightDouble
+        }
+
+        self.text = try container.decodeIfPresent([LabelText].self, forKey: .text) ?? []
+        self.images = try container.decodeIfPresent([NPGImage].self, forKey: .images) ?? []
+        self.nearbyArtworks = try container.decodeIfPresent([Nearby].self, forKey: .nearbyArtworks) ?? []
+        self.audio = try container.decodeIfPresent([NPGAudio].self, forKey: .audio) ?? []
+        self.video = try container.decodeIfPresent([NPGVideo].self, forKey: .video) ?? []
+        self.scanObjects = try container.decodeIfPresent([NPG3DObject].self, forKey: .scanObjects) ?? []
+        self.excludeFromApplications = try container.decodeIfPresent([NPGApplication].self, forKey: .excludeFromApplications) ?? []
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encode(self.id, forKey: .id)
+        try container.encode(self.dateModified, forKey: .dateModified)
+        try container.encode(self.title, forKey: .title)
+        try container.encode(self.subtitle, forKey: .subtitle)
+        try container.encode(self.dateCreated, forKey: .dateCreated)
+        try container.encodeIfPresent(self.accessionID, forKey: .accessionID)
+        try container.encode(self.areaID, forKey: .areaID)
+        try container.encodeIfPresent(self.locationID, forKey: .locationID)
+        try container.encodeIfPresent(self.beaconID, forKey: .beaconID)
+        try container.encode(self.priority, forKey: .priority)
+        try container.encode(self.width, forKey: .width)
+        try container.encode(self.height, forKey: .height)
+        try container.encode(self.text, forKey: .text)
+        try container.encode(self.images, forKey: .images)
+        try container.encode(self.nearbyArtworks, forKey: .nearbyArtworks)
+        try container.encode(self.audio, forKey: .audio)
+        try container.encode(self.video, forKey: .video)
+        try container.encode(self.scanObjects, forKey: .scanObjects)
+        try container.encode(self.excludeFromApplications, forKey: .excludeFromApplications)
     }
 
     public init(from decoder: Decoder) throws {

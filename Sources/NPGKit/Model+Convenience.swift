@@ -185,7 +185,8 @@ extension NPGArtwork {
                 audio: [NPGAudio] = [],
                 video: [NPGVideo] = [],
                 scanObjects: [NPG3DObject] = [],
-                media: NPGArtwork.MediaType? = nil) {
+                media: NPGArtwork.MediaType? = nil,
+                excludeFromApplications: [NPGApplication] = []) {
         self.id = id
         self.dateModified = .now
         self.title = title
@@ -204,7 +205,8 @@ extension NPGArtwork {
         self.audio = audio
         self.video = video
         self.scanObjects = scanObjects
-        self.media = media
+		self.media = media
+        self.excludeFromApplications = excludeFromApplications
     }
 
     /// The size of the artwork in centimetres.
