@@ -2,7 +2,7 @@ import Foundation
 
 extension NPGData {
     enum CodingKeys: String, CodingKey {
-        case areas, locations, beacons, tours
+        case areas, locations, boundaries, beacons, tours
         case artworks = "labels"
         case entities = "people"
         case metadata = "title"
@@ -64,6 +64,115 @@ extension NPGArea.Location {
         case areaID = "areaid"
         case artworkIDs = "labels"
         case beaconID = "beaconid"
+    }
+}
+
+extension NPGArea.Boundary {
+    enum CodingKeys: String, CodingKey {
+        case id, title, subtitle, content, priority, width, height, orientation
+        case dateAdded = "dateadded"
+        case dateModified = "datemodified"
+        case locationID = "locationid"
+        case leftBoundaryID = "leftboundaryid"
+        case rightBoundaryID = "rightboundaryid"
+        case positionX = "positionx"
+        case positionY = "positiony"
+        case artworkIDs = "labels"
+        case type = "boundarytype"
+        case doorwayLocationID = "doorwaylocationid"
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.locationID = try container.decode(Int.self, forKey: .locationID)
+        self.leftBoundaryID = try container.decodeIfPresent(Int.self, forKey: .leftBoundaryID)
+        self.rightBoundaryID = try container.decodeIfPresent(Int.self, forKey: .rightBoundaryID)
+        self.dateAdded = try container.decode(Date.self, forKey: .dateAdded)
+        self.dateModified = try container.decode(Date.self, forKey: .dateModified)
+        self.title = try container.decode(String.self, forKey: .title)
+        self.subtitle = try container.decodeIfPresent(String.self, forKey: .subtitle)
+        self.content = try container.decodeIfPresent(String.self, forKey: .content)
+        self.orientation = try container.decode(NPGArea.Orientation.self, forKey: .orientation)
+        self.priority = try container.decode(Int.self, forKey: .priority)
+        self.artworkIDs = try container.decodeIfPresent([Int].self, forKey: .artworkIDs) ?? []
+
+        if let widthDouble = try? container.decode(Double.self, forKey: .width) {
+            self.width = widthDouble
+        } else {
+            let widthString = try container.decode(String.self, forKey: .width)
+            guard let widthDouble = Double(widthString) else {
+                let context = DecodingError.Context(codingPath: [CodingKeys.width], debugDescription: "Expected double.")
+                throw DecodingError.typeMismatch(String.self, context)
+            }
+            self.width = widthDouble
+        }
+
+        if let heightDouble = try? container.decode(Double.self, forKey: .height) {
+            self.height = heightDouble
+        } else {
+            let heightString = try container.decode(String.self, forKey: .height)
+            guard let heightDouble = Double(heightString) else {
+                let context = DecodingError.Context(codingPath: [CodingKeys.height], debugDescription: "Expected double.")
+                throw DecodingError.typeMismatch(String.self, context)
+            }
+            self.height = heightDouble
+        }
+
+        self.positionX = (try? container.decodeIfPresent(Double.self, forKey: .positionX)) ?? 0
+        self.positionY = (try? container.decodeIfPresent(Double.self, forKey: .positionY)) ?? 0
+
+        let typeString = try container.decode(String.self, forKey: .type)
+        switch typeString {
+        case "wall":
+            self.boundaryType = .wall
+        case "islandwall", "island wall":
+            self.boundaryType = .islandWall
+        case "doorway":
+            let toOtherLocationID = try container.decodeIfPresent(Int.self, forKey: .doorwayLocationID)
+            self.boundaryType = .doorway(toOtherLocationID: toOtherLocationID)
+        case "closed doorway":
+            self.boundaryType = .doorway(toOtherLocationID: nil)
+        case "overlap":
+            self.boundaryType = .overlap
+        default:
+            let context = DecodingError.Context(codingPath: [CodingKeys.type], debugDescription: "Unknown boundary type: \(typeString)")
+            throw DecodingError.dataCorrupted(context)
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encode(self.id, forKey: .id)
+        try container.encode(self.locationID, forKey: .locationID)
+        try container.encodeIfPresent(self.leftBoundaryID, forKey: .leftBoundaryID)
+        try container.encodeIfPresent(self.rightBoundaryID, forKey: .rightBoundaryID)
+        try container.encode(self.dateAdded, forKey: .dateAdded)
+        try container.encode(self.dateModified, forKey: .dateModified)
+        try container.encode(self.title, forKey: .title)
+        try container.encodeIfPresent(self.subtitle, forKey: .subtitle)
+        try container.encodeIfPresent(self.content, forKey: .content)
+        try container.encode(self.width, forKey: .width)
+        try container.encode(self.height, forKey: .height)
+        try container.encode(self.positionX, forKey: .positionX)
+        try container.encode(self.positionY, forKey: .positionY)
+        try container.encode(self.orientation, forKey: .orientation)
+        try container.encode(self.priority, forKey: .priority)
+        try container.encode(self.artworkIDs, forKey: .artworkIDs)
+
+        switch self.boundaryType {
+        case .wall:
+            try container.encode("wall", forKey: .type)
+        case .islandWall:
+            try container.encode("islandwall", forKey: .type)
+        case .doorway(let toOtherLocationID):
+            try container.encode("doorway", forKey: .type)
+            try container.encodeIfPresent(toOtherLocationID, forKey: .doorwayLocationID)
+        case .overlap:
+            try container.encode("overlap", forKey: .type)
+        }
     }
 }
 

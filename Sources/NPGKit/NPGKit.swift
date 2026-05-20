@@ -88,6 +88,15 @@ public actor NPGKit: Sendable {
     }
     
     /**
+     An async throwing stream of  boundaries with the NPG.
+     
+     - throws: Will throw an `NPGError` if the content can't be retrieved or is malformed.
+     */
+    public func boundaries(pollEvery pollPeriod: TimeInterval? = nil) -> AsyncThrowingStream<[NPGArea.Boundary], Error> {
+        pollingStreamForNPGObject(pollEvery: pollPeriod)
+    }
+    
+    /**
      An async throwing stream of tours offered within (and possibly beyond) the National Portrait Gallery.
      
      - throws: Will throw an `NPGError` if the content can't be retrieved or is malformed.
@@ -137,6 +146,7 @@ public actor NPGKit: Sendable {
                         let decodingErrors = try npgData.decodingErrors(for: T.self)
                         if !decodingErrors.isEmpty {
                             Self.logger.error("\(decodingErrors.count) errors encountered whilst decoding \(T.self) entities.")
+                            Self.logger.debug("First \(T.self) decoding error: \(decodingErrors[0])")
                         }
                         
                         continuation.yield(values)
@@ -157,6 +167,7 @@ fileprivate extension NPGKit.DataSource {
     enum PathComponent: String {
         case areas = "/areas"
         case locations = "/locations"
+        case boundaries = "/boundaries"
         case beacons = "/beacons"
         case artworks = "/labels"
         case entities = "/people"
@@ -164,25 +175,28 @@ fileprivate extension NPGKit.DataSource {
         
         static func forType(_ type: any NPGObject.Type) throws -> Self {
             switch type {
-                case is NPGArea.Type:
-                    return .areas
-                    
-                case is NPGArea.Location.Type:
-                    return .locations
-                    
-                case is NPGBeacon.Type:
-                    return .beacons
-                    
-                case is NPGArtwork.Type:
-                    return .artworks
-                    
-                case is NPGEntity.Type:
-                    return .entities
-                    
-                case is NPGTour.Type:
-                    return .tours
-                default:
-                    throw(NPGError.noPathComponentForType(type))
+            case is NPGArea.Type:
+                return .areas
+                
+            case is NPGArea.Location.Type:
+                return .locations
+                
+            case is NPGArea.Boundary.Type:
+                return .boundaries
+                
+            case is NPGBeacon.Type:
+                return .beacons
+                
+            case is NPGArtwork.Type:
+                return .artworks
+                
+            case is NPGEntity.Type:
+                return .entities
+                
+            case is NPGTour.Type:
+                return .tours
+            default:
+                throw(NPGError.noPathComponentForType(type))
             }
         }
     }
@@ -235,7 +249,13 @@ fileprivate extension NPGData {
                     throw(NPGError.noContentForType(T.self))
                 }
                 return values.compactMap { $0.base as? T }
-            
+
+            case is NPGArea.Boundary.Type:
+                guard let values = self.boundaries else {
+                    throw(NPGError.noContentForType(T.self))
+                }
+                return values.compactMap { $0.base as? T }
+
             case is NPGArtwork.Type:
                 guard let values = self.artworks else {
                     throw(NPGError.noContentForType(T.self))
@@ -278,7 +298,13 @@ fileprivate extension NPGData {
                     throw(NPGError.noContentForType(type))
                 }
                 return values.compactMap { $0.error }
-               
+
+            case is NPGArea.Boundary.Type:
+                guard let values = self.boundaries else {
+                    throw(NPGError.noContentForType(type))
+                }
+                return values.compactMap { $0.error }
+
             case is NPGArtwork.Type:
                 guard let values = self.artworks else {
                     throw(NPGError.noContentForType(type))

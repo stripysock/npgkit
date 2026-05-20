@@ -121,7 +121,7 @@ extension NPGArea {
     }
 }
 
-extension NPGArea.AccessPointLocation {
+extension NPGArea.Orientation {
     public var opposite: Self {
         switch self {
         case .north:

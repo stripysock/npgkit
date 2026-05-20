@@ -32,6 +32,7 @@ internal struct NPGData: Decodable, Sendable {
     var metadata: NPGMetadata?
     var areas: [FailableDecodable<NPGArea>]?
     var locations: [FailableDecodable<NPGArea.Location>]?
+    var boundaries: [FailableDecodable<NPGArea.Boundary>]?
     var artworks: [FailableDecodable<NPGArtwork>]?
     var beacons: [FailableDecodable<NPGBeacon>]?
     var tours: [FailableDecodable<NPGTour>]?
@@ -179,7 +180,7 @@ public struct NPGBeacon: NPGObject, Codable {
  */
 public struct NPGArea: NPGObject, Codable {
     /// A point where a room can be entered or exited.
-    public enum AccessPointLocation: String, Sendable, Hashable, Codable {
+    public enum Orientation: String, Sendable, Hashable, Codable {
         case north
         case northEast = "northeast"
         case east
@@ -195,7 +196,7 @@ public struct NPGArea: NPGObject, Codable {
         public var areaID: Int
         
         /// The location upon the current area's edge to enter the adjoining area.
-        public var accessPointLocation: AccessPointLocation
+        public var accessPointLocation: Orientation
     }
     
     /**
@@ -232,6 +233,82 @@ public struct NPGArea: NPGObject, Codable {
         
         /// Audio for wayfinding. This could be guiding the user from this location to another (``NPGAudio.AudioContext.wayfinding``) or a description fo the area (``NPGAudio.AudioContext.audiodescription``).
         public var audio: [NPGAudio]
+    }
+    
+    /**
+     NPGArea.Boundary represents a given contiguous area within the Gallery. This might be an entire Gallery space (i.e. Gallery 2), an alcove, or even a wall.
+     
+     From Patrick:
+     A boundary is a "wall" or "doorway" that forms part of the perimeter of a location.
+
+     It has width and height in cm.
+
+     It has an orientation of north, east, south or west - being the direction you face to look at it. North is looking from gallery 1 into the Gordon Darling Hall.
+
+     It has a reference to the boundaries to the left and right.
+
+     A "doorway" has a doorwaylocationid of the location it leads to.
+
+     Note: Boundaries for a location fully enclose it in an unbroken loop. There can be boundaries in addition to those which constitute the loop eg. the central wall in gallery 2. These would have an "islandwall" or "showcase" type and also include relativex and relativey offset in cm from the top left (north west) most corner of the location.
+     */
+    public struct Boundary: NPGObject, Codable {
+        public enum BoundaryType: Sendable, Hashable, Codable {
+            case wall
+            case islandWall
+            case doorway(toOtherLocationID: Int?)
+            case overlap
+        }
+        
+        /// A unique identifier for this location.
+        public var id: Int
+        
+        /// The ID of the ``NPGLocation`` that this boundary resides within.
+        public var locationID: Int
+        
+        /// The ID of a boundary to the left of this one.
+        public var leftBoundaryID: Int?
+        
+        /// The ID of a boundary to the right of this one.
+        public var rightBoundaryID: Int?
+        
+        /// Last modified date for this boundary.
+        public var dateAdded: Date
+        
+        /// Last modified date for this boundary.
+        public var dateModified: Date
+        
+        /// The type of this boundary — wall, doorway, etc.
+        public var boundaryType: BoundaryType
+        
+        /// A title for this boundary, for instance, "Wall D"
+        public var title: String
+        
+        /// An optional subtitle for this location, for instance, "Emerging Artists"
+        public var subtitle: String?
+        
+        /// An optional text of a label that may appear on this boundary, for instance, a summary of works on the wall.
+        public var content: String?
+        
+        /// Width in centimetres. Use convenience ``size`` instead.
+        public var width: Double
+        
+        /// Height in centimetres. Use convenience ``size`` instead.
+        public var height: Double
+        
+        /// X position on wall in centimetres, from bottom left. Use convenience ``position`` instead.
+        public var positionX: Double
+        
+        /// Y position on wall in centimetres, from bottom left. Use convenience ``position`` instead.
+        public var positionY: Double
+        
+        /// The normalized direction of the viewer when facing this boundary.
+        public var orientation: NPGArea.Orientation
+        
+        /// Sort priority.
+        public var priority: Int
+        
+        /// IDs of all of the labels that appear upon this boundary
+        public var artworkIDs: [Int]
     }
     
     /// A unique identifier for this area.
