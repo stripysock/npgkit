@@ -191,12 +191,20 @@ public struct NPGArea: NPGObject, Codable {
         case northWest = "northwest"
     }
     
-    public struct AdjoiningArea: Codable, Hashable, Sendable {
+    public struct AdjacentArea: Codable, Hashable, Sendable {
         /// The ID of the ``NPGArea`` that is adjoining.
         public var areaID: Int
         
         /// The location upon the current area's edge to enter the adjoining area.
-        public var accessPointLocation: Orientation
+        public var direction: Orientation
+    }
+    
+    public struct AdjacentLocation: Codable, Hashable, Sendable {
+        /// The ID of the ``NPGLocation`` that is adjoining.
+        public var locationID: Int
+        
+        /// The location upon the current area's edge to enter the adjoining area.
+        public var direction: Orientation
     }
     
     /**
@@ -209,6 +217,12 @@ public struct NPGArea: NPGObject, Codable {
         
         /// The ID of the ``NPGArea`` that encompasses this location.
         public var areaID: Int
+        
+        /// Locations that adjoin this one.
+        public var adjacentLocations: [AdjacentLocation]
+        
+        /// Boundaries found within this location.
+        public var boundaries: [Boundary]
         
         /// Last modified date for this area.
         public var dateModified: Date
@@ -339,7 +353,7 @@ public struct NPGArea: NPGObject, Codable {
     public var externalCoordinates: NPGCoordinates?
     
     /// Areas that adjoin this one.
-    public var adjoiningAreas: [AdjoiningArea]
+    public var adjacentAreas: [AdjacentArea]
 }
 
 /**

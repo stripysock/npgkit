@@ -106,7 +106,7 @@ extension NPGArea {
                 locationIDs: [Int],
                 artworkIDs: [Int],
                 externalCoordinates: NPGCoordinates? = nil,
-                adjoiningAreas: [AdjoiningArea] = []
+                adjacentAreas: [AdjacentArea] = []
     ) {
         self.id = id
         self.dateModified = .now
@@ -117,7 +117,7 @@ extension NPGArea {
         self.locationIDs = locationIDs
         self.artworkIDs = artworkIDs
         self.externalCoordinates = externalCoordinates
-        self.adjoiningAreas = adjoiningAreas
+        self.adjacentAreas = adjacentAreas
     }
 }
 
@@ -154,7 +154,9 @@ extension NPGArea.Location {
                 beaconID: Int? = nil,
                 priority: Int = 1,
                 artworkIDs: [Int],
-                audio: [NPGAudio]) {
+                audio: [NPGAudio],
+                boundaries: [NPGArea.Boundary] = [],
+                adjacentLocations: [NPGArea.AdjacentLocation] = []) {
         self.id = id
         self.areaID = areaID
         self.dateModified = .now
@@ -165,6 +167,8 @@ extension NPGArea.Location {
         self.priority = priority
         self.artworkIDs = artworkIDs
         self.audio = audio
+        self.boundaries = boundaries
+        self.adjacentLocations = adjacentLocations
     }
 }
 

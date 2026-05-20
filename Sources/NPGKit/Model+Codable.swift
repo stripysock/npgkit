@@ -46,24 +46,32 @@ extension NPGArea {
         case artworkIDs = "labels"
         case beaconIDs = "beaconids"
         case externalCoordinates = "gpscoordinates"
-        case adjoiningAreas = "adjoiningareas"
+        case adjacentAreas = "adjacentareas"
     }
 }
 
-extension NPGArea.AdjoiningArea {
+extension NPGArea.AdjacentArea {
     enum CodingKeys: String, CodingKey {
         case areaID = "areaid"
-        case accessPointLocation = "accesspoint"
+        case direction
+    }
+}
+
+extension NPGArea.AdjacentLocation {
+    enum CodingKeys: String, CodingKey {
+        case locationID = "locationid"
+        case direction
     }
 }
 
 extension NPGArea.Location {
     enum CodingKeys: String, CodingKey {
-        case id, title, subtitle, priority, audio
+        case id, title, subtitle, priority, audio, boundaries
         case dateModified = "datemodified"
         case areaID = "areaid"
         case artworkIDs = "labels"
         case beaconID = "beaconid"
+        case adjacentLocations = "adjacentlocations"
     }
 }
 
