@@ -180,6 +180,7 @@ extension NPGArtwork {
                 beaconID: Int? = nil,
                 priority: Int = 1,
                 size: CGSize = .zero,
+                position: CGPoint = .zero,
                 text: [NPGArtwork.LabelText] = [],
                 images: [NPGImage] = [],
                 nearbyArtworks: [NPGArtwork.Nearby] = [],
@@ -201,6 +202,8 @@ extension NPGArtwork {
         self.priority = priority
         self.width = size.width
         self.height = size.height
+        self.positionX = position.x
+        self.positionY = position.y
         self.text = text
         self.images = images
         self.nearbyArtworks = nearbyArtworks
@@ -214,6 +217,11 @@ extension NPGArtwork {
     /// The size of the artwork in centimetres.
     public var size: CGSize {
         .init(width: width, height: height)
+    }
+    
+    /// The wall position of the artwork, from bottom left, in centimetres.
+    public var position: CGPoint {
+        .init(x: positionX, y: positionY)
     }
 }
 

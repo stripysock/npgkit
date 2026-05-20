@@ -365,6 +365,12 @@ public struct NPGArtwork: NPGObject, Codable {
     /// Height in centimetres. Use convenience ``size`` instead.
     public var height: Double
     
+    /// X position on wall in centimetres, from bottom left. Use convenience ``position`` instead.
+    public var positionX: Double
+    
+    /// Y position on wall in centimetres, from bottom left. Use convenience ``position`` instead.
+    public var positionY: Double
+    
     /// A collection of label text related to the artwork.
     public var text: [LabelText]
     

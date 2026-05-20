@@ -76,6 +76,8 @@ extension NPGArtwork {
         case accessionID = "accessionnumber"
         case locationID = "locationid"
         case boundaryID = "boundaryid"
+        case positionX = "positionx"
+        case positionY = "positiony"
         case nearbyArtworks = "nearbylabels"
         case scanObjects = "3dscan"
         case beaconID = "beaconid"
@@ -118,6 +120,28 @@ extension NPGArtwork {
             }
             self.height = heightDouble
         }
+        
+        if let positionXDouble = try? container.decode(Double.self, forKey: .positionX) {
+            self.positionX = positionXDouble
+        } else {
+            let positionXString = try container.decode(String.self, forKey: .positionX)
+            guard let positionXDouble = Double(positionXString) else {
+                let context = DecodingError.Context(codingPath: [CodingKeys.positionX], debugDescription: "Expected double.")
+                throw DecodingError.typeMismatch(String.self, context)
+            }
+            self.positionX = positionXDouble
+        }
+        
+        if let positionYDouble = try? container.decode(Double.self, forKey: .positionY) {
+            self.positionY = positionYDouble
+        } else {
+            let positionYString = try container.decode(String.self, forKey: .positionY)
+            guard let positionYDouble = Double(positionYString) else {
+                let context = DecodingError.Context(codingPath: [CodingKeys.positionY], debugDescription: "Expected double.")
+                throw DecodingError.typeMismatch(String.self, context)
+            }
+            self.positionY = positionYDouble
+        }
 
         self.text = try container.decodeIfPresent([LabelText].self, forKey: .text) ?? []
         self.images = try container.decodeIfPresent([NPGImage].self, forKey: .images) ?? []
@@ -144,6 +168,8 @@ extension NPGArtwork {
         try container.encode(self.priority, forKey: .priority)
         try container.encode(self.width, forKey: .width)
         try container.encode(self.height, forKey: .height)
+        try container.encode(self.positionX, forKey: .positionX)
+        try container.encode(self.positionY, forKey: .positionY)
         try container.encode(self.text, forKey: .text)
         try container.encode(self.images, forKey: .images)
         try container.encode(self.nearbyArtworks, forKey: .nearbyArtworks)
