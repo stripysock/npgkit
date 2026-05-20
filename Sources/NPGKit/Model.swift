@@ -350,6 +350,9 @@ public struct NPGArtwork: NPGObject, Codable {
     /// If present, the ID of the specific location in which this artwork exists.
     public var locationID: Int?
     
+    /// If present, the ID of the specific boundary (wall) on which this artwork exists.
+    public var boundaryID: Int?
+    
     /// The ID of the beacon associated with this artwork. If empty, use the beacon associated with the area or location.
     public var beaconID: Int?
     

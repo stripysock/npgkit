@@ -176,6 +176,7 @@ extension NPGArtwork {
                 accessionID: String? = nil,
                 areaID: Int,
                 locationID: Int? = nil,
+                boundaryID: Int? = nil,
                 beaconID: Int? = nil,
                 priority: Int = 1,
                 size: CGSize = .zero,
@@ -195,6 +196,7 @@ extension NPGArtwork {
         self.accessionID = accessionID
         self.areaID = areaID
         self.locationID = locationID
+        self.boundaryID = boundaryID
         self.beaconID = beaconID
         self.priority = priority
         self.width = size.width

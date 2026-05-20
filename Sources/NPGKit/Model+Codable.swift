@@ -75,6 +75,7 @@ extension NPGArtwork {
         case areaID = "areaid"
         case accessionID = "accessionnumber"
         case locationID = "locationid"
+        case boundaryID = "boundaryid"
         case nearbyArtworks = "nearbylabels"
         case scanObjects = "3dscan"
         case beaconID = "beaconid"
@@ -92,6 +93,7 @@ extension NPGArtwork {
         self.accessionID = try container.decodeIfPresent(String.self, forKey: .accessionID)
         self.areaID = try container.decode(Int.self, forKey: .areaID)
         self.locationID = try container.decodeIfPresent(Int.self, forKey: .locationID)
+        self.boundaryID = try container.decodeIfPresent(Int.self, forKey: .boundaryID)
         self.beaconID = try container.decodeIfPresent(Int.self, forKey: .beaconID)
         self.priority = try container.decode(Int.self, forKey: .priority)
 
@@ -137,6 +139,7 @@ extension NPGArtwork {
         try container.encodeIfPresent(self.accessionID, forKey: .accessionID)
         try container.encode(self.areaID, forKey: .areaID)
         try container.encodeIfPresent(self.locationID, forKey: .locationID)
+        try container.encodeIfPresent(self.boundaryID, forKey: .boundaryID)
         try container.encodeIfPresent(self.beaconID, forKey: .beaconID)
         try container.encode(self.priority, forKey: .priority)
         try container.encode(self.width, forKey: .width)
