@@ -2,7 +2,7 @@ import XCTest
 @testable import NPGKit
 
 final class NPGKitTests: XCTestCase {
-    private let npgKit = NPGKit(dataSource: .development)
+    private let npgKit = NPGKit(dataSource: .development(path: "ondisplaywalltest"))
     
     func testArtworkRetrieval() async {
         let artworkExpectation = XCTestExpectation(description: "Artworks load successfully")
