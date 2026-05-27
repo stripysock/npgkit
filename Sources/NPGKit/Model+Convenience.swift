@@ -155,7 +155,7 @@ extension NPGArea.Location {
                 priority: Int = 1,
                 artworkIDs: [Int],
                 audio: [NPGAudio],
-                boundaries: [NPGArea.Boundary] = [],
+                boundaryIDs: [Int] = [],
                 adjacentLocations: [NPGArea.AdjacentLocation] = []) {
         self.id = id
         self.areaID = areaID
@@ -167,7 +167,7 @@ extension NPGArea.Location {
         self.priority = priority
         self.artworkIDs = artworkIDs
         self.audio = audio
-        self.boundaries = boundaries
+        self.boundaryIDs = boundaryIDs
         self.adjacentLocations = adjacentLocations
     }
 }

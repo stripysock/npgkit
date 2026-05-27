@@ -66,10 +66,11 @@ extension NPGArea.AdjacentLocation {
 
 extension NPGArea.Location {
     enum CodingKeys: String, CodingKey {
-        case id, title, subtitle, priority, audio, boundaries
+        case id, title, subtitle, priority, audio
         case dateModified = "datemodified"
         case areaID = "areaid"
         case artworkIDs = "labels"
+        case boundaryIDs = "boundaries"
         case beaconID = "beaconid"
         case adjacentLocations = "adjacentlocations"
     }

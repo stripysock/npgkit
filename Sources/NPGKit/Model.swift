@@ -221,8 +221,8 @@ public struct NPGArea: NPGObject, Codable {
         /// Locations that adjoin this one.
         public var adjacentLocations: [AdjacentLocation]
         
-        /// Boundaries found within this location.
-        public var boundaries: [Boundary]
+        /// IDs of boundaries found within this location.
+        public var boundaryIDs: [Int]
         
         /// Last modified date for this area.
         public var dateModified: Date
