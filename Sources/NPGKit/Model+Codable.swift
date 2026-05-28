@@ -89,6 +89,8 @@ extension NPGArea.Boundary {
         case artworkIDs = "labels"
         case type = "boundarytype"
         case doorwayLocationID = "doorwaylocationid"
+        case relativeX = "relativex"
+        case relativeY = "relativey"
     }
 
     public init(from decoder: Decoder) throws {
@@ -137,7 +139,9 @@ extension NPGArea.Boundary {
         case "wall":
             self.boundaryType = .wall
         case "islandwall", "island wall":
-            self.boundaryType = .islandWall
+            let relativeX = try container.decode(Int.self, forKey: .relativeX)
+            let relativeY = try container.decode(Int.self, forKey: .relativeY)
+            self.boundaryType = .islandWall(relativeX: relativeX, relativeY: relativeY)
         case "doorway":
             let toOtherLocationID = try container.decodeIfPresent(Int.self, forKey: .doorwayLocationID)
             self.boundaryType = .doorway(toOtherLocationID: toOtherLocationID)
@@ -174,8 +178,10 @@ extension NPGArea.Boundary {
         switch self.boundaryType {
         case .wall:
             try container.encode("wall", forKey: .type)
-        case .islandWall:
+        case .islandWall(let relativeX, let relativeY):
             try container.encode("islandwall", forKey: .type)
+            try container.encode(relativeX, forKey: .relativeX)
+            try container.encode(relativeY, forKey: .relativeY)
         case .doorway(let toOtherLocationID):
             try container.encode("doorway", forKey: .type)
             try container.encodeIfPresent(toOtherLocationID, forKey: .doorwayLocationID)

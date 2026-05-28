@@ -268,7 +268,7 @@ public struct NPGArea: NPGObject, Codable {
     public struct Boundary: NPGObject, Codable {
         public enum BoundaryType: Sendable, Hashable, Codable {
             case wall
-            case islandWall
+            case islandWall(relativeX: Int, relativeY: Int)
             case doorway(toOtherLocationID: Int?)
             case overlap
         }
