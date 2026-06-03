@@ -266,10 +266,17 @@ public struct NPGArea: NPGObject, Codable {
      Note: Boundaries for a location fully enclose it in an unbroken loop. There can be boundaries in addition to those which constitute the loop eg. the central wall in gallery 2. These would have an "islandwall" or "showcase" type and also include relativex and relativey offset in cm from the top left (north west) most corner of the location.
      */
     public struct Boundary: NPGObject, Codable {
+        public enum Priority: Int, Sendable, Hashable, Codable {
+            case primary = 1
+            case secondary
+            case tertiary
+            case wrongDirection
+        }
+        
         public enum BoundaryType: Sendable, Hashable, Codable {
             case wall
             case islandWall(relativeX: Int, relativeY: Int)
-            case doorway(toOtherLocationID: Int?)
+            case doorway(toOtherLocationID: Int?, priority: Priority = .primary)
             case overlap
         }
         

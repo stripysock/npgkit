@@ -89,6 +89,7 @@ extension NPGArea.Boundary {
         case artworkIDs = "labels"
         case type = "boundarytype"
         case doorwayLocationID = "doorwaylocationid"
+        case doorwayPriority = "doorwaypriority"
         case relativeX = "relativex"
         case relativeY = "relativey"
     }
@@ -144,7 +145,8 @@ extension NPGArea.Boundary {
             self.boundaryType = .islandWall(relativeX: relativeX, relativeY: relativeY)
         case "doorway":
             let toOtherLocationID = try container.decodeIfPresent(Int.self, forKey: .doorwayLocationID)
-            self.boundaryType = .doorway(toOtherLocationID: toOtherLocationID)
+            let doorwayPriority = (try? container.decodeIfPresent(NPGArea.Boundary.Priority.self, forKey: .doorwayPriority)) ?? .primary
+            self.boundaryType = .doorway(toOtherLocationID: toOtherLocationID, priority: doorwayPriority)
         case "closed doorway":
             self.boundaryType = .doorway(toOtherLocationID: nil)
         case "overlap":
@@ -182,9 +184,10 @@ extension NPGArea.Boundary {
             try container.encode("islandwall", forKey: .type)
             try container.encode(relativeX, forKey: .relativeX)
             try container.encode(relativeY, forKey: .relativeY)
-        case .doorway(let toOtherLocationID):
+        case .doorway(let toOtherLocationID, let priority):
             try container.encode("doorway", forKey: .type)
             try container.encodeIfPresent(toOtherLocationID, forKey: .doorwayLocationID)
+            try container.encodeIfPresent(priority, forKey: .doorwayPriority)
         case .overlap:
             try container.encode("overlap", forKey: .type)
         }
