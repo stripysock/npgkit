@@ -389,8 +389,8 @@ extension NPGImage: Codable {
         self.id = try container.decode(Int.self, forKey: .id)
         self.dateModified = try container.decode(Date.self, forKey: .dateModified)
         
-        let scanningOnly = try container.decode(NPGBool.self, forKey: .scanningOnly)
-        self.scanningOnly = scanningOnly.bool
+        let scanningOnly = try container.decodeIfPresent(NPGBool.self, forKey: .scanningOnly)
+        self.scanningOnly = scanningOnly?.bool ?? false
         
         if let widthDouble = try? container.decode(Double.self, forKey: .width) {
             self.width = widthDouble
