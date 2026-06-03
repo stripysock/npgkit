@@ -92,6 +92,8 @@ extension NPGArea.Boundary {
         case doorwayPriority = "doorwaypriority"
         case relativeX = "relativex"
         case relativeY = "relativey"
+        case colour
+        case images
     }
 
     public init(from decoder: Decoder) throws {
@@ -135,14 +137,17 @@ extension NPGArea.Boundary {
         self.positionX = (try? container.decodeIfPresent(Double.self, forKey: .positionX)) ?? 0
         self.positionY = (try? container.decodeIfPresent(Double.self, forKey: .positionY)) ?? 0
 
+        let colour = try container.decodeIfPresent(String.self, forKey: .colour)
+        let images = try container.decodeIfPresent([NPGImage].self, forKey: .images) ?? []
+
         let typeString = try container.decode(String.self, forKey: .type)
         switch typeString {
         case "wall":
-            self.boundaryType = .wall
+            self.boundaryType = .wall(color: colour, images: images)
         case "islandwall", "island wall":
             let relativeX = try container.decode(Int.self, forKey: .relativeX)
             let relativeY = try container.decode(Int.self, forKey: .relativeY)
-            self.boundaryType = .islandWall(relativeX: relativeX, relativeY: relativeY)
+            self.boundaryType = .islandWall(relativeX: relativeX, relativeY: relativeY, color: colour, images: images)
         case "doorway":
             let toOtherLocationID = try container.decodeIfPresent(Int.self, forKey: .doorwayLocationID)
             let doorwayPriority = (try? container.decodeIfPresent(NPGArea.Boundary.Priority.self, forKey: .doorwayPriority)) ?? .primary
@@ -150,7 +155,7 @@ extension NPGArea.Boundary {
         case "closed doorway":
             self.boundaryType = .doorway(toOtherLocationID: nil)
         case "overlap":
-            self.boundaryType = .overlap
+            self.boundaryType = .overlap(color: colour, images: images)
         default:
             let context = DecodingError.Context(codingPath: [CodingKeys.type], debugDescription: "Unknown boundary type: \(typeString)")
             throw DecodingError.dataCorrupted(context)
@@ -178,18 +183,24 @@ extension NPGArea.Boundary {
         try container.encode(self.artworkIDs, forKey: .artworkIDs)
 
         switch self.boundaryType {
-        case .wall:
+        case .wall(let color, let images):
             try container.encode("wall", forKey: .type)
-        case .islandWall(let relativeX, let relativeY):
+            try container.encodeIfPresent(color, forKey: .colour)
+            try container.encode(images, forKey: .images)
+        case .islandWall(let relativeX, let relativeY, let color, let images):
             try container.encode("islandwall", forKey: .type)
             try container.encode(relativeX, forKey: .relativeX)
             try container.encode(relativeY, forKey: .relativeY)
+            try container.encodeIfPresent(color, forKey: .colour)
+            try container.encode(images, forKey: .images)
         case .doorway(let toOtherLocationID, let priority):
             try container.encode("doorway", forKey: .type)
             try container.encodeIfPresent(toOtherLocationID, forKey: .doorwayLocationID)
             try container.encodeIfPresent(priority, forKey: .doorwayPriority)
-        case .overlap:
+        case .overlap(let color, let images):
             try container.encode("overlap", forKey: .type)
+            try container.encodeIfPresent(color, forKey: .colour)
+            try container.encode(images, forKey: .images)
         }
     }
 }
@@ -369,6 +380,7 @@ extension NPGImage: Codable {
         case url = "fileURL"
         case thumbnailURL = "thickURL"
         case squareURL = "doublesquareURL"
+        case backgroundFit = "fitmethod"
     }
     
     public init(from decoder: Decoder) throws {
@@ -412,6 +424,7 @@ extension NPGImage: Codable {
         self.url = try container.decode(URL.self, forKey: .url)
         self.thumbnailURL = try container.decodeIfPresent(URL.self, forKey: .thumbnailURL)
         self.squareURL = try container.decodeIfPresent(URL.self, forKey: .squareURL)
+        self.backgroundFit = try container.decodeIfPresent(NPGImage.BackgroundFit.self, forKey: .backgroundFit)
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -427,6 +440,7 @@ extension NPGImage: Codable {
         try container.encode(self.url, forKey: .url)
         try container.encodeIfPresent(self.thumbnailURL, forKey: .thumbnailURL)
         try container.encodeIfPresent(self.squareURL, forKey: .squareURL)
+        try container.encodeIfPresent(self.backgroundFit, forKey: .backgroundFit)
     }
 }
 

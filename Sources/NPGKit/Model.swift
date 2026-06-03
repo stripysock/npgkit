@@ -274,10 +274,10 @@ public struct NPGArea: NPGObject, Codable {
         }
         
         public enum BoundaryType: Sendable, Hashable, Codable {
-            case wall
-            case islandWall(relativeX: Int, relativeY: Int)
+            case wall(color: String?, images: [NPGImage])
+            case islandWall(relativeX: Int, relativeY: Int, color: String?, images: [NPGImage])
             case doorway(toOtherLocationID: Int?, priority: Priority = .primary)
-            case overlap
+            case overlap(color: String?, images: [NPGImage])
         }
         
         /// A unique identifier for this location.
@@ -514,10 +514,16 @@ public struct NPGImage: NPGFile {
         public var bottomRightY: Double
     }
     
-    /// A structure specifying the region of a person's face within an image
+    /// A structure specifying the region of a person's face within an image.
     public struct FaceCrop: Hashable, Sendable {
         public var entityID: Int
         public var crop: CropSize
+    }
+    
+    /// Possible techniques for fitting a background image.
+    public enum BackgroundFit: String, Sendable, Codable {
+        case tile = "backgroundtile"
+        case fill = "backgroundimage"
     }
     
     /// The unique identifier of our image.
@@ -550,7 +556,8 @@ public struct NPGImage: NPGFile {
     /// A square-cropped version of the image that (hopefully) takes the sitter's position into consideration.
     public var squareURL: URL?
     
-    
+    /// If used as a background image, the fitting technique that should be used.
+    public var backgroundFit: BackgroundFit?
 }
 
 /// An audio file associated with an artwork.
