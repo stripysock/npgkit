@@ -276,6 +276,20 @@ public struct NPGArtwork: NPGObject, Codable {
         var relationship: Relationship
     }
     
+    /// An enum of the types of media that may have been used to create the artwork.
+    public enum MediaType: String, Codable, Sendable {
+        case digitalMedia = "Digital Media"
+        case mixedMedia = "Mixed Media"
+        case painting = "Paintings"
+        case photography = "Photography"
+        case print = "Prints"
+        case sculpture = "Sculpture"
+        case textiles = "Textiles"
+        case decorativeArts = "Decorative Arts"
+        case drawing = "Drawings"
+        case installation = "Installation"
+    }
+    
     /// The unique identifier of this artwork.
     public var id: Int
     
@@ -333,6 +347,8 @@ public struct NPGArtwork: NPGObject, Codable {
 
     /// An array of 3D Objects to be used for detection by ARKit
     public var scanObjects: [NPG3DObject]
+    
+    public var media: MediaType?
 }
 
 /// An image file representing an artwork.

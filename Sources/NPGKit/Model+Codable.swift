@@ -61,7 +61,7 @@ extension NPGArea.Location {
 
 extension NPGArtwork {
     enum CodingKeys: String, CodingKey {
-        case id, title, subtitle, priority, width, height, text, images, audio, video
+        case id, title, subtitle, priority, width, height, text, images, audio, video, media
         case dateModified = "datemodified"
         case dateCreated = "datecreated"
         case areaID = "areaid"
@@ -70,6 +70,56 @@ extension NPGArtwork {
         case nearbyArtworks = "nearbylabels"
         case scanObjects = "3dscan"
         case beaconID = "beaconid"
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.dateModified = try container.decode(Date.self, forKey: .dateModified)
+        self.title = try container.decode(String.self, forKey: .title)
+        self.subtitle = try container.decode(String.self, forKey: .subtitle)
+        self.dateCreated = try container.decode(String.self, forKey: .dateCreated)
+        self.accessionID = try container.decodeIfPresent(String.self, forKey: .accessionID)
+        self.areaID = try container.decode(Int.self, forKey: .areaID)
+        self.locationID = try container.decodeIfPresent(Int.self, forKey: .locationID)
+        self.beaconID = try container.decodeIfPresent(Int.self, forKey: .beaconID)
+        self.priority = try container.decode(Int.self, forKey: .priority)
+        self.width = try container.decode(Double.self, forKey: .width)
+        self.height = try container.decode(Double.self, forKey: .height)
+        self.text = try container.decode([LabelText].self, forKey: .text)
+        self.images = try container.decode([NPGImage].self, forKey: .images)
+        self.nearbyArtworks = try container.decode([Nearby].self, forKey: .nearbyArtworks)
+        self.audio = try container.decode([NPGAudio].self, forKey: .audio)
+        self.video = try container.decode([NPGVideo].self, forKey: .video)
+        self.scanObjects = try container.decode([NPG3DObject].self, forKey: .scanObjects)
+
+        // If the media value is missing or doesn't match a known ``MediaType``, treat it as nil rather than failing to decode the entire artwork.
+        self.media = try? container.decodeIfPresent(MediaType.self, forKey: .media)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encode(self.id, forKey: .id)
+        try container.encode(self.dateModified, forKey: .dateModified)
+        try container.encode(self.title, forKey: .title)
+        try container.encode(self.subtitle, forKey: .subtitle)
+        try container.encode(self.dateCreated, forKey: .dateCreated)
+        try container.encodeIfPresent(self.accessionID, forKey: .accessionID)
+        try container.encode(self.areaID, forKey: .areaID)
+        try container.encodeIfPresent(self.locationID, forKey: .locationID)
+        try container.encodeIfPresent(self.beaconID, forKey: .beaconID)
+        try container.encode(self.priority, forKey: .priority)
+        try container.encode(self.width, forKey: .width)
+        try container.encode(self.height, forKey: .height)
+        try container.encode(self.text, forKey: .text)
+        try container.encode(self.images, forKey: .images)
+        try container.encode(self.nearbyArtworks, forKey: .nearbyArtworks)
+        try container.encode(self.audio, forKey: .audio)
+        try container.encode(self.video, forKey: .video)
+        try container.encode(self.scanObjects, forKey: .scanObjects)
+        try container.encodeIfPresent(self.media, forKey: .media)
     }
 }
 
