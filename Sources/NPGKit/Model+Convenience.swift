@@ -157,7 +157,8 @@ extension NPGArtwork {
                 nearbyArtworks: [NPGArtwork.Nearby] = [],
                 audio: [NPGAudio] = [],
                 video: [NPGVideo] = [],
-                scanObjects: [NPG3DObject] = []) {
+                scanObjects: [NPG3DObject] = [],
+                media: NPGArtwork.MediaType? = nil) {
         self.id = id
         self.dateModified = .now
         self.title = title
@@ -176,8 +177,9 @@ extension NPGArtwork {
         self.audio = audio
         self.video = video
         self.scanObjects = scanObjects
+        self.media = media
     }
-    
+
     /// The size of the artwork in centimetres.
     public var size: CGSize {
         .init(width: width, height: height)

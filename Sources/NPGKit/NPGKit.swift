@@ -7,11 +7,15 @@ public actor NPGKit: Sendable {
         category: String(describing: #file)
     )
     
-    public enum DataSource: String, Sendable {
+    public enum DataSource: Sendable {
         case fixtureDevelopment
         case fixture
-        case development
+        case development(path: String? = nil)
         case production
+        
+        static var development: Self {
+            .development(path: nil)
+        }
         
         var defaultPollPeriod: TimeInterval {
             switch self {
@@ -185,8 +189,10 @@ fileprivate extension NPGKit.DataSource {
     
     var baseURL: URL? {
         switch self {
-        case .development:
-            return URL(string: "https://www.portrait.gov.au/json/ondisplaydev")
+        case .development(let path):
+            let rawComponent = path ?? "ondisplaydev"
+            let pathComponent = rawComponent.filter { $0.isLetter || $0.isNumber }
+            return URL(string: "https://www.portrait.gov.au/json/" + pathComponent)
             
         case .production:
             return URL(string: "https://www.portrait.gov.au/json/ondisplaylive")
