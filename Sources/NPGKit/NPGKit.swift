@@ -113,9 +113,20 @@ public actor NPGKit: Sendable {
         
         return AsyncThrowingStream { continuation in
             Task {
+                /*
+                 Whether we've ever managed to deliver a value.
+
+                 A first-attempt failure is terminal, so callers can show a load error rather than
+                 spinning indefinitely. Once we've delivered something, later failures are logged and
+                 retried instead: a stream can only finish once, so ending it on a transient network
+                 blip would silently stop all further updates for the lifetime of the app, leaving
+                 the caller holding data that quietly goes stale.
+                 */
+                var hasDelivered = false
+
                 repeat {
                     let data: Data
-                    
+
                     do {
                         switch dataSource {
                         case .fixtureDevelopment:
@@ -150,14 +161,29 @@ public actor NPGKit: Sendable {
                         }
                         
                         continuation.yield(values)
-                        
+                        hasDelivered = true
+
                     } catch {
-                        continuation.finish(throwing: error)
+                        guard hasDelivered else {
+                            continuation.finish(throwing: error)
+                            return
+                        }
+                        Self.logger.error(
+                            "Failed to refresh \(T.self), keeping the last known values: \(error)"
+                        )
                     }
-                    
-                    try await Task.sleep(for: .seconds(pollPeriod))
-                    
+
+                    do {
+                        try await Task.sleep(for: .seconds(pollPeriod))
+                    } catch {
+                        // Cancellation. Finish cleanly so callers aren't left awaiting forever.
+                        continuation.finish()
+                        return
+                    }
+
                 } while !Task.isCancelled
+
+                continuation.finish()
             }
         }
     }
