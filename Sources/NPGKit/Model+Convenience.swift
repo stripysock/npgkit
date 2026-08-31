@@ -105,7 +105,9 @@ extension NPGArea {
                 priority: Int = 1,
                 locationIDs: [Int],
                 artworkIDs: [Int],
-                externalCoordinates: NPGCoordinates? = nil) {
+                externalCoordinates: NPGCoordinates? = nil,
+                adjacentAreas: [AdjacentArea] = []
+    ) {
         self.id = id
         self.dateModified = .now
         self.title = title
@@ -115,6 +117,31 @@ extension NPGArea {
         self.locationIDs = locationIDs
         self.artworkIDs = artworkIDs
         self.externalCoordinates = externalCoordinates
+        self.adjacentAreas = adjacentAreas
+    }
+}
+
+extension NPGArea.Orientation {
+    public var opposite: Self {
+        switch self {
+        case .north:
+                .south
+        case .northEast:
+                .southWest
+        case .east:
+                .west
+        case .southEast:
+                .northWest
+        case .south:
+                .north
+        case .southWest:
+                .northEast
+        case .west:
+                .east
+        case .northWest:
+                .southEast
+        }
+        
     }
 }
 
@@ -127,7 +154,9 @@ extension NPGArea.Location {
                 beaconID: Int? = nil,
                 priority: Int = 1,
                 artworkIDs: [Int],
-                audio: [NPGAudio]) {
+                audio: [NPGAudio],
+                boundaryIDs: [Int] = [],
+                adjacentLocations: [NPGArea.AdjacentLocation] = []) {
         self.id = id
         self.areaID = areaID
         self.dateModified = .now
@@ -138,6 +167,8 @@ extension NPGArea.Location {
         self.priority = priority
         self.artworkIDs = artworkIDs
         self.audio = audio
+        self.boundaryIDs = boundaryIDs
+        self.adjacentLocations = adjacentLocations
     }
 }
 
@@ -149,16 +180,19 @@ extension NPGArtwork {
                 accessionID: String? = nil,
                 areaID: Int,
                 locationID: Int? = nil,
+                boundaryID: Int? = nil,
                 beaconID: Int? = nil,
                 priority: Int = 1,
                 size: CGSize = .zero,
+                position: CGPoint = .zero,
                 text: [NPGArtwork.LabelText] = [],
                 images: [NPGImage] = [],
                 nearbyArtworks: [NPGArtwork.Nearby] = [],
                 audio: [NPGAudio] = [],
                 video: [NPGVideo] = [],
                 scanObjects: [NPG3DObject] = [],
-                media: NPGArtwork.MediaType? = nil) {
+                media: NPGArtwork.MediaType? = nil,
+                excludeFromApplications: [NPGApplication] = []) {
         self.id = id
         self.dateModified = .now
         self.title = title
@@ -167,22 +201,31 @@ extension NPGArtwork {
         self.accessionID = accessionID
         self.areaID = areaID
         self.locationID = locationID
+        self.boundaryID = boundaryID
         self.beaconID = beaconID
         self.priority = priority
         self.width = size.width
         self.height = size.height
+        self.positionX = position.x
+        self.positionY = position.y
         self.text = text
         self.images = images
         self.nearbyArtworks = nearbyArtworks
         self.audio = audio
         self.video = video
         self.scanObjects = scanObjects
-        self.media = media
+		self.media = media
+        self.excludeFromApplications = excludeFromApplications
     }
 
     /// The size of the artwork in centimetres.
     public var size: CGSize {
         .init(width: width, height: height)
+    }
+    
+    /// The wall position of the artwork, from bottom left, in centimetres.
+    public var position: CGPoint {
+        .init(x: positionX, y: positionY)
     }
 }
 

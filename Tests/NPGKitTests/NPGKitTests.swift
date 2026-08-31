@@ -92,7 +92,7 @@ final class NPGKitTests: XCTestCase {
         
         do {
             for try await values in await npgKit.artworks(pollEvery: 10) {
-                if values.count > 0 {
+                if values.count > 1 {
                     print("Haz \(values.count) artworks!")
                     pollCount += 1
                     if pollCount == 1 {
@@ -195,7 +195,29 @@ final class NPGKitTests: XCTestCase {
         
         await fulfillment(of: [beaconExpectation, areaExpectation, locationExpectation], timeout: 8, enforceOrder: false)
     }
-    
+
+    func testBoundaryRetrieval() async {
+        let boundaryExpectation = XCTestExpectation(description: "Boundaries load successfully")
+
+        do {
+            for try await values in await npgKit.boundaries() {
+                if !values.isEmpty {
+                    print("Haz \(values.count) boundaries!")
+                    boundaryExpectation.fulfill()
+                    return
+
+                } else {
+                    throw NPGError.noContentForType(NPGArea.Boundary.self)
+                }
+            }
+        } catch {
+            XCTFail("Error encountered whilst retrieving boundaries: \(error.localizedDescription).")
+            return
+        }
+
+        await fulfillment(of: [boundaryExpectation], timeout: 5)
+    }
+
     func testEntityRetrieval() async {
         let entityExpectation = XCTestExpectation(description: "Entities load successfully")
         

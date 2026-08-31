@@ -32,6 +32,7 @@ internal struct NPGData: Decodable, Sendable {
     var metadata: NPGMetadata?
     var areas: [FailableDecodable<NPGArea>]?
     var locations: [FailableDecodable<NPGArea.Location>]?
+    var boundaries: [FailableDecodable<NPGArea.Boundary>]?
     var artworks: [FailableDecodable<NPGArtwork>]?
     var beacons: [FailableDecodable<NPGBeacon>]?
     var tours: [FailableDecodable<NPGTour>]?
@@ -56,6 +57,15 @@ public protocol NPGObject: Hashable, Identifiable, Sendable {
 /// A file referenced by our model.
 public protocol NPGFile: NPGObject {
     var url: URL { get }
+}
+
+/**
+ NPGApplication represents a known mobile application owned by NPG. Certain content may be excluded from one of these applications.
+ */
+public enum NPGApplication: String, Codable, Sendable {
+    case headHunt = "headhunt"
+    case missionToMars = "m2m"
+    case portraitStories = "portraitstories"
 }
 
 /**
@@ -169,16 +179,50 @@ public struct NPGBeacon: NPGObject, Codable {
  For example, the area for Portrait 23 encompasses the locations "Gallery 4", "Gallery 5", "Gallery 6", "Gallery 6 Nook 1" and "Gallery 6 Nook 2".
  */
 public struct NPGArea: NPGObject, Codable {
+    /// A point where a room can be entered or exited.
+    public enum Orientation: String, Sendable, Hashable, Codable {
+        case north
+        case northEast = "northeast"
+        case east
+        case southEast = "southeast"
+        case south
+        case southWest = "southwest"
+        case west
+        case northWest = "northwest"
+    }
+    
+    public struct AdjacentArea: Codable, Hashable, Sendable {
+        /// The ID of the ``NPGArea`` that is adjoining.
+        public var areaID: Int
+        
+        /// The location upon the current area's edge to enter the adjoining area.
+        public var direction: Orientation
+    }
+    
+    public struct AdjacentLocation: Codable, Hashable, Sendable {
+        /// The ID of the ``NPGLocation`` that is adjoining.
+        public var locationID: Int
+        
+        /// The location upon the current area's edge to enter the adjoining area.
+        public var direction: Orientation
+    }
     
     /**
      NPGArea.Location represents a given contiguous area within the Gallery. This might be an entire Gallery space (i.e. Gallery 2), an alcove, or even a wall.
      */
     public struct Location: NPGObject, Codable {
+        
         /// A unique identifier for this location.
         public var id: Int
         
         /// The ID of the ``NPGArea`` that encompasses this location.
         public var areaID: Int
+        
+        /// Locations that adjoin this one.
+        public var adjacentLocations: [AdjacentLocation]
+        
+        /// IDs of boundaries found within this location.
+        public var boundaryIDs: [Int]
         
         /// Last modified date for this area.
         public var dateModified: Date
@@ -203,6 +247,89 @@ public struct NPGArea: NPGObject, Codable {
         
         /// Audio for wayfinding. This could be guiding the user from this location to another (``NPGAudio.AudioContext.wayfinding``) or a description fo the area (``NPGAudio.AudioContext.audiodescription``).
         public var audio: [NPGAudio]
+    }
+    
+    /**
+     NPGArea.Boundary represents a given contiguous area within the Gallery. This might be an entire Gallery space (i.e. Gallery 2), an alcove, or even a wall.
+     
+     From Patrick:
+     A boundary is a "wall" or "doorway" that forms part of the perimeter of a location.
+
+     It has width and height in cm.
+
+     It has an orientation of north, east, south or west - being the direction you face to look at it. North is looking from gallery 1 into the Gordon Darling Hall.
+
+     It has a reference to the boundaries to the left and right.
+
+     A "doorway" has a doorwaylocationid of the location it leads to.
+
+     Note: Boundaries for a location fully enclose it in an unbroken loop. There can be boundaries in addition to those which constitute the loop eg. the central wall in gallery 2. These would have an "islandwall" or "showcase" type and also include relativex and relativey offset in cm from the top left (north west) most corner of the location.
+     */
+    public struct Boundary: NPGObject, Codable {
+        public enum Priority: Int, Sendable, Hashable, Codable {
+            case primary = 1
+            case secondary
+            case tertiary
+            case wrongDirection
+        }
+        
+        public enum BoundaryType: Sendable, Hashable, Codable {
+            case wall(color: String?, images: [NPGImage])
+            case islandWall(relativeX: Int, relativeY: Int, color: String?, images: [NPGImage])
+            case doorway(toOtherLocationID: Int?, priority: Priority = .primary)
+            case overlap(color: String?, images: [NPGImage])
+        }
+        
+        /// A unique identifier for this location.
+        public var id: Int
+        
+        /// The ID of the ``NPGLocation`` that this boundary resides within.
+        public var locationID: Int
+        
+        /// The ID of a boundary to the left of this one.
+        public var leftBoundaryID: Int?
+        
+        /// The ID of a boundary to the right of this one.
+        public var rightBoundaryID: Int?
+        
+        /// Last modified date for this boundary.
+        public var dateAdded: Date
+        
+        /// Last modified date for this boundary.
+        public var dateModified: Date
+        
+        /// The type of this boundary — wall, doorway, etc.
+        public var boundaryType: BoundaryType
+        
+        /// A title for this boundary, for instance, "Wall D"
+        public var title: String
+        
+        /// An optional subtitle for this location, for instance, "Emerging Artists"
+        public var subtitle: String?
+        
+        /// An optional text of a label that may appear on this boundary, for instance, a summary of works on the wall.
+        public var content: String?
+        
+        /// Width in centimetres. Use convenience ``size`` instead.
+        public var width: Double
+        
+        /// Height in centimetres. Use convenience ``size`` instead.
+        public var height: Double
+        
+        /// X position on wall in centimetres, from bottom left. Use convenience ``position`` instead.
+        public var positionX: Double
+        
+        /// Y position on wall in centimetres, from bottom left. Use convenience ``position`` instead.
+        public var positionY: Double
+        
+        /// The normalized direction of the viewer when facing this boundary.
+        public var orientation: NPGArea.Orientation
+        
+        /// Sort priority.
+        public var priority: Int
+        
+        /// IDs of all of the labels that appear upon this boundary
+        public var artworkIDs: [Int]
     }
     
     /// A unique identifier for this area.
@@ -231,6 +358,9 @@ public struct NPGArea: NPGObject, Codable {
     
     /// If the area is external to the gallery (for instance, a touring exhibition), the lat/long coordinates.
     public var externalCoordinates: NPGCoordinates?
+    
+    /// Areas that adjoin this one.
+    public var adjacentAreas: [AdjacentArea]
 }
 
 /**
@@ -318,6 +448,9 @@ public struct NPGArtwork: NPGObject, Codable {
     /// If present, the ID of the specific location in which this artwork exists.
     public var locationID: Int?
     
+    /// If present, the ID of the specific boundary (wall) on which this artwork exists.
+    public var boundaryID: Int?
+    
     /// The ID of the beacon associated with this artwork. If empty, use the beacon associated with the area or location.
     public var beaconID: Int?
     
@@ -329,6 +462,12 @@ public struct NPGArtwork: NPGObject, Codable {
     
     /// Height in centimetres. Use convenience ``size`` instead.
     public var height: Double
+    
+    /// X position on wall in centimetres, from bottom left. Use convenience ``position`` instead.
+    public var positionX: Double
+    
+    /// Y position on wall in centimetres, from bottom left. Use convenience ``position`` instead.
+    public var positionY: Double
     
     /// A collection of label text related to the artwork.
     public var text: [LabelText]
@@ -348,7 +487,15 @@ public struct NPGArtwork: NPGObject, Codable {
     /// An array of 3D Objects to be used for detection by ARKit
     public var scanObjects: [NPG3DObject]
     
-    public var media: MediaType?
+	/// The type of media used within this artwork.
+	public var media: MediaType?
+
+    /**
+     A list of NPG Applications that should ignore this content.
+     
+     Note that an exclusion for an application should only be used when the content isn't appropriate for the application's use-case. If, for instance, content was inappropriate for a certain age, we may target this (in future) by specifying an intended audience.
+     */
+	public var excludeFromApplications: [NPGApplication]
 }
 
 /// An image file representing an artwork.
@@ -367,10 +514,16 @@ public struct NPGImage: NPGFile {
         public var bottomRightY: Double
     }
     
-    /// A structure specifying the region of a person's face within an image
+    /// A structure specifying the region of a person's face within an image.
     public struct FaceCrop: Hashable, Sendable {
         public var entityID: Int
         public var crop: CropSize
+    }
+    
+    /// Possible techniques for fitting a background image.
+    public enum BackgroundFit: String, Sendable, Codable {
+        case tile = "backgroundtile"
+        case fill = "backgroundimage"
     }
     
     /// The unique identifier of our image.
@@ -403,7 +556,8 @@ public struct NPGImage: NPGFile {
     /// A square-cropped version of the image that (hopefully) takes the sitter's position into consideration.
     public var squareURL: URL?
     
-    
+    /// If used as a background image, the fitting technique that should be used.
+    public var backgroundFit: BackgroundFit?
 }
 
 /// An audio file associated with an artwork.
@@ -525,9 +679,7 @@ public struct NPG3DObject: NPGFile, Codable {
 
 /**
  NPGEntity represents a person or group, apperaing as either a sitter or artist.
- 
- Note that as of 1.0.8 these entities **are not** being retrieved, and instead are a proposed structure for future implmentation.
- */
+  */
 public struct NPGEntity: NPGObject, Codable {
     
     /// A unique identifier for this entity.
