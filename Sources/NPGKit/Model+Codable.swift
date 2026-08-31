@@ -9,12 +9,39 @@ extension NPGData {
     }
 }
 
+/*
+ A note on the decoders below.
+
+ These types previously relied on Swift's synthesised `init(from:)`. That makes every non-optional
+ property mandatory — including the collections — so a single absent key failed the decode of the
+ whole record, and `NPGKit`'s streams surface that as a failure of the entire feed.
+
+ That is not a theoretical concern: the `ondisplaylive` endpoints omit `adjacentareas` on areas, and
+ `adjacentlocations` and `boundaries` on locations, so reading production data failed outright with
+ `keyNotFound`. Collections are now decoded with `decodeIfPresent ?? []`, so an absent list means
+ "none" rather than "malformed". Scalars are deliberately left mandatory: a missing title or ID is a
+ genuinely unusable record, and defaulting it would invent data.
+ */
+
 extension NPGTour {
     enum CodingKeys: String, CodingKey {
         case id, title, subtitle, priority, audio
         case dateModified = "datemodified"
         case beaconID = "beaconid"
         case tourStops = "tourstops"
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.dateModified = try container.decode(Date.self, forKey: .dateModified)
+        self.title = try container.decode(String.self, forKey: .title)
+        self.subtitle = try container.decodeIfPresent(String.self, forKey: .subtitle)
+        self.beaconID = try container.decodeIfPresent(Int.self, forKey: .beaconID)
+        self.priority = try container.decode(Int.self, forKey: .priority)
+        self.audio = try container.decodeIfPresent([NPGAudio].self, forKey: .audio) ?? []
+        self.tourStops = try container.decodeIfPresent([TourStop].self, forKey: .tourStops) ?? []
     }
 }
 
@@ -24,6 +51,20 @@ extension NPGTour.TourStop {
         case dateModified = "datemodified"
         case beaconID = "beaconid"
         case artworkIDs = "labels"
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.dateModified = try container.decode(Date.self, forKey: .dateModified)
+        self.title = try container.decode(String.self, forKey: .title)
+        self.subtitle = try container.decodeIfPresent(String.self, forKey: .subtitle)
+        self.content = try container.decodeIfPresent(String.self, forKey: .content)
+        self.beaconID = try container.decode(Int.self, forKey: .beaconID)
+        self.priority = try container.decode(Int.self, forKey: .priority)
+        self.artworkIDs = try container.decodeIfPresent([Int].self, forKey: .artworkIDs) ?? []
+        self.audio = try container.decodeIfPresent([NPGAudio].self, forKey: .audio) ?? []
     }
 }
 
@@ -36,6 +77,20 @@ extension NPGBeacon {
         case locationIDs = "locations"
         case artworkIDs = "labels"
     }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.dateModified = try container.decode(Date.self, forKey: .dateModified)
+        self.proximityUUID = try container.decode(UUID.self, forKey: .proximityUUID)
+        self.major = try container.decode(Int.self, forKey: .major)
+        self.minor = try container.decode(Int.self, forKey: .minor)
+        self.title = try container.decode(String.self, forKey: .title)
+        self.areaIDs = try container.decodeIfPresent([Int].self, forKey: .areaIDs) ?? []
+        self.locationIDs = try container.decodeIfPresent([Int].self, forKey: .locationIDs) ?? []
+        self.artworkIDs = try container.decodeIfPresent([Int].self, forKey: .artworkIDs) ?? []
+    }
 }
 
 extension NPGArea {
@@ -47,6 +102,27 @@ extension NPGArea {
         case beaconIDs = "beaconids"
         case externalCoordinates = "gpscoordinates"
         case adjacentAreas = "adjacentareas"
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.dateModified = try container.decode(Date.self, forKey: .dateModified)
+        self.title = try container.decode(String.self, forKey: .title)
+        self.subtitle = try container.decodeIfPresent(String.self, forKey: .subtitle)
+        self.priority = try container.decode(Int.self, forKey: .priority)
+        self.externalCoordinates = try container.decodeIfPresent(
+            NPGCoordinates.self,
+            forKey: .externalCoordinates
+        )
+        self.beaconIDs = try container.decodeIfPresent([Int].self, forKey: .beaconIDs) ?? []
+        self.locationIDs = try container.decodeIfPresent([Int].self, forKey: .locationIDs) ?? []
+        self.artworkIDs = try container.decodeIfPresent([Int].self, forKey: .artworkIDs) ?? []
+        self.adjacentAreas = try container.decodeIfPresent(
+            [AdjacentArea].self,
+            forKey: .adjacentAreas
+        ) ?? []
     }
 }
 
@@ -66,13 +142,35 @@ extension NPGArea.AdjacentLocation {
 
 extension NPGArea.Location {
     enum CodingKeys: String, CodingKey {
-        case id, title, subtitle, priority, audio
+        // `content` was previously missing from this list, which meant a location's entrance-label
+        // text was silently discarded — `content` decoded as nil even when the feed supplied it.
+        case id, title, subtitle, content, priority, audio
         case dateModified = "datemodified"
         case areaID = "areaid"
         case artworkIDs = "labels"
         case boundaryIDs = "boundaries"
         case beaconID = "beaconid"
         case adjacentLocations = "adjacentlocations"
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.areaID = try container.decode(Int.self, forKey: .areaID)
+        self.dateModified = try container.decode(Date.self, forKey: .dateModified)
+        self.title = try container.decode(String.self, forKey: .title)
+        self.subtitle = try container.decodeIfPresent(String.self, forKey: .subtitle)
+        self.content = try container.decodeIfPresent(String.self, forKey: .content)
+        self.beaconID = try container.decodeIfPresent(Int.self, forKey: .beaconID)
+        self.priority = try container.decode(Int.self, forKey: .priority)
+        self.artworkIDs = try container.decodeIfPresent([Int].self, forKey: .artworkIDs) ?? []
+        self.boundaryIDs = try container.decodeIfPresent([Int].self, forKey: .boundaryIDs) ?? []
+        self.audio = try container.decodeIfPresent([NPGAudio].self, forKey: .audio) ?? []
+        self.adjacentLocations = try container.decodeIfPresent(
+            [NPGArea.AdjacentLocation].self,
+            forKey: .adjacentLocations
+        ) ?? []
     }
 }
 
@@ -556,5 +654,29 @@ extension NPGEntity {
         case familyNames = "familynames"
         case artworkAsSubjectIDs = "subjectlabels"
         case artworkAsArtistIDs = "artistlabels"
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.dateModified = try container.decode(Date.self, forKey: .dateModified)
+        self.displayName = try container.decode(String.self, forKey: .displayName)
+        self.simpleName = try container.decodeIfPresent(String.self, forKey: .simpleName)
+        self.givenNames = try container.decodeIfPresent([String].self, forKey: .givenNames)
+        self.familyNames = try container.decodeIfPresent([String].self, forKey: .familyNames)
+        self.text = try container.decodeIfPresent(
+            [NPGArtwork.LabelText].self,
+            forKey: .text
+        ) ?? []
+        self.audio = try container.decodeIfPresent([NPGAudio].self, forKey: .audio) ?? []
+        self.artworkAsSubjectIDs = try container.decodeIfPresent(
+            [Int].self,
+            forKey: .artworkAsSubjectIDs
+        ) ?? []
+        self.artworkAsArtistIDs = try container.decodeIfPresent(
+            [Int].self,
+            forKey: .artworkAsArtistIDs
+        ) ?? []
     }
 }
