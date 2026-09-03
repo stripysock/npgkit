@@ -13,9 +13,9 @@
       "priority": 1,
       "audio": [],
       "locations": [
+        90,
         92,
         234,
-        90,
         237,
         239,
         240,
@@ -144,8 +144,8 @@
       "priority": 5,
       "audio": [],
       "locations": [
-        235,
-        84
+        84,
+        235
       ],
       "labels": [
         4001,
@@ -657,9 +657,9 @@
         57
       ],
       "locations": [
+        90,
         92,
         234,
-        90,
         220,
         237,
         239,
@@ -720,8 +720,8 @@
         55
       ],
       "locations": [
-        235,
-        84
+        84,
+        235
       ],
       "labels": [
         4001,
@@ -16172,6 +16172,70 @@
       ]
     },
     {
+      "id": 84,
+      "areaid": 55,
+      "datemodified": "2026-04-30",
+      "title": "Room one",
+      "subtitle": "",
+      "content": "",
+      "wallwidth": 0,
+      "wallheight": 0,
+      "beaconid": 16,
+      "dateadded": "2023-04-06",
+      "priority": 1,
+      "audio": [],
+      "labels": [
+        4001,
+        4792,
+        4639,
+        3773,
+        3431,
+        4164,
+        4636,
+        4638
+      ],
+      "boundaries": [
+        399,
+        400,
+        401,
+        402,
+        403,
+        404,
+        405,
+        406,
+        407,
+        408,
+        409,
+        410,
+        411,
+        412,
+        413,
+        414,
+        415,
+        416,
+        417,
+        418
+      ],
+      "adjacentlocations": [
+        {
+          "locationid": 136,
+          "direction": "east"
+        },
+        {
+          "locationid": 231,
+          "direction": "south"
+        },
+        {
+          "locationid": 235,
+          "direction": "north"
+        },
+        {
+          "locationid": 247,
+          "direction": "west"
+        }
+      ]
+    },
+    {
       "id": 89,
       "areaid": 43,
       "datemodified": "2026-05-13",
@@ -16218,75 +16282,72 @@
       ]
     },
     {
-      "id": 92,
+      "id": 90,
       "areaid": 57,
-      "datemodified": "2026-05-14",
-      "title": "Forecourt",
+      "datemodified": "2024-02-07",
+      "title": "Gordon Darling Hall",
       "subtitle": "",
       "content": "",
-      "wallwidth": 0,
-      "wallheight": 0,
-      "dateadded": "2023-05-12",
+      "beaconid": 14,
+      "dateadded": "2023-05-10",
       "priority": 1,
       "audio": [],
       "labels": [
-        1968,
-        3915
+        1969
       ],
       "boundaries": [
-        459,
-        460,
-        461,
-        462,
-        498,
-        463,
-        497,
-        464,
-        465,
-        466
+        467,
+        552,
+        468,
+        553,
+        551,
+        469,
+        470,
+        471,
+        472,
+        473,
+        474,
+        475,
+        476,
+        477,
+        478,
+        479,
+        480,
+        481,
+        563,
+        499,
+        564,
+        482,
+        500
       ],
       "adjacentlocations": [
         {
-          "locationid": 234,
-          "direction": "west"
-        }
-      ]
-    },
-    {
-      "id": 235,
-      "areaid": 55,
-      "datemodified": "2026-08-31",
-      "title": "Corridor between G1 and G2",
-      "subtitle": "",
-      "content": "",
-      "wallwidth": 0,
-      "wallheight": 0,
-      "dateadded": "2026-05-29",
-      "priority": 1,
-      "audio": [],
-      "labels": [],
-      "boundaries": [
-        531,
-        501,
-        532,
-        503,
-        504,
-        505,
-        534,
-        502,
-        533,
-        506,
-        507,
-        508
-      ],
-      "adjacentlocations": [
-        {
-          "locationid": 84,
+          "locationid": 89,
           "direction": "south"
         },
         {
-          "locationid": 89,
+          "locationid": 233,
+          "direction": "west"
+        },
+        {
+          "locationid": 234,
+          "direction": "east"
+        },
+        {
+          "locationid": 237,
+          "direction": "east"
+        },
+        {
+          "locationid": 240,
+          "direction": "west"
+        },
+        {
+          "locationid": 245,
           "direction": "north"
+        },
+        {
+          "locationid": 248,
+          "direction": "south"
         }
       ]
     },
@@ -16793,66 +16854,75 @@
       ]
     },
     {
-      "id": 84,
-      "areaid": 55,
-      "datemodified": "2026-04-30",
-      "title": "Room one",
+      "id": 92,
+      "areaid": 57,
+      "datemodified": "2026-05-14",
+      "title": "Forecourt",
       "subtitle": "",
       "content": "",
       "wallwidth": 0,
       "wallheight": 0,
-      "beaconid": 16,
-      "dateadded": "2023-04-06",
+      "dateadded": "2023-05-12",
       "priority": 2,
       "audio": [],
       "labels": [
-        4001,
-        4792,
-        4639,
-        3773,
-        3431,
-        4164,
-        4636,
-        4638
+        1968,
+        3915
       ],
       "boundaries": [
-        399,
-        400,
-        401,
-        402,
-        403,
-        404,
-        405,
-        406,
-        407,
-        408,
-        409,
-        410,
-        411,
-        412,
-        413,
-        414,
-        415,
-        416,
-        417,
-        418
+        459,
+        460,
+        461,
+        462,
+        498,
+        463,
+        497,
+        464,
+        465,
+        466
       ],
       "adjacentlocations": [
         {
-          "locationid": 136,
-          "direction": "east"
-        },
+          "locationid": 234,
+          "direction": "west"
+        }
+      ]
+    },
+    {
+      "id": 235,
+      "areaid": 55,
+      "datemodified": "2026-08-31",
+      "title": "Corridor between G1 and G2",
+      "subtitle": "",
+      "content": "",
+      "wallwidth": 0,
+      "wallheight": 0,
+      "dateadded": "2026-05-29",
+      "priority": 2,
+      "audio": [],
+      "labels": [],
+      "boundaries": [
+        531,
+        501,
+        532,
+        503,
+        504,
+        505,
+        534,
+        502,
+        533,
+        506,
+        507,
+        508
+      ],
+      "adjacentlocations": [
         {
-          "locationid": 231,
+          "locationid": 84,
           "direction": "south"
         },
         {
-          "locationid": 235,
+          "locationid": 89,
           "direction": "north"
-        },
-        {
-          "locationid": 247,
-          "direction": "west"
         }
       ]
     },
@@ -16964,6 +17034,44 @@
       ]
     },
     {
+      "id": 249,
+      "areaid": 114,
+      "datemodified": "2026-08-31",
+      "title": "Corridor between galleries 7 and 8",
+      "subtitle": "",
+      "content": "",
+      "wallwidth": 0,
+      "wallheight": 0,
+      "dateadded": "2026-08-31",
+      "priority": 2,
+      "audio": [],
+      "labels": [],
+      "boundaries": [
+        697,
+        698,
+        699,
+        700,
+        701,
+        702,
+        703,
+        704,
+        705,
+        706,
+        707,
+        708
+      ],
+      "adjacentlocations": [
+        {
+          "locationid": 247,
+          "direction": "south"
+        },
+        {
+          "locationid": 248,
+          "direction": "north"
+        }
+      ]
+    },
+    {
       "id": 234,
       "areaid": 57,
       "datemodified": "2026-05-14",
@@ -16973,7 +17081,7 @@
       "wallwidth": 0,
       "wallheight": 0,
       "dateadded": "2026-05-14",
-      "priority": 2,
+      "priority": 3,
       "audio": [],
       "labels": [],
       "boundaries": [
@@ -17016,114 +17124,6 @@
         {
           "locationid": 244,
           "direction": "north"
-        }
-      ]
-    },
-    {
-      "id": 249,
-      "areaid": 114,
-      "datemodified": "2026-08-31",
-      "title": "Corridor between galleries 7 and 8",
-      "subtitle": "",
-      "content": "",
-      "wallwidth": 0,
-      "wallheight": 0,
-      "dateadded": "2026-08-31",
-      "priority": 2,
-      "audio": [],
-      "labels": [],
-      "boundaries": [
-        697,
-        698,
-        699,
-        700,
-        701,
-        702,
-        703,
-        704,
-        705,
-        706,
-        707,
-        708
-      ],
-      "adjacentlocations": [
-        {
-          "locationid": 247,
-          "direction": "south"
-        },
-        {
-          "locationid": 248,
-          "direction": "north"
-        }
-      ]
-    },
-    {
-      "id": 90,
-      "areaid": 57,
-      "datemodified": "2024-02-07",
-      "title": "Gordon Darling Hall",
-      "subtitle": "",
-      "content": "",
-      "beaconid": 14,
-      "dateadded": "2023-05-10",
-      "priority": 3,
-      "audio": [],
-      "labels": [
-        1969
-      ],
-      "boundaries": [
-        467,
-        552,
-        468,
-        553,
-        551,
-        469,
-        470,
-        471,
-        472,
-        473,
-        474,
-        475,
-        476,
-        477,
-        478,
-        479,
-        480,
-        481,
-        563,
-        499,
-        564,
-        482,
-        500
-      ],
-      "adjacentlocations": [
-        {
-          "locationid": 89,
-          "direction": "south"
-        },
-        {
-          "locationid": 233,
-          "direction": "west"
-        },
-        {
-          "locationid": 234,
-          "direction": "east"
-        },
-        {
-          "locationid": 237,
-          "direction": "east"
-        },
-        {
-          "locationid": 240,
-          "direction": "west"
-        },
-        {
-          "locationid": 245,
-          "direction": "north"
-        },
-        {
-          "locationid": 248,
-          "direction": "south"
         }
       ]
     },
