@@ -194,6 +194,33 @@ extension NPGArea.Boundary {
         case images
     }
 
+    /// Reads `doorwaypriority`, tolerating both a missing value and an unrecognised one.
+    ///
+    /// The two are deliberately treated differently. A missing (or null) value means the feed has
+    /// no opinion about the door, so it stays `.primary`. A value that is present but unrecognised
+    /// falls back to `.tertiary` instead — still passable, but never preferred. Promoting an
+    /// unknown number to the best possible door is what previously made a `doorwaypriority` of 0
+    /// the preferred route through a closed door.
+    private static func decodeDoorwayPriority(
+        from container: KeyedDecodingContainer<CodingKeys>
+    ) -> NPGArea.Boundary.Priority {
+        guard container.contains(.doorwayPriority),
+              (try? container.decodeNil(forKey: .doorwayPriority)) != true
+        else { return .primary }
+
+        // Some numeric fields in this feed arrive as strings, so accept either spelling.
+        let rawValue: Int? = if let int = try? container.decode(Int.self, forKey: .doorwayPriority) {
+            int
+        } else if let string = try? container.decode(String.self, forKey: .doorwayPriority) {
+            Int(string)
+        } else {
+            nil
+        }
+
+        guard let rawValue else { return .tertiary }
+        return NPGArea.Boundary.Priority(rawValue: rawValue) ?? .tertiary
+    }
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
@@ -248,10 +275,10 @@ extension NPGArea.Boundary {
             self.boundaryType = .islandWall(relativeX: relativeX, relativeY: relativeY, color: colour, images: images)
         case "doorway":
             let toOtherLocationID = try container.decodeIfPresent(Int.self, forKey: .doorwayLocationID)
-            let doorwayPriority = (try? container.decodeIfPresent(NPGArea.Boundary.Priority.self, forKey: .doorwayPriority)) ?? .primary
+            let doorwayPriority = Self.decodeDoorwayPriority(from: container)
             self.boundaryType = .doorway(toOtherLocationID: toOtherLocationID, priority: doorwayPriority)
         case "closed doorway":
-            self.boundaryType = .doorway(toOtherLocationID: nil)
+            self.boundaryType = .doorway(toOtherLocationID: nil, priority: .closed)
         case "overlap":
             self.boundaryType = .overlap(color: colour, images: images)
         default:

@@ -266,10 +266,28 @@ public struct NPGArea: NPGObject, Codable {
      Note: Boundaries for a location fully enclose it in an unbroken loop. There can be boundaries in addition to those which constitute the loop eg. the central wall in gallery 2. These would have an "islandwall" or "showcase" type and also include relativex and relativey offset in cm from the top left (north west) most corner of the location.
      */
     public struct Boundary: NPGObject, Codable {
+        /**
+         How suitable a doorway is for passing through.
+
+         Note that the raw values are the feed's numbering, not a usability ordering: `closed` is
+         0 and so sorts *below* `primary` despite being the least usable of the set. Consumers
+         deciding whether or how readily to route through a door should switch over the cases
+         rather than compare raw values.
+         */
         public enum Priority: Int, Sendable, Hashable, Codable {
+            /// The doorway is shut. It is not passable, and should never be routed through.
+            case closed = 0
+
+            /// The preferred way between two locations.
             case primary = 1
+
+            /// Passable, but `primary` is the better choice where one exists.
             case secondary
+
+            /// Passable, but only where nothing better is available.
             case tertiary
+
+            /// Passable, but against the intended flow of visitors, so never routed through.
             case wrongDirection
         }
         
